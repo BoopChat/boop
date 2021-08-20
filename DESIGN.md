@@ -7,6 +7,7 @@ Design notes:
 - JavaScript React (front end)
 - Postgres SQL (DB)
 - Redis (Pub Sub)
+- Github Actions (CI, CD)
 
 ## MVP (Miminum Viable Product)
 
