@@ -3,7 +3,7 @@ Design notes:
 
 ## Tech Stack
 
-- C# (backend)
+- Node (backend)
 - JavaScript React (front end)
 - Postgres SQL (DB)
 - Redis (Pub Sub)
