@@ -13,16 +13,16 @@ describe("SignUp", () => {
 
     test("fails if input element for password does not exist", () => {
         const { getByPlaceholderText } = render(<SignUp />);
-        let username_input = getByPlaceholderText("password");
+        let password_input = getByPlaceholderText("password");
 
-        expect(username_input).toBeInTheDocument();
+        expect(password_input).toBeInTheDocument();
     })
 
     test("fails if sign up button does not exist", () => {
         const { getByText } = render(<SignUp />);
-        let login_btn = getByText("Sign up");
+        let signup_btn = getByText("Sign up");
 
-        expect(login_btn).toBeInTheDocument();
+        expect(signup_btn).toBeInTheDocument();
     })
 
     test('fails if user enters a blank username', () => {
@@ -33,28 +33,28 @@ describe("SignUp", () => {
         userEvent.type(username_input, "")
         userEvent.click(signup_btn)
 
-        const error_element = getByText(/Please a username/i);
+        const error_element = getByText(/Please enter a username/i);
         expect(error_element).toBeInTheDocument();
     });
 
     test('fails if user enters a blank password', () => {
         const { getByPlaceholderText, getByText } = render(<SignUp />);
-        let username_input = getByPlaceholderText("password")
+        let password_input = getByPlaceholderText("password")
         let signup_btn = getByText("Sign up")
 
-        userEvent.type(username_input, "")
+        userEvent.type(password_input, "")
         userEvent.click(signup_btn)
 
-        const error_element = getByText(/Please a password/i);
+        const error_element = getByText(/Please enter a password/i);
         expect(error_element).toBeInTheDocument();
     });
 
     test("fails if user enters a password with less than 8 chars", () => {
         const { getByPlaceholderText, getByText } = render(<SignUp />);
-        let username_input = getByPlaceholderText("password")
+        let password_input = getByPlaceholderText("password")
         let signup_btn = getByText("Sign up")
 
-        userEvent.type(username_input, "pasword")
+        userEvent.type(password_input, "pasword")
         userEvent.click(signup_btn)
 
         const error_element = getByText(/Your password is less than 8 characters long/i);
