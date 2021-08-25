@@ -13,9 +13,9 @@ describe("Login", () => {
 
     test("fails if input element for password does not exist", () => {
         const { getByPlaceholderText } = render(<Login />);
-        let username_input = getByPlaceholderText("password");
+        let password_input = getByPlaceholderText("password");
 
-        expect(username_input).toBeInTheDocument();
+        expect(password_input).toBeInTheDocument();
     })
 
     test("fails if login button does not exist", () => {
@@ -39,10 +39,10 @@ describe("Login", () => {
 
     test('fails if user enters a blank password', () => {
         const { getByPlaceholderText, getByText } = render(<Login />);
-        let username_input = getByPlaceholderText("password")
+        let password_input = getByPlaceholderText("password")
         let login_btn = getByText("Login")
 
-        userEvent.type(username_input, "")
+        userEvent.type(password_input, "")
         userEvent.click(login_btn)
 
         const error_element = getByText(/Please enter your password/i);
@@ -51,10 +51,10 @@ describe("Login", () => {
 
     test("fails if user enters a password with less than 8 chars", () => {
         const { getByPlaceholderText, getByText } = render(<Login />);
-        let username_input = getByPlaceholderText("password")
+        let password_input = getByPlaceholderText("password")
         let login_btn = getByText("Login")
 
-        userEvent.type(username_input, "pasword")
+        userEvent.type(password_input, "pasword")
         userEvent.click(login_btn)
 
         const error_element = getByText(/Your password is less than 8 characters long/i);
