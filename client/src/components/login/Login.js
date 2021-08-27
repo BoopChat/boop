@@ -2,7 +2,7 @@ import { GoogleLogin } from "react-google-login";
 
 const Login = () => {
   /*when the user clicks the google sign in button and logs into google, it returns
-  data which contains web token to be verified on the server.
+  data which contains a web token to be verified on the server.
   */
   const handleLogin = async (googleData) => {
     try {
@@ -19,7 +19,7 @@ const Login = () => {
         },
       });
 
-      //extract user data from the Object the the fetch command returns
+      //extract user data from the Object that the fetch command returns
       const user = await res.json();
 
       //For testing: to be delete.

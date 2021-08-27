@@ -1,13 +1,13 @@
 var express = require("express");
 var router = express.Router();
 
-//Google auth client verifies the token sent from the front-end
+//Google authentication client verifies the token sent from the front-end
 const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(process.env.CLIENT_ID);
 
 //google authentication route
 router.post("/google", async (req, res) => {
-  //stores the token that was sent from the front-ent in the request body.
+  //token variable stores the token that was sent from the front-end in the request body.
   const { token } = req.body;
 
   try {
@@ -17,15 +17,15 @@ router.post("/google", async (req, res) => {
       audience: process.env.client_ID,
     });
 
-    //extract the relevant user information from the return ticket.
+    //extracts the relevant user information from the returned ticket.
     const { given_name, family_name, email, picture } = ticket.getPayload();
 
     /*  here is where the returned user information + any other revelent information would
-    be sent to database using an UPSERT REQUEST. TYhe created or updated user record from the datababe is returned and the database generated userId can be then used to 
+    be sent to database using an UPSERT REQUEST. The created or updated user record from the datababe is returned and the database generated userId can be used to 
     create a session cookie.
     */
 
-    //Here is where the other return data information can be send back to the from end for dispaying names of images.
+    //Here is where the same user information can be sent back to the fron-end.
 
     //this is for testing : sample return data.
     const user = {
