@@ -1,0 +1,101 @@
+@import "./globalStyles";
+/*
+=============================
+APP
+=============================
+*/
+.app {
+  background: $clr-primary-7;
+  box-shadow: $dark-shadow;
+  color: $clr-primary-1;
+  height: 100vh;
+  width: 100%;
+  min-width: 300px;
+}
+
+@media screen and (min-width: 1170px) {
+  .app {
+    border-radius: $radius;
+    height: 95vh;
+    width: 1770px;
+  }
+  body {
+    display: grid;
+    place-items: center;
+  }
+}
+/*
+=============================
+LOGIN
+=============================
+*/
+.login {
+  background: $clr-primary-4;
+  color: $clr-primary-1;
+  text-align: center;
+  border-radius: $radius;
+  box-shadow: $dark-shadow;
+  padding-bottom: 1.5rem;
+  width: 50%;
+  min-width: 300px;
+  max-width: 450px;
+  h3 {
+    color: #ff8800;
+    font-family: $ff-primary;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+}
+
+.horizontal-line {
+  display: grid;
+  grid-template-columns: 1fr 2.5fr 1fr;
+  align-items: center;
+  justify-content: space-between;
+  margin: 1rem 0;
+
+  div {
+    background: $clr-primary-3;
+    height: 1px;
+  }
+  span {
+    margin: 0.5rem;
+    color: $clr-primary-3;
+  }
+}
+form {
+  text-align: center;
+}
+.form-control {
+  margin: auto;
+  margin-bottom: 1rem;
+  background: white;
+  width: 16rem;
+  display: flex;
+  align-items: center;
+  padding: 0.3rem 0.7rem;
+  border-radius: 25px;
+  background: $clr-primary-1;
+
+  span {
+    color: $clr-primary-2;
+  }
+
+  input {
+    border: transparent;
+    background: transparent;
+    margin-left: 0.5rem;
+    width: 20rem;
+    height: 1.5rem;
+    color: $clr-primary-9;
+    &:focus {
+      outline: none;
+      &::placeholder {
+        color: transparent;
+      }
+    }
+    &::placeholder {
+      color: $clr-primary-2;
+    }
+  }
+}

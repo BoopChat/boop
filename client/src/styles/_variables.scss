@@ -1,0 +1,40 @@
+/*fonts*/
+@import url("https://fonts.googleapis.com/css?family=Open+Sans|Roboto:400,700&display=swap");
+
+/* primary colors*/
+$clr-primary-1: #d3d4da;
+$clr-primary-2: #a7a9b5;
+$clr-primary-3: #7b7f90;
+$clr-primary-4: #4f546b;
+$clr-primary-5: #232946;
+$clr-primary-6: #1c2138;
+$clr-primary-7: #15192a;
+$clr-primary-8: #0e101c;
+$clr-primary-9: #07080e;
+
+/* orange color*/
+$clr-orange-1: #daa166;
+$clr-orange-2: #cd8133;
+$clr-orange-3: #c16200;
+
+/* purple*/
+$clr-purple-1: #9795c9;
+$clr-purple-1: #7d7abc;
+$clr-purple-1: #646296;
+
+/*  russian violet*/
+$clr-violet-1: #a89ab9;
+$clr-violet-2: #7d6896;
+$clr-violet-3: #513573;
+$clr-violet-4: #260350;
+
+$white: #fff;
+
+$transition: all 0.3s linear;
+$spacing: 0.25rem;
+$radius: 0.5rem;
+$light-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+$dark-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+$max-width: 1170px;
+$ff-primary: "Roboto", sans-serif;
+$ff-secondary: "Open Sans", sans-serif;
