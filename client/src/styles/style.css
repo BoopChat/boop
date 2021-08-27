@@ -189,14 +189,14 @@ LOGIN
   color: #ff8800;
   font-family: "Roboto", sans-serif;
   margin-top: 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .horizontal-line {
   display: -ms-grid;
   display: grid;
-  -ms-grid-columns: 1fr 2.5fr 1fr;
-      grid-template-columns: 1fr 2.5fr 1fr;
+  -ms-grid-columns: 1fr 0.3fr 1fr;
+      grid-template-columns: 1fr 0.3fr 1fr;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
@@ -214,74 +214,5 @@ LOGIN
 .horizontal-line span {
   margin: 0.5rem;
   color: #7b7f90;
-}
-
-form {
-  text-align: center;
-}
-
-.form-control {
-  margin: auto;
-  margin-bottom: 1rem;
-  background: white;
-  width: 16rem;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  padding: 0.3rem 0.7rem;
-  border-radius: 25px;
-  background: #d3d4da;
-}
-
-.form-control span {
-  color: #a7a9b5;
-}
-
-.form-control input {
-  border: transparent;
-  background: transparent;
-  margin-left: 0.5rem;
-  width: 20rem;
-  height: 1.5rem;
-  color: #07080e;
-}
-
-.form-control input:focus {
-  outline: none;
-}
-
-.form-control input:focus::-webkit-input-placeholder {
-  color: transparent;
-}
-
-.form-control input:focus:-ms-input-placeholder {
-  color: transparent;
-}
-
-.form-control input:focus::-ms-input-placeholder {
-  color: transparent;
-}
-
-.form-control input:focus::placeholder {
-  color: transparent;
-}
-
-.form-control input::-webkit-input-placeholder {
-  color: #a7a9b5;
-}
-
-.form-control input:-ms-input-placeholder {
-  color: #a7a9b5;
-}
-
-.form-control input::-ms-input-placeholder {
-  color: #a7a9b5;
-}
-
-.form-control input::placeholder {
-  color: #a7a9b5;
 }
 /*# sourceMappingURL=style.css.map */

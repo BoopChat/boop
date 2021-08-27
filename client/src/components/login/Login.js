@@ -28,7 +28,11 @@ const Login = () => {
     <section className="container container-center">
       <div className="login">
         <h3>boop messenger</h3>
-
+        <div className="horizontal-line">
+          <div></div>
+          <span>Login</span>
+          <div></div>
+        </div>
         <GoogleLogin
           clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
           buttonText="Continue in with Google"
@@ -36,26 +40,6 @@ const Login = () => {
           onFailure={handleLogin}
           cookiePolicy={"single_host_origin"}
         />
-        <div className="horizontal-line">
-          <div></div>
-          <span>or Sign in with Username</span>
-          <div></div>
-        </div>
-        <form className="login-from">
-          <div className="form-control">
-            <span>
-              <i className="fas fa-user"></i>
-            </span>
-            <input type="text" name="username" placeholder="Email" />
-          </div>
-          <div className="form-control">
-            <span>
-              <i className="fas fa-lock"></i>
-            </span>
-            <input type="password" name="password" placeholder="Password" />
-          </div>
-          <button className="btn">Login</button>
-        </form>
       </div>
     </section>
   );

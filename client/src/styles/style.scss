@@ -43,13 +43,13 @@ LOGIN
     color: #ff8800;
     font-family: $ff-primary;
     margin-top: 2rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
   }
 }
 
 .horizontal-line {
   display: grid;
-  grid-template-columns: 1fr 2.5fr 1fr;
+  grid-template-columns: 1fr 0.3fr 1fr;
   align-items: center;
   justify-content: space-between;
   margin: 1rem 0;
@@ -61,41 +61,5 @@ LOGIN
   span {
     margin: 0.5rem;
     color: $clr-primary-3;
-  }
-}
-form {
-  text-align: center;
-}
-.form-control {
-  margin: auto;
-  margin-bottom: 1rem;
-  background: white;
-  width: 16rem;
-  display: flex;
-  align-items: center;
-  padding: 0.3rem 0.7rem;
-  border-radius: 25px;
-  background: $clr-primary-1;
-
-  span {
-    color: $clr-primary-2;
-  }
-
-  input {
-    border: transparent;
-    background: transparent;
-    margin-left: 0.5rem;
-    width: 20rem;
-    height: 1.5rem;
-    color: $clr-primary-9;
-    &:focus {
-      outline: none;
-      &::placeholder {
-        color: transparent;
-      }
-    }
-    &::placeholder {
-      color: $clr-primary-2;
-    }
   }
 }
