@@ -6,6 +6,10 @@ name: Node.js CI
 on:
   pull_request:
     branches: [ main ]
+    
+defaults:
+  run:
+    working-directory: client
 
 jobs:
   test:
@@ -19,9 +23,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
-    - run: cd client
       uses: actions/setup-node@v2
       with:
+        cache-dependency-path: "client"
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
