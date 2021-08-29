@@ -1,0 +1,62 @@
+h1 {
+    font-family: 'Monserrat', sans-serif;
+    font-size: 24px;
+    color: rgb(44, 44, 44);
+}
+
+div.sign-in-container {
+    background: white;
+    display: flex;
+    flex-direction: column;
+    padding: 0 30px;
+    width: 65%;
+    margin: auto;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.25), 0 10px 15px rgba(0, 0, 0, 0.22);
+    border-radius: .5rem;
+}
+
+div.sign_btns {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0;
+}
+
+div.sign_btns > * {
+    margin: 5px 0;
+}
+
+div.sign-in-container span.switch {
+    margin: 8px 0 15px 0;
+    color: rgb(26, 26, 26);
+    padding: 8px;
+    font-size: 14px;
+}
+
+a {
+    color: #0d5ef3;
+    text-decoration: none;
+}
+
+hr {
+    background-color: #dadde1;
+    border: none;
+    height: 1px;
+    width: 100%;
+}
+
+@media only screen and (min-width: 768px) {
+    div.sign-in-container {
+        width: 50%;
+    }
+
+    h1 {
+        font-size: 32px;
+    }
+
+    div.sign-in-container span.switch {
+        font-size: 16px;
+    }
+}

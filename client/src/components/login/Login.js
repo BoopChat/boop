@@ -2,6 +2,11 @@ import { GoogleLogin } from "react-google-login";
 import { useDispatch } from "react-redux";
 import { logIn } from "./userSlice";
 
+import "../../styles/login.css"
+
+import FacebookButton from "../FacebookButton.js"
+import TwitterButton from "../TwitterButton.js"
+
 const Login = () => {
   //send action to redux store to change states
   const dispatch = useDispatch();
@@ -26,25 +31,20 @@ const Login = () => {
     }
   };
   return (
-    <div className="container center">
-      <div className="login">
-        <h3 className="title">BOOP MESSENGER</h3>
-        <div className="hr-line">
-          <div></div>
-          <span>Login</span>
-          <div></div>
+    <div className="sign-in-container">
+            <h1>Boop Chat</h1>
+            <div className="sign_btns">
+                <GoogleLogin
+                    clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+                    buttonText="Continue with Google"
+                    onSuccess={handleLogin}
+                    onFailure={handleLogin}
+                    cookiePolicy={"single_host_origin"}
+                  />
+                <FacebookButton text="Continue with facebook"/>
+                <TwitterButton text="Continue with twitter"/>
+            </div>
         </div>
-        <div className="login-btns">
-          <GoogleLogin
-            clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
-            buttonText="Continue with Google"
-            onSuccess={handleLogin}
-            onFailure={handleLogin}
-            cookiePolicy={"single_host_origin"}
-          />
-        </div>
-      </div>
-    </div>
   );
 };
 

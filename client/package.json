@@ -12,7 +12,7 @@
     "react-google-login": "^5.2.2",
     "react-redux": "^7.2.4",
     "react-scripts": "4.0.3",
-    "web-vitals": "^1.1.2"
+    "web-vitals": "^1.1.2",
   },
   "scripts": {
     "start": "react-scripts start",
