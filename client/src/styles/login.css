@@ -4,7 +4,7 @@ h1 {
     color: rgb(44, 44, 44);
 }
 
-div.sign-up-container {
+div.sign-in-container {
     background: white;
     display: flex;
     flex-direction: column;
@@ -28,7 +28,7 @@ div.sign_btns > * {
     margin: 5px 0;
 }
 
-div.sign-up-container span.switch {
+div.sign-in-container span.switch {
     margin: 8px 0 15px 0;
     color: rgb(26, 26, 26);
     padding: 8px;
@@ -48,7 +48,7 @@ hr {
 }
 
 @media only screen and (min-width: 768px) {
-    div.sign-up-container {
+    div.sign-in-container {
         width: 50%;
     }
 
@@ -56,7 +56,7 @@ hr {
         font-size: 32px;
     }
 
-    div.sign-up-container span.switch {
+    div.sign-in-container span.switch {
         font-size: 16px;
     }
 }
