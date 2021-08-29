@@ -1,11 +1,11 @@
-import Login from "./components/login/Login.js"
+import Login from "./components/login/Login";
+import Messenger from "./components/messenger/Messenger";
+import { useSelector } from "react-redux";
 
 function App() {
-    return (
-        <div className="App">
-            <Login/>
-        </div>
-    );
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+
+  return <div className="App">{!isLoggedIn ? <Login /> : <Messenger />}</div>;
 }
 
 export default App;

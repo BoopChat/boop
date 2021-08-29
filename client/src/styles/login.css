@@ -8,7 +8,7 @@ div.sign-in-container {
     background: white;
     display: flex;
     flex-direction: column;
-    padding: 0 30px;
+    padding: 30px 10px;
     width: 65%;
     margin: auto;
     justify-content: center;
