@@ -145,7 +145,6 @@ App
 
 @media screen and (min-width: 900px) {
   .App {
-    height: 95vh;
     border-radius: 0.5rem;
     -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);

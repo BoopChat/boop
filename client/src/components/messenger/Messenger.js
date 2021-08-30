@@ -1,19 +1,32 @@
-import { useDispatch } from "react-redux";
-import { logOut } from "../login/userSlice";
+import { Route, Switch, useLocation } from "react-router";
+
+import Chats from "./Chats";
+import Contacts from "./Contacts";
+import Settings from "./Settings";
+import Sidebar from "./Sidebar";
+import Chat from "./Chat";
+
+import "../../styles/messenger.css"
 
 const Messenger = () => {
-  //used to send actions to the redux store to change its state
-  const dispatch = useDispatch();
-  return (
-    <div className="container center">
-      <div>
-        <h2>Welcome, You are logged in</h2>
-        <button className="btn" onClick={() => dispatch(logOut())}>
-          LogOut
-        </button>
-      </div>
-    </div>
-  );
+    const location = useLocation();
+
+    return (
+        <div className="container">
+            <Sidebar username="James Clarke" user_pic="https://picsum.photos/200" user_email="james243@live.com"/>
+            <div id="main_panel">
+                <Switch location={location} key={location.pathname}>
+                    <Route path="/chats" component={Chats} />
+                    <Route path="/contacts" component={Contacts} />
+                    <Route path="/settings" component={Settings} />
+                    <Route path="/" component={Chats} />
+                </Switch>
+            </div>
+            <div id="chat_panel">
+                <Chat/>
+            </div>
+        </div>
+    );
 };
 
 export default Messenger;
