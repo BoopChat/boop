@@ -1,0 +1,77 @@
+#sidebar_container {
+    background-color: black;
+    width: 56px;
+    height: 60vh;
+    margin-top: 16px;
+    border-radius: 0 30px 30px 0;
+    padding: 16px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+a {
+    width: 100%;
+    padding: 16px 0;
+    cursor: pointer;
+    display: flex;
+    padding-left: 16px;
+    margin: 2px 0;
+    text-decoration: none;
+}
+
+a > span {
+    color: white;
+}
+
+a:hover, a.active {
+    border-right: 4px solid white;
+}
+
+a > img {
+    width: 20px;
+    height: auto;
+    filter: invert(92%) sepia(4%) saturate(1033%) hue-rotate(169deg) brightness(78%) contrast(85%);
+}
+
+a:hover > img {
+    filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(103%) contrast(103%);
+}
+
+#profile > img {
+    width: 40px;
+    width: 40px;
+    border-radius: 50%;
+}
+
+#profile:hover > img {
+    border: 2px solid grey;
+    padding: 2px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+#logout {
+    border: none;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
+    background-color: transparent;
+}
+
+#logout > img {
+    width: 100%;
+    height: auto;
+    filter: invert(15%) sepia(70%) saturate(6573%) hue-rotate(2deg) brightness(100%) contrast(126%);
+    transition: all 0.3s ease;
+}
+
+#logout > img:hover {
+    border: none;
+    padding: 0;
+    opacity: .5;
+    cursor: pointer;
+}
