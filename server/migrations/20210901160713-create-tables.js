@@ -9,7 +9,7 @@ module.exports = {
     try {
       const queryPath = path.resolve(
         __dirname,
-        "../queries/create- tables.sql"
+        "../queries/create-tables.sql"
       );
       const query = await readFile(queryPath, "utf8");
       return await queryInterface.sequelize.query(query);
