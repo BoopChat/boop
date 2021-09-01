@@ -1,6 +1,6 @@
 var createError = require("http-errors");
-var express = require("express");
-var path = require("path");
+const express = require("express");
+const path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
@@ -10,9 +10,14 @@ dotenv.config();
 
 //Server routes
 var indexRouter = require("./routes/index");
+// var contactsRouter = require("./router/contacts");
+// var conversationsRouter = require("./router/conversations");
+// var messagesRouter = require("./router/messages");
+// var participantsRouter = require("./router/participants");
+// var signinOptionsRouter = require("./router/signinOptions");
 var usersRouter = require("./routes/users");
-//handles login requests
-const LoginAuthRouter = require("./routes/loginAuth");
+var LoginAuthRouter = require("./routes/loginAuth");//handles login requests
+
 
 var app = express();
 
@@ -31,6 +36,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
+// app.use("/contacts", contactsRouter);
+// app.use("/conversations", conversationsRouter);
+// app.use("/messages", messagesRouter);
+// app.use("/participants", participantsRouter);
+// app.use("/signinOptions", signinOptionsRouter);
 app.use("/users", usersRouter);
 app.use("/login/auth", LoginAuthRouter);
 

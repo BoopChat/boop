@@ -1,5 +1,5 @@
 CREATE TABLE "Users" (
-    "id" varchar(11) PRIMARY KEY,
+    "id" varchar(6) PRIMARY KEY,
     "username" varchar(50) UNIQUE NOT NULL,
     "firstname" varchar(25),
     "lastname" varchar(25),
@@ -8,7 +8,7 @@ CREATE TABLE "Users" (
 );
 
 CREATE TABLE "SigninOptions" (
-    "user_id" varchar(11),
+    "user_id" varchar(6),
     "service_name" varchar(50) NOT NULL,
     "email" varchar(320) NOT NULL,
     "token" varchar(255) NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE "SigninOptions" (
 
 CREATE TABLE "Contacts" (
     "contact_id" varchar(11),
-    "user_id" varchar(11),
+    "user_id" varchar(6),
     PRIMARY KEY ("contact_id", "user_id")
 );
 
@@ -28,9 +28,9 @@ CREATE TABLE "Conversations" (
 );
 
 CREATE TABLE "Participants" (
-    "user_id" varchar(11),
+    "user_id" varchar(6),
     "conversation_id" varchar(128),
-    "is_admin" boolean,
+    "is_admin" boolean DEFAULT false,
     PRIMARY KEY ("user_id", "conversation_id")
 );
 
@@ -39,7 +39,7 @@ CREATE TABLE "Messages" (
     "content" varchar(512) NOT NULL,
     "sent_at" timestamp DEFAULT (now()),
     "conversation_id" varchar(128),
-    "user_id" varchar(11)
+    "user_id" varchar(6)
 );
 
 ALTER TABLE "SigninOptions" ADD FOREIGN KEY ("user_id") REFERENCES "Users" ("id");
