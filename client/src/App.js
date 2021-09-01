@@ -4,13 +4,13 @@ import { useSelector } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 
 function App() {
-    const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
-    return (
-        <BrowserRouter>
-            <div className="App">{!isLoggedIn ? <Login /> : <Messenger />}</div>
-        </BrowserRouter>
-    );
+  return (
+    <BrowserRouter>
+      <div className="App">{!isLoggedIn ? <Login /> : <Messenger />}</div>
+    </BrowserRouter>
+  );
 }
 
 export default App;

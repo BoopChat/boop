@@ -4,6 +4,8 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
+const passport = require("passport");
+
 //environment variables configuration
 const dotenv = require("dotenv");
 dotenv.config();
@@ -22,7 +24,7 @@ app.set("view engine", "jade");
 
 //cors
 const cors = require("cors");
-app.use(cors());
+app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 
 app.use(logger("dev"));
 app.use(express.json());
