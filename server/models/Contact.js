@@ -4,6 +4,7 @@ module.exports = (sequelize, Sequelize) => {
         user_id: { primaryKey: true, type: Sequelize.STRING, allowNull: false }
     });
 
+    // MAY NOT BE NEEDED
     // Contact.associate = ({
     //     User
     // })=>{

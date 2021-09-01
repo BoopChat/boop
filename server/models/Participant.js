@@ -5,6 +5,7 @@ module.exports = (sequelize, Sequelize) => {
         is_admin: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false}
     });
 
+    // MAY NOT BE NEEDED
     // Participant.associate = ({
     //     Conversation,
     //     User

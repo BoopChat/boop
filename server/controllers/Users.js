@@ -17,20 +17,20 @@ module.exports.createUser = async (req, res) => {
     }
 
     let user = await User.create({
-        id: Math.floor(Math.random() * 999999) + 1,//just temporary
+        id: Math.floor(Math.random() * 999999) + 1,//just temporary way to generate a user_id
         username: req.body.username,
         firstname: req.body.firstname,
         lastname: req.body.lastname,
         last_active: db.Sequelize.fn('NOW'),// set to current time
         image_url: req.body.image_url
     })
-    .catch(err => {
+    .catch(err => {//catch any errors
         res.status(500).send({
             message:
             err.message || "Some error occurred while creating the User."
         });
     });
-    return res.send({message:"User successfully create!", user});
+    return res.send({message:"User successfully create!", user});//return a success message + the newly created user
 };
 
 // Retrieve all Users from the database.
@@ -41,8 +41,7 @@ module.exports.getAllUsers = async (req, res) => {
 
 // Find a single User with an id
 module.exports.getUser = async (req, res) => {
-    let userId = req.params.id;
-    console.log(`userId: ${userId}`);
+    let userId = req.params.id;//temporariry getting the userId from the url
     // if (!Sequelize.Types.ObjectId.isValid(userId))
     //     return res.status(400).send("Invalid object id");
     let user = await User.findByPk(userId);
@@ -61,10 +60,10 @@ exports.updateUser = async (req, res) => {
         plain: true
     })
     .then(user => {
-    return res.send(user[1]);
+        return res.send(user[1]);
     })
     .catch(err => {
-    return res.status(500).send(err);
+        return res.status(500).send(err);
     });
 };
 
