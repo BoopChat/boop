@@ -1,8 +1,12 @@
 module.exports = (sequelize, Sequelize) => {
     const Participant = sequelize.define("Participant", {
+        //attributes
         user_id: { primaryKey: true, type: Sequelize.STRING, allowNull: false },
         conversation_id: { primaryKey: true, type: Sequelize.STRING, allowNull: false },
-        is_admin: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false}
+        is_admin: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false},
+        //timestamps
+        createdAt: { type: Sequelize.DATE, field: 'created_at', defaultValue: Sequelize.NOW},
+        updatedAt: { type: Sequelize.DATE, field: 'updated_at', defaultValue: Sequelize.NOW }
     });
 
     // MAY NOT BE NEEDED

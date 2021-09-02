@@ -1,10 +1,13 @@
 module.exports = (sequelize, Sequelize) => {
     const Message = sequelize.define("Message", {
+        //attributes
         id: { primaryKey: true, type: Sequelize.STRING, allowNull: false },
         content: { type: Sequelize.STRING, allowNull: false },
-        sent_at: { type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.Now},
         conversation_id: { type: Sequelize.STRING, allowNull: false },
         user_id: { type: Sequelize.STRING, allowNull: false },
+        //timestamps
+        createdAt: { type: Sequelize.DATE, field: 'created_at', defaultValue: Sequelize.NOW},
+        updatedAt: { type: Sequelize.DATE, field: 'updated_at', defaultValue: Sequelize.NOW }
     });
 
     Message.associate = ({

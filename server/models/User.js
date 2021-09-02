@@ -1,11 +1,15 @@
 module.exports = (sequelize, Sequelize) => {
     const User = sequelize.define("User", {
+        //attributes
         id: { primaryKey: true, type: Sequelize.STRING, allowNull: false },
         username: { type: Sequelize.STRING, allowNull: false },
-        firstname: { type: Sequelize.STRING, allowNull: false },
-        lastname: { type: Sequelize.STRING, allowNull: false },
-        last_active: { type: Sequelize.DATE, allowNull: false },
+        firstname: { type: Sequelize.STRING, allowNull: true },
+        lastname: { type: Sequelize.STRING, allowNull: true },
         image_url: { type: Sequelize.STRING, allowNull: true },
+        // timestamps
+        last_active: { type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.NOW },
+        createdAt: { type: Sequelize.DATE, field: 'created_at', defaultValue: Sequelize.NOW},
+        updatedAt: { type: Sequelize.DATE, field: 'updated_at', defaultValue: Sequelize.NOW }
     });
 
     User.associate = ({
