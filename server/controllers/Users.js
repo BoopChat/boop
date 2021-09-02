@@ -30,7 +30,7 @@ module.exports.createUser = async (req, res) => {
             err.message || "Some error occurred while creating the User."
         });
     });
-    return res.send({message:"User successfully create!", user});//return a success message + the newly created user
+    return res.send({message:"User successfully created!", user});//return a success message + the newly created user
 };
 
 // Retrieve all Users from the database.

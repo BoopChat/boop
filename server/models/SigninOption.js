@@ -14,7 +14,7 @@ module.exports = (sequelize, Sequelize) => {
         User
     })=>{
         SigninOption.belongsTo(User, {
-            as: "users",
+            as: "user",
             foreignKey: "user_id"
         });
     }

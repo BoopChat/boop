@@ -23,16 +23,24 @@ module.exports = (sequelize, Sequelize) => {
             as: "signinOptions",
             foreignKey: "user_id"
         });
-        User.belongsToMany(User, {
-            as: "contacts",
-            through: Contact,
-            foreignKey: "contact_id"
-        });
-        User.belongsToMany(User, {
-            as: "users",
-            through: Contact,
+        User.hasMany(Contact, {
+            as: "contactList",
             foreignKey: "user_id"
         });
+        User.hasMany(Contact, {
+            as: "userList",
+            foreignKey: "user_id"
+        });
+        // User.belongsToMany(User, {
+        //     as: "contacts",
+        //     through: Contact,
+        //     foreignKey: "contact_id"
+        // });
+        // User.belongsToMany(User, {
+        //     as: "users",
+        //     through: Contact,
+        //     foreignKey: "user_id"
+        // });
         User.belongsToMany(Conversation, {
             as: "conversations",
             through: Participant,

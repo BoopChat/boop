@@ -8,19 +8,18 @@ module.exports = (sequelize, Sequelize) => {
         updatedAt: { type: Sequelize.DATE, field: 'updated_at', defaultValue: Sequelize.NOW }
     });
 
-    // MAY NOT BE NEEDED
-    // Contact.associate = ({
-    //     User
-    // })=>{
-    //     Contact.hasMany(User, {
-    //         as: "contacts",
-    //         foreignKey: "contact_id"
-    //     });
-    //     Contact.belongsToMany(User, {
-    //         as: "owners",
-    //         foreignKey: "user_id"
-    //     });
-    // };
+    Contact.associate = ({
+        User
+    })=>{
+        Contact.belongsTo(User, {
+            as: "contactInfo",
+            foreignKey: "contact_id"
+        });
+        Contact.belongsTo(User, {
+            as: "userInfo",
+            foreignKey: "user_id"
+        });
+    };
     
     return Contact;
 };
