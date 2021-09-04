@@ -24,11 +24,8 @@ module.exports.addContact = async (req, res) => {
         }
     });
     var contact_id = contact.user_id;
-
-    // console.log(`user_id = ${user_id}`);
-    // console.log(`contact_id = ${contact_id}`);
     
-    let contact1 = await Contact.create({// creating the original requested contact association
+    let contact = await Contact.create({// creating the original requested contact association
         user_id: user_id,
         contact_id: contact_id
     })
@@ -39,17 +36,7 @@ module.exports.addContact = async (req, res) => {
         });
     });
 
-    let contact2 = await Contact.create({// adding the user to their new contact's contact list
-        user_id: contact_id,
-        contact_id: user_id
-    })
-    .catch(err => {//catch any errors
-        res.status(500).send({
-            message:
-            err.message || "Some error occurred while creating the Contact."
-        });
-    });
-    return res.send({message:"Contact successfully created!", contact1});//return a success message + the newly created contact
+    return res.send({message:"Contact successfully created!", contact});//return a success message + the newly created contact
 };
 
 module.exports.getContacts = async (req, res) => {

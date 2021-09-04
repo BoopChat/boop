@@ -1,8 +1,8 @@
 module.exports = (sequelize, Sequelize) => {
     const Participant = sequelize.define("Participant", {
         //attributes
-        user_id: { primaryKey: true, type: Sequelize.STRING, allowNull: false },
-        conversation_id: { primaryKey: true, type: Sequelize.STRING, allowNull: false },
+        user_id: { primaryKey: true, type: Sequelize.INTEGER, allowNull: false },
+        conversation_id: { primaryKey: true, type: Sequelize.BIGINT, allowNull: false },
         is_admin: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false},
         //timestamps
         createdAt: { type: Sequelize.DATE, field: 'created_at', defaultValue: Sequelize.NOW},

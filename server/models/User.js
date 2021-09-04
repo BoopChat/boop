@@ -1,11 +1,11 @@
 module.exports = (sequelize, Sequelize) => {
     const User = sequelize.define("User", {
         //attributes
-        id: { primaryKey: true, type: Sequelize.STRING, allowNull: false },
-        username: { type: Sequelize.STRING, allowNull: false },
-        firstname: { type: Sequelize.STRING, allowNull: true },
-        lastname: { type: Sequelize.STRING, allowNull: true },
-        image_url: { type: Sequelize.STRING, allowNull: true },
+        id: { primaryKey: true, type: Sequelize.INTEGER, allowNull: false },
+        display_name: { type: Sequelize.STRING(50), allowNull: false, unique: true },
+        first_name: { type: Sequelize.STRING(50), allowNull: true },
+        last_name: { type: Sequelize.STRING(50), allowNull: true },
+        image_url: { type: Sequelize.STRING(2048), allowNull: true },
         // timestamps
         last_active: { type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.NOW },
         createdAt: { type: Sequelize.DATE, field: 'created_at', defaultValue: Sequelize.NOW},
@@ -31,16 +31,6 @@ module.exports = (sequelize, Sequelize) => {
             as: "userList",
             foreignKey: "user_id"
         });
-        // User.belongsToMany(User, {
-        //     as: "contacts",
-        //     through: Contact,
-        //     foreignKey: "contact_id"
-        // });
-        // User.belongsToMany(User, {
-        //     as: "users",
-        //     through: Contact,
-        //     foreignKey: "user_id"
-        // });
         User.belongsToMany(Conversation, {
             as: "conversations",
             through: Participant,
