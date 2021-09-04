@@ -1,7 +1,7 @@
 module.exports = (sequelize, Sequelize) => {
     const Message = sequelize.define("Message", {
         //attributes
-        id: { primaryKey: true, type: Sequelize.BIGINT, allowNull: false },
+        id: { primaryKey: true, type: Sequelize.BIGINT, autoIncrement: true, allowNull: false },
         content: { type: Sequelize.TEXT , allowNull: false },
         conversation_id: { type: Sequelize.BIGINT, allowNull: false },
         sender_id: { type: Sequelize.INTEGER, allowNull: false },

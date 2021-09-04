@@ -1,5 +1,5 @@
 CREATE TABLE "Users" (
-    "id" int PRIMARY KEY,
+    "id" SERIAL PRIMARY KEY,
     "display_name" varchar(50) UNIQUE NOT NULL,
     "first_name" varchar(50),
     "last_name" varchar(50),
@@ -12,7 +12,7 @@ CREATE TABLE "Users" (
 CREATE TABLE "SigninOptions" (
     "service_name" varchar(20) NOT NULL,
     "email" varchar(320) NOT NULL,
-    "user_id" int,
+    "user_id" int NOT NULL,
     "created_at" timestamp DEFAULT (now()),
     "updated_at" timestamp DEFAULT (now()),
     PRIMARY KEY ("service_name", "email")
@@ -27,7 +27,7 @@ CREATE TABLE "Contacts" (
 );
 
 CREATE TABLE "Conversations" (
-    "id" bigint PRIMARY KEY,
+    "id" BIGSERIAL PRIMARY KEY,
     "title" varchar(25),
     "image_url" varchar(2048),
     "user_editable_image" boolean DEFAULT false,
@@ -46,10 +46,10 @@ CREATE TABLE "Participants" (
 );
 
 CREATE TABLE "Messages" (
-    "id" bigint PRIMARY KEY,
+    "id" BIGSERIAL PRIMARY KEY,
     "content" text NOT NULL,
-    "conversation_id" bigint,
-    "sender_id" int,
+    "conversation_id" bigint NOT NULL,
+    "sender_id" int NOT NULL,
     "created_at" timestamp DEFAULT (now()),
     "updated_at" timestamp DEFAULT (now())
 );

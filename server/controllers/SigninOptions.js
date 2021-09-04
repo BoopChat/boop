@@ -5,12 +5,12 @@ const Op = db.Sequelize.Op;
 
 // Create and Save a new User
 module.exports.createSigninOption = async (req, res) => {
+    let user_id = req.params.user_id;//temporarily getting the user_id from the url
     // Validate request
     if (
-        !req.body.user_id 
+        !user_id
         && !req.body.service_name
         && !req.body.email
-        && !req.body.token
         ) {
         res.status(400).send({
         message: "Content can not be empty!"
@@ -19,10 +19,9 @@ module.exports.createSigninOption = async (req, res) => {
     }
 
     let signinOption = await SigninOption.create({
-        user_id: req.body.user_id,
+        user_id: user_id,
         service_name: req.body.service_name,
-        email: req.body.email,
-        token: req.body.token
+        email: req.body.email
     })
     .catch(err => {//catch any errors
         res.status(500).send({
@@ -39,8 +38,9 @@ module.exports.getAllSigninOption = async (req, res) => {
     return res.send(signinOption);
 };
 
+// Get all SigninOptions for a user
 module.exports.getSigninOptionsByUserID = async (req, res) => {
-    let user_id = req.params.user_id;//temporariry getting the user_id from the url
+    let user_id = req.params.user_id;//temporarily getting the user_id from the url
 
     // OPTION 1 access via user then access signinOptions as association
     let signinOptions = await User.findOne({//get user and all signinOptions
@@ -78,12 +78,14 @@ module.exports.getSigninOptionsByUserID = async (req, res) => {
     return res.send(signinOptions);
 }
 
-// Find a single User with an id
-module.exports.getSigninOption = async (req, res) => {//may need to change to a post request
-    let token = req.params.token;//temporariry getting the token from the url
+// Find a single SigninOption using service_name and email
+module.exports.getSigninOption = async (req, res) => {//may need to change to a post request??
+    let email = req.params.email;//temporarily getting the email from the url
+    let service_name = req.params.service_name;//temporarily getting the service_name from the url
     let signinOption = await SigninOption.findOne({
         where: {
-            token: token
+            email: email,
+            service_name: service_name
         },
         include: {
             model: User,
@@ -94,33 +96,15 @@ module.exports.getSigninOption = async (req, res) => {//may need to change to a 
 
     // if the signinOption doesn't exist, then this turns into a sign up and a new user and signinOption are created
     if (!signinOption){
-        if (
-            !req.body.email 
-            // && !req.body.token
-            && !req.body.service_name
-            && !req.body.given_name
-            && !req.body.family_name
-            ) {
-            res.status(400).send({
-            message: "Content can not be empty!"
-            });
-            return;
-        }
-
-        var user_id = Math.floor(Math.random() * 999999) + 1;//just temporary way to generate a user_id
     
         let user = await User.create({
-            id: user_id,
-            username: req.body.email,
-            firstname: req.body.given_name,
-            lastname: req.body.family_name,
-            last_active: db.Sequelize.fn('NOW'),// set to current time
+            display_name: email,
+            first_name: req.body.given_name,
+            last_name: req.body.family_name,
             image_url: req.body.picture,
             signinOptions: {
-                user_id: user_id,
-                service_name: req.body.service_name,
-                email: req.body.email,
-                token: token,
+                service_name: service_name,
+                email: email,
             }
         }, {
             include: {

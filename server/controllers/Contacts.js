@@ -4,11 +4,17 @@ const SigninOption = db.SigninOption;
 const User = db.User;
 const Op = db.Sequelize.Op;
 
-// Create and Save a new User
-module.exports.addContact = async (req, res) => {
-    let user_id = req.params.user_id;//temporariry getting the user_id from the url
+// Retrieve all Contact relationships in the database
+module.exports.getAllContacts = async (req, res) => {
+    let contacts = await Contact.findAll();
+    return res.send(contacts);
+}
 
-    // Validate request (need to add check to ensure user exists)
+// Create and Save a new Contact
+module.exports.addContact = async (req, res) => {
+    let user_id = req.params.user_id;//temporarily getting the user_id from the url
+
+    // Validate request (need to add check to ensure user exists) + (prevent user from adding self as contact????)
     if (
         !req.body.contactEmail 
         ) {
@@ -18,14 +24,17 @@ module.exports.addContact = async (req, res) => {
         return;
     }
 
-    let contact = await SigninOption.findOne({//get user's id so it can be used as the contact_id
+    //get user's id so it can be used as the contact_id
+    let contact_info = await SigninOption.findOne({
         where: {
             email: req.body.contactEmail
         }
     });
-    var contact_id = contact.user_id;
-    
-    let contact = await Contact.create({// creating the original requested contact association
+    var contact_id = contact_info.user_id;
+
+
+    // creating the requested contact association
+    let contact = await Contact.create({
         user_id: user_id,
         contact_id: contact_id
     })
@@ -40,13 +49,13 @@ module.exports.addContact = async (req, res) => {
 };
 
 module.exports.getContacts = async (req, res) => {
-    let user_id = req.params.user_id;//temporariry getting the user_id from the url
+    let user_id = req.params.user_id;//temporarily getting the user_id from the url
 
     let user = await User.findByPk(user_id,{//get user and all contacts
         include: {
             model: Contact,
             as: "contactList",
-            include: {
+            include: { // get each contact's info from the Users table
                 model: User,
                 as: "contactInfo"
             }
