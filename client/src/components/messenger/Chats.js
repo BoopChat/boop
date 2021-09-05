@@ -18,6 +18,7 @@ let chats = [
         img: "https://picsum.photos/200?random=3",
         lastMsg: "Lorem ipsum dolor sit amet.",
         lastDate: "Yesterday",
+        unread: 12,
     }, {
         name: "Josh",
         img: "https://picsum.photos/200?random=4",

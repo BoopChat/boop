@@ -246,6 +246,10 @@ div.time_and_badge {
     align-items: flex-end;
 }
 
+div.time_and_badge span {
+    font-size: 14px;
+}
+
 span.chat_name {
     font-weight: bold;
 }
@@ -264,4 +268,44 @@ div.unread {
     margin-top: 5px;
     padding: 4px;
     min-width: 24px;
+}
+
+div.setting_item {
+    display: flex;
+    justify-content: space-between;
+    color: rgb(20, 20, 20);
+    margin-top: 40px;
+}
+
+span.attribute {
+    font-weight: 900;
+    display: block;
+}
+
+button.edit {
+    border: none;
+    background-color: inherit;
+    align-self: flex-end;
+}
+
+button.edit:hover {
+    cursor: pointer;
+}
+
+div.setting_item input {
+    padding: 5px;
+    margin-top: 5px;
+    margin-right: 5px;
+}
+
+div.setting_item input:focus {
+    outline:rgb(19, 119, 233) 2px solid;
+    border:none;
+}
+
+div.setting_item img.profile_img {
+    border-radius: 50%;
+    height: 55px;
+    width: auto;
+    margin-top: 20px;
 }
