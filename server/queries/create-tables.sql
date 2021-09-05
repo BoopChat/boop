@@ -31,8 +31,7 @@ CREATE TABLE "Conversations" (
     "title" varchar(25),
     "image_url" varchar(2048),
     "user_editable_image" boolean DEFAULT false,
-    "user_editable_title" boolean DEFAULT false,
-    "created_at" timestamp DEFAULT (now()),
+    "user_editable_title" boolean DEFAULT false,DEFAULT (now()),
     "updated_at" timestamp DEFAULT (now())
 );
 
