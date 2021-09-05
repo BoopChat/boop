@@ -6,9 +6,7 @@ const User = db.User;
 // Create and Save a new Conversation
 module.exports.addConversation = async (req, res) => {
     let user_id = req.params.user_id;
-
     // Need to check that user_id belongs to a valid user and matches the id of the requesting user
-    
 
     // Validate request
     if (!user_id) {
@@ -57,9 +55,6 @@ module.exports.addConversation = async (req, res) => {
 
 module.exports.getConversations = async (req, res) => {
     let user_id = req.params.user_id;
-
-
-
     // Need to check that user_id belongs to a valid user and matches the id of the requesting user
 
     //get user and all conversations
@@ -86,4 +81,45 @@ module.exports.getConversations = async (req, res) => {
 
     if (!user) return res.status(404).send("user not found");
     return res.send(user);
+}
+
+// Add a user to an existing conversation
+module.exports.addParticipantToConversation = async (req, res) => {
+    let user_id = req.params.user_id;
+    //get the conversation_id and the id of the user being added to the conversation (participant_id) from the request body
+    let conversation_id = req.body.conversation_id;
+    let participant_id = req.body.participant_id;
+    // Need to check that user_id belongs to a valid user and matches the id of the requesting user
+    
+    // Validate request
+    if (!user_id|| !conversation_id || !participant_id) {
+        res.status(400).send({
+        message: "Content can not be empty!"
+        });
+        return;
+    }
+
+    //check if the requesting user is a participant of the conversation
+    let is_participant = await Participant.findOne({ 
+        where: {
+            user_id: user_id,
+            conversation_id: conversation_id
+        }
+    })
+    if (!is_participant) return res.status(404).send("requesting user is not a participant of conversation");
+
+    // add the new participant to the conversation using participant_id passed in the body of the request
+    let participant = await Participant.create({
+        user_id : participant_id,
+        conversation_id: conversation_id
+    })
+    //catch any errors
+    .catch(err => {
+        res.status(500).send({
+            message:
+            err.message || "Some error occurred while adding the user to the conversation."
+        });
+    });
+    //return a success message + the newly participant association;
+    return res.send({message:"User successfully added to the conversation!", participant});
 }

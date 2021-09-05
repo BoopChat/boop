@@ -10,5 +10,9 @@ router
     // create a new conversation
     .post(controller.addConversation)
 
+router
+    .route("/:user_id/add-participant")
+    // add a user to an existing conversation
+    .post(controller.addParticipantToConversation)
 
 module.exports = router;

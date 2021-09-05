@@ -36,9 +36,7 @@ module.exports.getMessages = async (req, res) => {
 module.exports.addMessage = async (req, res) => {
     let user_id = req.params.user_id;
     let conversation_id = req.params.conversation_id;
-
     // Need to check that user_id belongs to a valid user and matches the id of the requesting user
-    
 
     // Validate request
     if (!req.body.content) {

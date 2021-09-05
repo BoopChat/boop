@@ -6,7 +6,6 @@ const User = db.User;
 // Create and Save a new Contact
 module.exports.addContact = async (req, res) => {
     let user_id = req.params.user_id;
-
     // Need to check that user_id belongs to a valid user and matches the id of the requesting user
 
     // Validate request (need to add check to ensure user exists) + (prevent user from adding self as contact????)
@@ -25,7 +24,7 @@ module.exports.addContact = async (req, res) => {
     });
 
     // return an error messageif the contact isn't a valid user
-    if(!contact_info){
+    if (!contact_info) {
         return res.status(404).send({
                 message: `${req.body.contactEmail} is not a valid user.`
             });
@@ -54,7 +53,6 @@ module.exports.addContact = async (req, res) => {
 
 module.exports.getContacts = async (req, res) => {
     let user_id = req.params.user_id;
-
     // Need to check that user_id belongs to a valid user and matches the id of the requesting user
 
     //get user and all contacts
@@ -78,7 +76,6 @@ module.exports.getContacts = async (req, res) => {
 exports.deleteContact = async (req, res) => {
     let user_id = req.params.user_id;
     let contact_id = req.params.contact_id;
-
     // Need to check that user_id belongs to a valid user and matches the id of the requesting user
 
     // Validate request

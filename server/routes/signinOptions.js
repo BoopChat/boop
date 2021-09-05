@@ -14,6 +14,5 @@ router
     .get(controller.getSigninOptionsByUserID)
     // useful for adding more than 1 signin option for 1 user
     .post(controller.createSigninOption);
-    // .delete(controller.deleteUser);
 
 module.exports = router;
