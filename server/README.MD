@@ -2,6 +2,10 @@
 
 Boop is a chat app under development by computer science students from The University of the West Indies along with their mentor David Fowler (Partner Software Architect at Microsoft).
 
+# Database structure
+
+The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b5b0146e9aed7) and in the boop-db.png image in the project root.
+
 # Getting the server to work
 
 1. Docker
