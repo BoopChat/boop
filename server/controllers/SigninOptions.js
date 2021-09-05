@@ -1,7 +1,6 @@
 const db = require("../models");
 const SigninOption = db.SigninOption;
 const User = db.User;
-const Op = db.Sequelize.Op;
 
 // Create and Save a new User
 module.exports.createSigninOption = async (req, res) => {
@@ -9,8 +8,8 @@ module.exports.createSigninOption = async (req, res) => {
     // Validate request
     if (
         !user_id
-        && !req.body.service_name
-        && !req.body.email
+        || !req.body.service_name
+        || !req.body.email
         ) {
         res.status(400).send({
         message: "Content can not be empty!"

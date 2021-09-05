@@ -32,13 +32,13 @@ module.exports = (sequelize, Sequelize) => {
             foreignKey: "user_id"
         });
         User.belongsToMany(Conversation, {
-            as: "conversations",
+            as: "conversationList",
             through: Participant,
             foreignKey: "user_id"
         });
         User.hasMany(Message, {
             as: "messages",
-            foreignKey: "user_id"
+            foreignKey: "sender_id"
         });
     };
     

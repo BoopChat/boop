@@ -2,7 +2,6 @@ const db = require("../models");
 const Contact = db.Contact;
 const SigninOption = db.SigninOption;
 const User = db.User;
-const Op = db.Sequelize.Op;
 
 // Retrieve all Contact relationships in the database
 module.exports.getAllContacts = async (req, res) => {

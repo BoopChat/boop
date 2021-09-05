@@ -5,7 +5,7 @@ var controller = require("../controllers/signinOptions");
 //Manage all signinOptions
 router//just for testing in development.
     .route("/")
-    .get(controller.getAllSigninOption)
+    .get(controller.getAllSigninOption)// get all signinOptions in the database
     
 
 // Manage a single signinOption
@@ -17,7 +17,7 @@ router
 
 router
     .route("/:user_id")
-    .get(controller.getSigninOptionsByUserID)
+    .get(controller.getSigninOptionsByUserID)// get all a user's signinOptions using their user_id
     .post(controller.createSigninOption);// may be useful for adding more than 1 signin option for 1 user
     // .delete(controller.deleteUser);
 

@@ -4,8 +4,8 @@ module.exports = (sequelize, Sequelize) => {
         id: { primaryKey: true, type: Sequelize.BIGINT, autoIncrement: true, allowNull: false },
         title: { type: Sequelize.STRING(25), allowNull: true },
         image_url: { type: Sequelize.STRING(2048), allowNull: true },
-        user_editable_image:  { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false},
-        user_editable_title:  { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false},
+        user_editable_image:  { type: Sequelize.BOOLEAN, defaultValue: false},
+        user_editable_title:  { type: Sequelize.BOOLEAN, defaultValue: false},
         //timestamps
         createdAt: { type: Sequelize.DATE, field: 'created_at', defaultValue: Sequelize.NOW},
         updatedAt: { type: Sequelize.DATE, field: 'updated_at', defaultValue: Sequelize.NOW }
