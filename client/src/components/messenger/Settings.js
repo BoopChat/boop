@@ -22,8 +22,7 @@ const Settings = () => {
 
     const handleNameChange = (e) => {
         const { name, value } = e.target
-        Name[name] = value;
-        // setName({ ...Name, [name]: value })
+        setName({ ...Name, [name]: value })
     }
 
     const [displayName, setDisplayName] = useState({
@@ -35,96 +34,29 @@ const Settings = () => {
     const handleDNameChange = (e) => {
         const { name, value } = e.target
         setDisplayName({ ...displayName, [name]: value })
-        console.log(displayName);
     }
 
     const handleEditName = () => {
-        // get div containing name of attr and value
-        let keyValue = document.getElementsByClassName("setting_item")[0].firstElementChild;
-
-        if (!Name.editing) {
-            Name.editing = true;
-
-            // get ref to span containing name value
-            let display_span = keyValue.firstChild.nextElementSibling;
-
-            // temp remove span displaying name while editing
-            keyValue.removeChild(display_span)
-
-            // create inputs for user to edit their name
-            let firstNameInput = document.createElement("input");
-            let lastNameInput = document.createElement("input");
-
-            // prepare inputs for user
-            firstNameInput.value = Name.firstname;
-            firstNameInput.placeholder = "First Name";
-            firstNameInput.name = "firstname";
-            firstNameInput.type = "text";
-            firstNameInput.addEventListener("change", (e) => handleNameChange(e));
-            lastNameInput.value = Name.lastname;
-            lastNameInput.placeholder = "Last Name";
-            lastNameInput.name = "lastname";
-            lastNameInput.type = "text";
-            lastNameInput.addEventListener("change", (e) => handleNameChange(e));
-
-            // add inputs to ui for user to edit name
-            keyValue.appendChild(firstNameInput)
-            keyValue.appendChild(lastNameInput)
-        } else {
+        if (!Name.editing)
+            setName({ ...Name, editing: true });
+        else {
             if (!Name.editLock) { // ignore validation for now
-                // remove inputs
-                keyValue.removeChild(keyValue.firstChild.nextElementSibling)
-                keyValue.removeChild(keyValue.firstChild.nextElementSibling)
-
                 // commit changes
-                user_data.first_name = Name.firstname
-                user_data.last_name = Name.lastname
-
-                // update and replace display span
-                let display_span = document.createElement("span");
-                display_span.innerText = user_data.first_name + " " + user_data.last_name;
-                keyValue.appendChild(display_span)
-                Name.editing = false;
+                user_data.first_name = Name.firstname;
+                user_data.last_name = Name.lastname;
+                setName({ ...Name, editing: false })
             }
         }
     }
 
     const handleEditDName = () => {
-        // get div containing name of attr and value
-        let keyValue = document.getElementsByClassName("setting_item")[1].firstElementChild;
-
-        if (!displayName.editing) {
-            displayName.editing = true;
-            // get ref to span containing displayname value
-            let display_span = keyValue.firstChild.nextElementSibling;
-
-            // temp remove span displaying name while editing
-            keyValue.removeChild(display_span)
-
-            // create input for user to edit their display name
-            let displayNameInput = document.createElement("input");
-
-            // prepare inputs for user
-            displayNameInput.value = displayName.displayname;
-            displayNameInput.placeholder = "Display Name";
-            displayNameInput.name = "displayname";
-            displayNameInput.type = "text";
-            displayNameInput.addEventListener("change", (e) => handleDNameChange(e));
-
-            keyValue.appendChild(displayNameInput)
-        } else {
+        if (!displayName.editing)
+            setDisplayName({ ...displayName, editing: true });
+        else {
             if (!displayName.editLock) { // ignore validation for now
-                // remove input
-                keyValue.removeChild(keyValue.firstChild.nextElementSibling)
-
                 // commit changes
                 user_data.display_name = displayName.displayname
-
-                // update and replace display span
-                let display_span = document.createElement("span");
-                display_span.innerText = user_data.display_name
-                keyValue.appendChild(display_span)
-                displayName.editing = false;
+                setDisplayName({ ...displayName, editing: false });
             }
         }
     }
@@ -135,7 +67,25 @@ const Settings = () => {
             <div className="setting_item">
                 <div>
                     <span className="attribute">Name</span>
-                    <span>{user_data.first_name + " " + user_data.last_name}</span>
+                    {Name.editing ? (
+                            <div>
+                                <input
+                                    value={Name.firstname}
+                                    placeholder="First Name"
+                                    name="firstname"
+                                    type="text"
+                                    onChange={(e) => handleNameChange(e)}
+                                />
+                                <input
+                                    value={Name.lastname}
+                                    placeholder="Last Name"
+                                    name="lastname"
+                                    type="text"
+                                    onChange={(e) => handleNameChange(e)}
+                                />
+                            </div>
+                        ) : <span>{user_data.first_name + " " + user_data.last_name}</span>
+                    }
                 </div>
                 <button title="edit name" className="edit" onClick={() => handleEditName()}>
                     <img src={edit_icon} alt="edit"/>
@@ -145,7 +95,16 @@ const Settings = () => {
             <div className="setting_item">
                 <div>
                     <span className="attribute">Display Name</span>
-                    <span>{user_data.display_name}</span>
+                    {displayName.editing ?
+                            <input
+                                value={displayName.displayname}
+                                placeholder="Display Name"
+                                name="displayname"
+                                type="text"
+                                onChange={(e) => handleDNameChange(e)}
+                            />
+                        :   <span>{user_data.display_name}</span>
+                    }
                 </div>
                 <button title="edit display name" className="edit" onClick={() => handleEditDName()}>
                     <img src={edit_icon} alt="edit"/>
