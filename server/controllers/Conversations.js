@@ -3,21 +3,15 @@ const Conversation = db.Conversation;
 const Participant = db.Participant;
 const User = db.User;
 
-// Retrieve all Conversations in the database
-module.exports.getAllConversations = async (req, res) => {
-    let conversations = await Conversation.findAll();
-    return res.send(conversations);
-}
-
-
 // Create and Save a new Conversation
 module.exports.addConversation = async (req, res) => {
-    let user_id = req.params.user_id;//temporarily getting the user_id from the url
+    let user_id = req.params.user_id;
+
+    // Need to check that user_id belongs to a valid user and matches the id of the requesting user
+    
 
     // Validate request
-    if (
-        !user_id
-        ) {
+    if (!user_id) {
         res.status(400).send({
         message: "Content can not be empty!"
         });
@@ -31,46 +25,61 @@ module.exports.addConversation = async (req, res) => {
         user_editable_image: req.body.user_editable_image,
         user_editable_title: req.body.user_editable_title,
     })
-    .catch(err => {//catch any errors
+    //catch any errors
+    .catch(err => {
         res.status(500).send({
             message:
             err.message || "Some error occurred while creating the Conversation."
         });
     });
     
-    let participants = req.body.participants
-    participants.push(user_id)//add the user to the array of participants
+    // the participants' user_ids will be passed in an array
+    let participants = req.body.participants;
+    //add the user to the array of participants
+    participants.push(user_id);
     
-    async function addParticipants () { // function that adds all users in the participants array as participants in the conversation
-        await Promise.all(participants.map(async (participant) => {
-            var is_admin = (participant == user_id) ?  true : false;// if this is the user that created the chat make them the admin
-            Participant.create({ // create the association between the user and the conversation
-                user_id : participant,
-                conversation_id: conversation.id,
-                is_admin: is_admin
-            })
-        }));
-    }
+    // add all users in the participants array as participants in the conversation
+    await Promise.all(participants.map(async (participant) => {
+        // if this is the user that created the chat make them the admin
+        var is_admin = (participant == user_id) ?  true : false;
 
-    addParticipants();// add the participants
+        // create the association between the user and the conversation
+        Participant.create({ 
+            user_id : participant,
+            conversation_id: conversation.id,
+            is_admin: is_admin
+        })
+    }));
 
-    return res.send({message:"Conversation successfully created!", conversation});//return a success message + the newly created conversation
+    //return a success message + the newly created conversation
+    return res.send({message:"Conversation successfully created!", conversation});
 };
 
 module.exports.getConversations = async (req, res) => {
-    let user_id = req.params.user_id;//temporarily getting the user_id from the url
+    let user_id = req.params.user_id;
 
-    let user = await User.findByPk(user_id,{//get user and all conversations
-        include: {// get the conversation info
+
+
+    // Need to check that user_id belongs to a valid user and matches the id of the requesting user
+
+    //get user and all conversations
+    let user = await User.findByPk(user_id,{
+        // get the conversation info
+        include: {
             model: Conversation,
             as: "conversationList",
-            attributes:["id", "title", "image_url", "user_editable_image", "user_editable_title"], // specify what atributes you want returned
-            through: {attributes: []}, // Prevents the belongs-to-many mapping object (Participant) from being returned
-            include: { // get each conversation's participants' info from the Users table
+            // specify what atributes you want returned
+            attributes:["id", "title", "image_url", "user_editable_image", "user_editable_title"], 
+            // Prevent the belongs-to-many mapping object (Participant) from being returned
+            through: {attributes: []}, 
+            // get each conversation's participants' info from the Users table
+            include: { 
                 model: User,
                 as: "participants",
-                attributes:["id", "display_name", "image_url"], // specify what atributes you want returned
-                through: {attributes: ["is_admin"]} // Prevents the entire belongs-to-many mapping object (Participant) from being returned, just returns Participant -> is_admin
+                // specify what atributes you want returned
+                attributes:["id", "display_name", "image_url"], 
+                // Prevents the entire belongs-to-many mapping object (Participant) from being returned, just returns Participant -> is_admin
+                through: {attributes: ["is_admin"]} 
             }
         }
     });

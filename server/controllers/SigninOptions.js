@@ -2,9 +2,15 @@ const db = require("../models");
 const SigninOption = db.SigninOption;
 const User = db.User;
 
-// Create and Save a new User
+//These operations can be integrated into a LoginAuth controller
+
+// Create and Save a new SigninOption
 module.exports.createSigninOption = async (req, res) => {
-    let user_id = req.params.user_id;//temporarily getting the user_id from the url
+    let user_id = req.params.user_id;
+
+    // Need to check that user_id belongs to a valid user and matches the id of the requesting user
+
+
     // Validate request
     if (
         !user_id
@@ -22,26 +28,27 @@ module.exports.createSigninOption = async (req, res) => {
         service_name: req.body.service_name,
         email: req.body.email
     })
-    .catch(err => {//catch any errors
+    //catch any errors
+    .catch(err => {
         res.status(500).send({
             message:
             err.message || "Some error occurred while creating the SigninOption."
         });
     });
-    return res.send({message:"SigninOption successfully created!", signinOption});//return a success message + the newly created signinOption
+
+    //return a success message + the newly created signinOption
+    return res.send({message:"SigninOption successfully created!", signinOption});
 };
 
-// Retrieve all SigninOptions from the database.
-module.exports.getAllSigninOption = async (req, res) => {
-    let signinOption = await SigninOption.findAll();
-    return res.send(signinOption);
-};
 
 // Get all SigninOptions for a user
 module.exports.getSigninOptionsByUserID = async (req, res) => {
-    let user_id = req.params.user_id;//temporarily getting the user_id from the url
+    let user_id = req.params.user_id;
 
-    // OPTION 1 access via user then access signinOptions as association
+    // Need to check that user_id belongs to a valid user and matches the id of the requesting user
+
+
+    // access via user then access signinOptions as association
     let signinOptions = await User.findOne({//get user and all signinOptions
         where: {
             id: user_id
@@ -53,34 +60,22 @@ module.exports.getSigninOptionsByUserID = async (req, res) => {
         }
     });
 
-    // OPTION 2 access via signinOptions
-    // let signinOptions = await SigninOption.findAll({//get user and all signinOptions
-    //     where: {
-    //         user_id: user_id
-    //     },
-    //     include: {
-    //         model: User,
-    //         as: "user"
-    //         // attributes: ['id','username'],
-    //     }
-    // });
-
-    // OPTION 3 no user info
-    // let signinOptions = await SigninOption.findAll({//get all signinOptions
-    //     where: {
-    //         user_id: user_id
-    //     }
-    // });
-
-
     if (!signinOptions) return res.status(404).send("signinOptions not found");
     return res.send(signinOptions);
 }
 
 // Find a single SigninOption using service_name and email
 module.exports.getSigninOption = async (req, res) => {//may need to change to a post request??
-    let email = req.params.email;//temporarily getting the email from the url
-    let service_name = req.params.service_name;//temporarily getting the service_name from the url
+
+    let email = req.params.email;
+    let service_name = req.params.service_name;
+
+
+
+    // Need to check that email belongs to a valid user and matches the email of the requesting user
+
+
+    // try to find the signinOption
     let signinOption = await SigninOption.findOne({
         where: {
             email: email,
@@ -111,7 +106,8 @@ module.exports.getSigninOption = async (req, res) => {//may need to change to a 
                 as: "signinOptions"
             }
         })
-        .catch(err => {//catch any errors
+        //catch any errors
+        .catch(err => {
             res.status(500).send({
                 message:
                 err.message || "Some error occurred while creating the User."
@@ -119,21 +115,27 @@ module.exports.getSigninOption = async (req, res) => {//may need to change to a 
         });
         return res.send({message:"User and signinOption successfully created!", user});
     }
-    return res.send(signinOption);//return the signinoption with the user if it was found
+    //return the signinoption with the user if it was found
+    return res.send(signinOption);
 };
 
-// Update a User by the id in the request
-// exports.updateUser = async (req, res) => {
-//     let userId = req.params.id;
-//     await User.update(req.body, {
+// // Update a SigninOption by the id in the request
+// exports.updateSigninOptions = async (req, res) => {
+//     //temporarily getting the email from the url
+//     let email = req.params.email;
+//     //temporarily getting the service_name from the url
+//     let service_name = req.params.service_name;
+
+//     await SigninOption.update(req.body, {
 //         where: {
-//             id: userId
+//             email: email,
+//             service_name: service_name
 //         },
 //         returning: true,
 //         plain: true
 //     })
-//     .then(user => {
-//         return res.send(user[1]);
+//     .then(signinOption => {
+//         return res.send(signinOption[1]);
 //     })
 //     .catch(err => {
 //         return res.status(500).send(err);
@@ -141,11 +143,32 @@ module.exports.getSigninOption = async (req, res) => {//may need to change to a 
 // };
 
 // // Delete a User with the specified id in the request
-// exports.delete = (req, res) => {
-  
-// };
+// exports.deleteSigninOption = async (req, res) => {
+//     //temporarily getting the email from the url
+//     let email = req.params.email;
+//     //temporarily getting the service_name from the url
+//     let service_name = req.params.service_name;
 
-// // Delete all Users from the database.
-// exports.deleteAll = (req, res) => {
-  
+//     await SigninOption.destroy({
+//         where: {
+//             email: email,
+//             service_name: service_name
+//         }
+//     })
+//     .then(num => {
+//         if (num == 1) {
+//             res.send({
+//                 message: "SigninOption was deleted successfully!"
+//             });
+//         } else {
+//             res.send({
+//                 message: `Cannot delete SigninOption with email=${email} and service_name=${service_name}. Maybe SigninOption was not found!`
+//             });
+//         }
+//     })
+//     .catch(err => {
+//         res.status(500).send({
+//             message: `Could not delete SigninOption with email=${email} and service_name=${service_name}`
+//         });
+//     });
 // };

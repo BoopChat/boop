@@ -2,26 +2,27 @@ const db = require("../models");
 const Participant = db.Participant;
 const Message = db.Message;
 
-// Retrieve all Messages in the database
-module.exports.getAllMessages = async (req, res) => {
-    let messages = await Message.findAll();
-    return res.send(messages);
-}
+// THIS FUNCTIONALITY COULD BE FOLDED INTO THE GETCONVERSATION METHOD (IN AN INCLUDE STATMENT) IN THE CONVERSATIONS CONTROLLER
 
 // get all messages from a conversation
 module.exports.getMessages = async (req, res) => {
-    let user_id = req.params.user_id;//temporarily getting the user_id from the url
-    let conversation_id = req.params.conversation_id;//temporarily getting the conversation_id from the url
+    let user_id = req.params.user_id;
+    let conversation_id = req.params.conversation_id;
 
-    let is_participant = await Participant.findOne({ //check if the user is a participant of the conversation
+    // Need to check that user_id belongs to a valid user and matches the id of the requesting user
+    
+
+    //check if the user is a participant of the conversation
+    let is_participant = await Participant.findOne({ 
         where: {
-            user_id,
+            user_id: user_id,
             conversation_id: conversation_id
         }
     })
     if (!is_participant) return res.status(404).send("user is not a participant of conversation");
 
-    let messages = await Message.findAll({//get all messages from the conversation
+    //get all messages from the conversation
+    let messages = await Message.findAll({
         where: {
             conversation_id: conversation_id
         }
@@ -33,38 +34,42 @@ module.exports.getMessages = async (req, res) => {
 
 // Create a new message in the conversation
 module.exports.addMessage = async (req, res) => {
-    let user_id = req.params.user_id;//temporarily getting the user_id from the url
-    let conversation_id = req.params.conversation_id;//temporarily getting the conversation_id from the url
+    let user_id = req.params.user_id;
+    let conversation_id = req.params.conversation_id;
+
+    // Need to check that user_id belongs to a valid user and matches the id of the requesting user
+    
 
     // Validate request
-    if (
-            !req.body.content
-        ) {
+    if (!req.body.content) {
         res.status(400).send({
         message: "Content can not be empty!"
         });
         return;
     }
 
-    let is_participant = await Participant.findOne({ //check if the user is a participant of the conversation
+    //check if the user is a participant of the conversation
+    let is_participant = await Participant.findOne({ 
         where: {
-            user_id,
+            user_id: user_id,
             conversation_id: conversation_id
         }
     })
     if (!is_participant) return res.status(404).send("user is not a participant of conversation");
 
-
-    let msg = await Message.create({// create the message with the neccessary values
+    // create the message with the neccessary values
+    let new_message = await Message.create({
         sender_id : user_id,
         conversation_id: conversation_id,
         content: req.body.content
     })
-    .catch(err => {//catch any errors
+    //catch any errors
+    .catch(err => {
         res.status(500).send({
             message:
             err.message || "Some error occurred while creating the message."
         });
     });
-    return res.send({message:"Message successfully added to the conversation!", msg});//return a success message + the newly created msg;
+    //return a success message + the newly created msg;
+    return res.send({message:"Message successfully added to the conversation!", new_message});
 }

@@ -1,17 +1,16 @@
 const db = require("../models");
 const Participant = db.Participant;
 
-// Retrieve all Participant associations in the database
-module.exports.getAllParticipants = async (req, res) => {
-    let participants = await Participant.findAll();
-    return res.send(participants);
-}
 
 // Get all a user's conversations
 module.exports.getConversations = async (req, res) => {
-    let user_id = req.params.user_id;//temporarily getting the user_id from the url
+    let user_id = req.params.user_id;
 
-    let conversations = await Participant.findAll({//get all user's conversations (participant associations)
+    // Need to check that user_id belongs to a valid user and matches the id of the requesting user
+    
+
+    //get all user's conversations (participant associations)
+    let conversations = await Participant.findAll({
         where: {
             user_id: user_id
         },
@@ -21,30 +20,36 @@ module.exports.getConversations = async (req, res) => {
     return res.send({conversations: conversations});
 }
 
+// THIS OPERATION CAN BE MOVED TO THE CONVERSATIONS CONTROLLER
 // Add a user to an existing conversation
 module.exports.addToConversation = async (req, res) => {
-    let user_id = req.params.user_id;//temporarily getting the user_id from the url
+    let user_id = req.params.user_id;
+
+    // Need to check that user_id belongs to a valid user and matches the id of the requesting user
+    
 
     // Validate request
     if (
         !user_id
         || !req.body.conversation_id
         ) {
-        res.status(400).send({
-        message: "Content can not be empty!"
-        });
-        return;
-    }
+            res.status(400).send({
+            message: "Content can not be empty!"
+            });
+            return;
+        }
 
     let participant = await Participant.create({
         user_id : user_id,
         conversation_id: req.body.conversation_id
     })
-    .catch(err => {//catch any errors
+    //catch any errors
+    .catch(err => {
         res.status(500).send({
             message:
             err.message || "Some error occurred while adding the user to the conversation."
         });
     });
-    return res.send({message:"User successfully added to the conversation!", participant});//return a success message + the newly participant association;
+    //return a success message + the newly participant association;
+    return res.send({message:"User successfully added to the conversation!", participant});
 }
