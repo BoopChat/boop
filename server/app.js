@@ -10,11 +10,11 @@ dotenv.config();
 
 //Server routes
 var indexRouter = require("./routes/index");
-// var contactsRouter = require("./router/contacts");
-// var conversationsRouter = require("./router/conversations");
-// var messagesRouter = require("./router/messages");
-// var participantsRouter = require("./router/participants");
-// var signinOptionsRouter = require("./router/signinOptions");
+var contactsRouter = require("./routes/contacts");
+var conversationsRouter = require("./routes/conversations");
+var messagesRouter = require("./routes/messages");
+var participantsRouter = require("./routes/participants");
+var signinOptionsRouter = require("./routes/signinOptions");
 var usersRouter = require("./routes/users");
 var LoginAuthRouter = require("./routes/loginAuth");//handles login requests
 
@@ -38,11 +38,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
-// app.use("/contacts", contactsRouter);
-// app.use("/conversations", conversationsRouter);
-// app.use("/messages", messagesRouter);
-// app.use("/participants", participantsRouter);
-// app.use("/signinOptions", signinOptionsRouter);
+app.use("/contacts", contactsRouter);
+app.use("/conversations", conversationsRouter);
+app.use("/messages", messagesRouter);
+app.use("/participants", participantsRouter);
+app.use("/signinOptions", signinOptionsRouter);
 app.use("/users", usersRouter);
 app.use("/login/auth", LoginAuthRouter);
 
