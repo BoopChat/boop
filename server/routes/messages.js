@@ -9,18 +9,4 @@ router
     .post(controller.addMessage)//create a new message in the conversation
 
 
-// POTENTIALLY USEFUL ROUTES
-
-// router
-//     .route("/:sender_id/sent")
-//     .get(controller.getSentMessages)//get all the messages a user has sent
-
-
-// router
-//     .route("/:sender_id/received")
-//     .get(controller.getReceivedMessages)//get all the messages a user has received
-
-
-
-
 module.exports = router;

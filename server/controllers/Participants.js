@@ -29,10 +29,7 @@ module.exports.addToConversation = async (req, res) => {
     
 
     // Validate request
-    if (
-        !user_id
-        || !req.body.conversation_id
-        ) {
+    if (!user_id|| !req.body.conversation_id) {
             res.status(400).send({
             message: "Content can not be empty!"
             });

@@ -12,11 +12,7 @@ module.exports.createSigninOption = async (req, res) => {
 
 
     // Validate request
-    if (
-        !user_id
-        || !req.body.service_name
-        || !req.body.email
-        ) {
+    if (!user_id || !req.body.service_name || !req.body.email) {
         res.status(400).send({
         message: "Content can not be empty!"
         });
@@ -118,57 +114,3 @@ module.exports.getSigninOption = async (req, res) => {//may need to change to a 
     //return the signinoption with the user if it was found
     return res.send(signinOption);
 };
-
-// // Update a SigninOption by the id in the request
-// exports.updateSigninOptions = async (req, res) => {
-//     //temporarily getting the email from the url
-//     let email = req.params.email;
-//     //temporarily getting the service_name from the url
-//     let service_name = req.params.service_name;
-
-//     await SigninOption.update(req.body, {
-//         where: {
-//             email: email,
-//             service_name: service_name
-//         },
-//         returning: true,
-//         plain: true
-//     })
-//     .then(signinOption => {
-//         return res.send(signinOption[1]);
-//     })
-//     .catch(err => {
-//         return res.status(500).send(err);
-//     });
-// };
-
-// // Delete a User with the specified id in the request
-// exports.deleteSigninOption = async (req, res) => {
-//     //temporarily getting the email from the url
-//     let email = req.params.email;
-//     //temporarily getting the service_name from the url
-//     let service_name = req.params.service_name;
-
-//     await SigninOption.destroy({
-//         where: {
-//             email: email,
-//             service_name: service_name
-//         }
-//     })
-//     .then(num => {
-//         if (num == 1) {
-//             res.send({
-//                 message: "SigninOption was deleted successfully!"
-//             });
-//         } else {
-//             res.send({
-//                 message: `Cannot delete SigninOption with email=${email} and service_name=${service_name}. Maybe SigninOption was not found!`
-//             });
-//         }
-//     })
-//     .catch(err => {
-//         res.status(500).send({
-//             message: `Could not delete SigninOption with email=${email} and service_name=${service_name}`
-//         });
-//     });
-// };

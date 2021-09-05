@@ -82,10 +82,7 @@ exports.deleteContact = async (req, res) => {
     // Need to check that user_id belongs to a valid user and matches the id of the requesting user
 
     // Validate request
-    if (
-        !user_id
-        || !contact_id
-        ) {
+    if (!user_id || !contact_id) {
         res.status(400).send({
         message: "Content can not be empty!"
         });
@@ -98,8 +95,8 @@ exports.deleteContact = async (req, res) => {
             contact_id: contact_id
         }
     })
-    .then(num => {
-        if (num == 1) {
+    .then(affectedRows => {
+        if (affectedRows == 1) {
             res.send({
                 message: "Contact was deleted successfully!"
             });

@@ -15,10 +15,4 @@ router
     .route("/:user_id/:contact_id")
     .delete(controller.deleteContact);
 
-
-// router
-//     .route("/:user_id/is_contact")// Determines if user is a contact of this user
-//     .get(controller.isContact)
-
-
 module.exports = router;

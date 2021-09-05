@@ -7,8 +7,6 @@ var controller = require("../controllers/signinOptions");
 router
     .route("/:email/:service_name")
     .get(controller.getSigninOption)
-    // .put(controller.updateSigninOptions)
-    // .delete(controller.deleteUser);
 
 router
     .route("/:user_id")

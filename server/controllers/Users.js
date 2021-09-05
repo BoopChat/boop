@@ -40,33 +40,3 @@ exports.updateUser = async (req, res) => {
         return res.status(500).send(err);
     });
 };
-
-// // Delete a User with the specified id in the request
-// exports.deleteUser = async (req, res) => {
-//     let user_id = req.params.id;
-
-//     // Need to check that user_id belongs to a valid user and matches the id of the requesting user
-
-
-//     await User.destroy({
-//         where: {
-//             id: user_id
-//         }
-//     })
-//     .then(num => {
-//         if (num == 1) {
-//             res.send({
-//                 message: "User was deleted successfully!"
-//             });
-//         } else {
-//             res.status(404).send({
-//                 message: `Cannot delete User with id=${user_id}. Maybe User was not found!`
-//             });
-//         }
-//     })
-//     .catch(err => {
-//         res.status(500).send({
-//             message: "Could not delete User with id=" + user_id
-//         });
-//     });
-// };
