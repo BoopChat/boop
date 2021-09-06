@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var controller = require("../controllers/conversations");
+var controller = require("../controllers/Conversations");
 
 // Manage a single user's conversations
 router
