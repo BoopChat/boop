@@ -172,3 +172,140 @@ div.chat_container {
     justify-content: space-between;
     height: 100%;
 }
+
+div.contact_item, div.chat_item {
+    background-color: white;
+    padding: 30px 15px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+div.chat_item {
+    padding: 34px 18px;
+}
+
+div.contact_item img, div.chat_item img {
+    border-radius: 50%;
+    height: 35px;
+    width: auto;
+}
+
+div.contact_item span {
+    font-weight: bold;
+    padding-left: 20px;
+}
+
+div.status {
+    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+    margin-right: 15px;
+}
+
+div.img_and_name {
+    display: flex;
+    align-items: center;
+}
+
+div.status_online {
+    background-color: #62b93c;
+}
+
+div.status_away {
+    background-color: #f7e01b;
+}
+
+div.status_dnd {
+    background-color: #f71a30;
+}
+
+div.status_offline {
+    border: #dfdfdf solid 2px;
+}
+
+div#contacts, div#chats {
+    overflow-y: scroll;
+    max-height: inherit;
+}
+
+div#contact_container, div#chat_container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+div.name_and_msg, div.time_and_badge {
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+}
+
+div.time_and_badge {
+    align-items: flex-end;
+}
+
+div.time_and_badge span {
+    font-size: 14px;
+}
+
+span.chat_name {
+    font-weight: bold;
+}
+
+span.chat_msg {
+    color:#808080;
+    font-size: 12px;
+}
+
+div.unread {
+    background-color: #62b93c;
+    color: white;
+    font-size: 12px;
+    text-align: center;
+    border-radius: 50%;
+    margin-top: 5px;
+    padding: 4px;
+    min-width: 24px;
+}
+
+div.setting_item {
+    display: flex;
+    justify-content: space-between;
+    color: rgb(20, 20, 20);
+    margin-top: 40px;
+}
+
+span.attribute {
+    font-weight: 900;
+    display: block;
+}
+
+button.edit {
+    border: none;
+    background-color: inherit;
+    align-self: flex-end;
+}
+
+button.edit:hover {
+    cursor: pointer;
+}
+
+div.setting_item input {
+    padding: 5px;
+    margin-top: 5px;
+    margin-right: 5px;
+}
+
+div.setting_item input:focus {
+    outline:rgb(19, 119, 233) 2px solid;
+    border:none;
+}
+
+div.setting_item img.profile_img {
+    border-radius: 50%;
+    height: 55px;
+    width: auto;
+    margin-top: 20px;
+}

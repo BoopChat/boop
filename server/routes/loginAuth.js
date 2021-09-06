@@ -10,6 +10,7 @@ router.get(
   passport.authenticate("google", { scope: ["email", "profile"] })
 );
 
+<<<<<<< HEAD
 // after successful login with google strategy, user db record will be sent
 // here in the req.user property.
 router.get(
@@ -94,6 +95,43 @@ router.get("/logout", (req, res) => {
     success: true,
     msg: "Logged Out",
   });
+=======
+router.post("/google", async (req, res) => {
+    const { token } = req.body;
+
+    try {
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.CLIENT_ID,
+        });
+
+        const { given_name, family_name, email, picture } = ticket.getPayload();
+
+        //send info to data base using an upsert requests
+        //return created or updated record so user id can be used for JWT.
+
+        //testing data of return record
+        const user = {
+            id: "aslkdjhjd7363",
+            first_name: given_name,
+            last_name: family_name,
+            email,
+            picture,
+        };
+
+        const authToken = jwt.sign({ id: user.id }, process.env.TOKEN_SECRET);
+
+        res.status(200).header("auth-token", authToken).json({
+            status: "success",
+            authToken,
+        });
+    } catch (err) {
+        res.status(400).json({
+            status: "failed",
+            error: err,
+        });
+    }
+>>>>>>> d1162b131ae513f7a845f0317bea97deb73ba80e
 });
 
 // router.get("/google", async (req, res) => {

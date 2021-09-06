@@ -1,0 +1,44 @@
+{
+    "development": {
+        "username": "root",
+        "password": null,
+        "database": "database_development",
+        "host": "127.0.0.1",
+        "dialect": "postgres",
+        "dialectOptions": {
+            "useUTC": true
+        },
+        "timezone" : "+00:00",
+        "define": {
+            "timestamps": true
+        }
+    },
+    "test": {
+        "username": "root",
+        "password": null,
+        "database": "database_test",
+        "host": "127.0.0.1",
+        "dialect": "postgres",
+        "dialectOptions": {
+            "useUTC": true
+        },
+        "timezone" : "+00:00",
+        "define": {
+            "timestamps": true
+        }
+    },
+    "production": {
+        "username": "root",
+        "password": null,
+        "database": "database_production",
+        "host": "127.0.0.1",
+        "dialect": "postgres",
+        "dialectOptions": {
+            "useUTC": true
+        },
+        "timezone" : "+00:00",
+        "define": {
+            "timestamps": true
+        }
+    }
+}

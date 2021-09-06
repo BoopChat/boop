@@ -133,7 +133,7 @@ App
     content: "";
     position: absolute;
     display: inline-block;
-    background-image: url('../bg.png');
+    background-image: url('../assets/bg.png');
     opacity: .6;
     background-repeat: no-repeat;
     background-size:cover;

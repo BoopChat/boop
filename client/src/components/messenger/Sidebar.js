@@ -11,17 +11,7 @@ import { useDispatch } from "react-redux";
 
 import { logOut } from "../login/userSlice";
 
-const Sidebar = ({ username, user_pic, user_email }) => {
-  const [click, setClick] = useState(false);
-  const handleClick = () => setClick(!click);
-
-  const [profileClick, setProfileClick] = useState(false);
-  const handleProfileClick = () => setProfileClick(!profileClick);
-
-  //used to send actions to the redux store to change its state
-  const dispatch = useDispatch();
-
-  const Button = styled.button`
+const Button = styled.button`
     background-color: black;
     border: none;
     width: 40px;
@@ -36,27 +26,26 @@ const Sidebar = ({ username, user_pic, user_email }) => {
 
     &::before,
     &::after {
-      content: "";
-      background-color: white;
-      height: 2px;
-      width: 16px;
-      position: absolute;
-      transition: all 0.3s ease;
+        content: "";
+        background-color: white;
+        height: 2px;
+        width: 16px;
+        position: absolute;
+        transition: all 0.3s ease;
     }
 
     &::before {
-      top: ${(props) => (props.clicked ? "24" : "16px")};
-      transform: ${(props) => (props.clicked ? "rotate(135deg)" : "rotate(0)")};
+        top: ${(props) => (props.clicked ? "24" : "16px")};
+        transform: ${(props) => (props.clicked ? "rotate(135deg)" : "rotate(0)")};
     }
 
     &::after {
-      top: ${(props) => (props.clicked ? "18" : "24px")};
-      transform: ${(props) =>
-        props.clicked ? "rotate(-135deg)" : "rotate(0)"};
+        top: ${(props) => (props.clicked ? "18" : "24px")};
+        transform: ${(props) => (props.clicked ? "rotate(-135deg)" : "rotate(0)")};
     }
-  `;
+`;
 
-  const SideItems = styled.ul`
+const SideItems = styled.ul`
     color: white;
     background-color: black;
     list-style: none;
@@ -70,16 +59,16 @@ const Sidebar = ({ username, user_pic, user_email }) => {
     transition: all 0.3s ease;
     border-radius: 0 30px 30px 0;
     padding: 16px 0;
-  `;
+`;
 
-  const Text = styled.span`
+const Text = styled.span`
     width: ${(props) => (props.clicked ? "100%" : "0")};
     overflow: hidden;
     margin-left: ${(props) => (props.clicked ? "24px" : "0")};
     transition: all 0.3s ease;
-  `;
+`;
 
-  const Profile = styled.div`
+const Profile = styled.div`
     color: white;
     background-color: black;
     list-style: none;
@@ -94,96 +83,93 @@ const Sidebar = ({ username, user_pic, user_email }) => {
     transition: all 0.3s ease;
     border-radius: 0 30px 30px 0;
     padding: 12px 4px;
-  `;
+`;
 
-  const Details = styled.div`
+const Details = styled.div`
     display: ${(props) => (props.clicked ? "flex" : "none")};
     justify-content: space-between;
     align-items: center;
 
     div {
-      padding: 0 24px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+        padding: 0 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     h4 {
-      display: inline-block;
+        display: inline-block;
     }
-  `;
+`;
 
-  //handles logout
-  //deletes access token cookie from browser
-  //dispatches logOut action
-  const handleLogOut = async () => {
-    const res = await fetch("http://localhost:5000/login/auth/logout", {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Credentials": true,
-      },
-    });
+const Sidebar = ({ username, user_pic, user_email }) => {
+    const [click, setClick] = useState(false);
+    const handleClick = () => setClick(!click);
 
-    const data = await res.json();
-    const { success } = data;
+    const [profileClick, setProfileClick] = useState(false);
+    const handleProfileClick = () => setProfileClick(!profileClick);
 
-    if (success) {
-      dispatch(logOut());
-    }
-  };
+    // Used to send actions to the redux store to change its state
+    const dispatch = useDispatch();
 
-  return (
-    <div>
-      <Button clicked={click} onClick={() => handleClick()}></Button>
-      <div id="sidebar_container">
-        <Profile id="profile" clicked={profileClick}>
-          <img
-            onClick={() => handleProfileClick()}
-            src={user_pic}
-            alt={username + " pic"}
-          />
-          <Details clicked={profileClick}>
-            <div>
-              <h4>{username}</h4>
-              <h5>{user_email}</h5>
+    // handles logout
+    // deletes access token cookie from browser
+    // dispatches logOut action
+    const handleLogOut = async () => {
+        const res = await fetch("http://localhost:5000/login/auth/logout", {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Credentials": true,
+            },
+        });
+
+        const data = await res.json();
+        const { success } = data;
+
+        if (success) {
+            dispatch(logOut());
+        }
+    };
+
+    return (
+        <div>
+            <Button clicked={click} onClick={() => handleClick()}></Button>
+            <div id="sidebar_container">
+                <Profile id="profile" clicked={profileClick}>
+                    <img onClick={() => handleProfileClick()} src={user_pic} alt={username + " pic"} />
+                    <Details clicked={profileClick}>
+                        <div>
+                            <h4>{username}</h4>
+                            <h5>{user_email}</h5>
+                        </div>
+                        <button id="logout" onClick={() => dispatch(logOut())}>
+                            <img src={logout} alt="logout" />
+                        </button>
+                    </Details>
+                </Profile>
+                <SideItems clicked={click}>
+                    <NavLink onClick={() => setClick(false)} activeClassName="active" to="/chats">
+                        <img src={chats} alt="chats" />
+                        <Text clicked={click}>Chats</Text>
+                    </NavLink>
+                    <NavLink onClick={() => setClick(false)} activeClassName="active" to="/contacts">
+                        <img src={contacts} alt="contacts" />
+                        <Text clicked={click}>Contacts</Text>
+                    </NavLink>
+                    <NavLink onClick={() => setClick(false)} activeClassName="active" to="/settings">
+                        <img src={settings} alt="settings" />
+                        <Text clicked={click}>Settings</Text>
+                    </NavLink>
+                </SideItems>
             </div>
             <button id="logout" onClick={handleLogOut}>
-              <img src={logout} alt="logout" />
+                <img src={logout} alt="logout" />
             </button>
-          </Details>
-        </Profile>
-        <SideItems clicked={click}>
-          <NavLink
-            onClick={() => setClick(false)}
-            activeClassName="active"
-            to="/chats"
-          >
-            <img src={chats} alt="chats" />
-            <Text clicked={click}>Chats</Text>
-          </NavLink>
-          <NavLink
-            onClick={() => setClick(false)}
-            activeClassName="active"
-            to="/contacts"
-          >
-            <img src={contacts} alt="contacts" />
-            <Text clicked={click}>Contacts</Text>
-          </NavLink>
-          <NavLink
-            onClick={() => setClick(false)}
-            activeClassName="active"
-            to="/settings"
-          >
-            <img src={settings} alt="settings" />
-            <Text clicked={click}>Settings</Text>
-          </NavLink>
-        </SideItems>
-      </div>
-    </div>
-  );
+        </div>
+    );
 };
 
 export default Sidebar;
