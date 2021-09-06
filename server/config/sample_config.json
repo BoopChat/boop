@@ -5,8 +5,12 @@
         "database": "database_development",
         "host": "127.0.0.1",
         "dialect": "postgres",
+        "dialectOptions": {
+            "useUTC": true
+        },
+        "timezone" : "+00:00",
         "define": {
-            "timestamps": false
+            "timestamps": true
         }
     },
     "test": {
@@ -15,8 +19,12 @@
         "database": "database_test",
         "host": "127.0.0.1",
         "dialect": "postgres",
+        "dialectOptions": {
+            "useUTC": true
+        },
+        "timezone" : "+00:00",
         "define": {
-            "timestamps": false
+            "timestamps": true
         }
     },
     "production": {
@@ -25,8 +33,12 @@
         "database": "database_production",
         "host": "127.0.0.1",
         "dialect": "postgres",
+        "dialectOptions": {
+            "useUTC": true
+        },
+        "timezone" : "+00:00",
         "define": {
-            "timestamps": false
+            "timestamps": true
         }
     }
 }
