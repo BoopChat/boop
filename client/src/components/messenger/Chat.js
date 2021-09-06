@@ -33,11 +33,7 @@ const Chat = () => {
                 {
                     messages.map((msg, key) => {
                         return (
-                            <li
-                                key={key}
-                                className={"message " + (msg.author ?
-                                    "author_message" : "friend_message")}
-                            >
+                            <li key={key} className={"message " + (msg.author ? "author_message" : "friend_message")}>
                                 <div className="info">
                                     <span className="user">{msg.username}</span>
                                     <span className="time">{msg.elapsed}</span>

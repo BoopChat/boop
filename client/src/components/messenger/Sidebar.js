@@ -115,11 +115,7 @@ const Sidebar = ({username, user_pic, user_email}) => {
             <Button clicked={click} onClick={() => handleClick()}></Button>
             <div id="sidebar_container">
                 <Profile id="profile" clicked={profileClick}>
-                    <img
-                        onClick={() => handleProfileClick()}
-                        src={user_pic}
-                        alt={username + " pic"}
-                    />
+                    <img onClick={() => handleProfileClick()} src={user_pic} alt={username + " pic"} />
                     <Details clicked={profileClick}>
                         <div>
                             <h4>{username}</h4>
@@ -131,27 +127,15 @@ const Sidebar = ({username, user_pic, user_email}) => {
                     </Details>
                 </Profile>
                 <SideItems clicked={click}>
-                    <NavLink
-                        onClick={() => setClick(false)}
-                        activeClassName="active"
-                        to="/chats"
-                    >
+                    <NavLink onClick={() => setClick(false)} activeClassName="active" to="/chats">
                         <img src={chats} alt="chats"/>
                         <Text clicked={click}>Chats</Text>
                     </NavLink>
-                    <NavLink
-                        onClick={() => setClick(false)}
-                        activeClassName="active"
-                        to="/contacts"
-                    >
+                    <NavLink onClick={() => setClick(false)} activeClassName="active" to="/contacts">
                         <img src={contacts} alt="contacts" />
                         <Text clicked={click}>Contacts</Text>
                     </NavLink>
-                    <NavLink
-                        onClick={() => setClick(false)}
-                        activeClassName="active"
-                        to="/settings"
-                    >
+                    <NavLink onClick={() => setClick(false)}activeClassName="active"to="/settings">
                         <img src={settings} alt="settings"/>
                         <Text clicked={click}>Settings</Text>
                     </NavLink>

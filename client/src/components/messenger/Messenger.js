@@ -13,11 +13,7 @@ const Messenger = () => {
 
     return (
         <div className="container">
-            <Sidebar
-                username="James Clarke"
-                user_pic="https://picsum.photos/200"
-                user_email="james243@live.com"
-            />
+            <Sidebar username="James Clarke" user_pic="https://picsum.photos/200" user_email="james243@live.com"/>
             <div id="main_panel">
                 <Switch location={location} key={location.pathname}>
                     <Route path="/chats" component={Chats} />
