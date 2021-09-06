@@ -48,7 +48,7 @@ const Chat = () => {
                 }
             </ul>
             <div className="interactions">
-                <input type="text" name="chat_box" placeholder="chat" value="" />
+                <input type="text" name="chat_box" placeholder="chat" readOnly />
                 <button>Send</button>
             </div>
         </div>
