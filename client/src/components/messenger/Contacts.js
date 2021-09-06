@@ -29,7 +29,7 @@ const Contacts = () => {
         <div id="contact_container">
             <h1>Contacts</h1>
             <div id="contacts">
-                {contacts.map(contact => 
+                {contacts.map(contact =>
                     <ContactItem
                         img={contact.img}
                         username={contact.username}

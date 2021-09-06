@@ -5,8 +5,12 @@ module.exports = (sequelize, Sequelize) => {
         email: { primaryKey: true, type: Sequelize.STRING(320), allowNull: false },
         user_id: { type: Sequelize.INTEGER, allowNull: false },
         //timestamps
-        createdAt: { type: Sequelize.DATE, field: 'created_at', defaultValue: Sequelize.NOW},
-        updatedAt: { type: Sequelize.DATE, field: 'updated_at', defaultValue: Sequelize.NOW }
+        createdAt: {
+            type: Sequelize.DATE, field: 'created_at', defaultValue: Sequelize.NOW
+        },
+        updatedAt: {
+            type: Sequelize.DATE, field: 'updated_at', defaultValue: Sequelize.NOW
+        }
     });
 
     SigninOption.associate = ({
@@ -17,6 +21,6 @@ module.exports = (sequelize, Sequelize) => {
             foreignKey: "user_id"
         });
     }
-    
+
     return SigninOption;
 };

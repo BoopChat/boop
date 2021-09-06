@@ -16,15 +16,16 @@ module.exports.getUser = async (req, res) => {
 // Update a User by the id in the request
 exports.updateUser = async (req, res) => {
     let user_id = req.params.id;
-    // Need to check that user_id belongs to a valid user and matches the id of the requesting user
-    
+    // Need to check that user_id belongs to a valid user and
+    // matches the id of the requesting user
+
     await User.update({
         display_name: req.body.display_name,
         first_name: req.body.given_name,
         last_name: req.body.family_name,
         image_url: req.body.image_url,
         // update last_active to current time
-        last_active: db.Sequelize.fn('NOW') 
+        last_active: db.Sequelize.fn('NOW')
     }, {
         where: {
             id: user_id

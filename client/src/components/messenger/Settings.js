@@ -84,7 +84,9 @@ const Settings = () => {
                                     onChange={(e) => handleNameChange(e)}
                                 />
                             </div>
-                        ) : <span>{user_data.first_name + " " + user_data.last_name}</span>
+                        ) : <span>
+                                {user_data.first_name + " " + user_data.last_name}
+                            </span>
                     }
                 </div>
                 <button title="edit name" className="edit" onClick={() => handleEditName()}>

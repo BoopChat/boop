@@ -1,0 +1,16 @@
+name: EditorConfig check
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  check:
+
+    runs-on: ubuntu-latest
+  
+    steps:
+      - uses: actions/checkout@v2
+      - uses: wow-rp-addons/actions-editorconfig-check@v1.0.2
+        with:
+          files: $(git ls-files '*.js' '*.json' '*md' '*yml')

@@ -5,8 +5,12 @@ module.exports = (sequelize, Sequelize) => {
         conversation_id: { primaryKey: true, type: Sequelize.BIGINT, allowNull: false },
         is_admin: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false},
         //timestamps
-        createdAt: { type: Sequelize.DATE, field: 'created_at', defaultValue: Sequelize.NOW},
-        updatedAt: { type: Sequelize.DATE, field: 'updated_at', defaultValue: Sequelize.NOW }
+        createdAt: {
+            type: Sequelize.DATE, field: 'created_at', defaultValue: Sequelize.NOW
+        },
+        updatedAt: {
+            type: Sequelize.DATE, field: 'updated_at', defaultValue: Sequelize.NOW
+        }
     });
 
     // MAY NOT BE NEEDED
@@ -23,6 +27,6 @@ module.exports = (sequelize, Sequelize) => {
     //         foreignKey: "user_id"
     //     });
     // }
-    
+
     return Participant;
 };

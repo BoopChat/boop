@@ -41,7 +41,7 @@ describe("Settings tab", () => {
 
         let editBtn = getByTitle("edit name");
         userEvent.click(editBtn);
-        
+
         let lastNameInput = getByPlaceholderText("Last Name")
         userEvent.clear(lastNameInput)
         userEvent.type(lastNameInput, "Selma");
@@ -62,7 +62,7 @@ describe("Settings tab", () => {
 
         let editBtn = getByTitle("edit display name");
         userEvent.click(editBtn);
-        
+
         let displayNameInput = getByPlaceholderText("Display Name")
         userEvent.clear(displayNameInput)
         userEvent.type(displayNameInput, "Julie24");
