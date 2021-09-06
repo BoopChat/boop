@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var controller = require("../controllers/users");
+var controller = require("../controllers/Users");
 
 // Manage a single user
 router
