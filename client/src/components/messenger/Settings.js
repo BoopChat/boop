@@ -84,10 +84,16 @@ const Settings = () => {
                                     onChange={(e) => handleNameChange(e)}
                                 />
                             </div>
-                        ) : <span>{user_data.first_name + " " + user_data.last_name}</span>
+                        ) : <span>
+                                {user_data.first_name + " " + user_data.last_name}
+                            </span>
                     }
                 </div>
-                <button title="edit name" className="edit" onClick={() => handleEditName()}>
+                <button
+                    title="edit name"
+                    className="edit"
+                    onClick={() => handleEditName()}
+                >
                     <img src={edit_icon} alt="edit"/>
                 </button>
             </div>
@@ -106,7 +112,11 @@ const Settings = () => {
                         :   <span>{user_data.display_name}</span>
                     }
                 </div>
-                <button title="edit display name" className="edit" onClick={() => handleEditDName()}>
+                <button
+                    title="edit display name"
+                    className="edit"
+                    onClick={() => handleEditDName()}
+                >
                     <img src={edit_icon} alt="edit"/>
                 </button>
             </div>

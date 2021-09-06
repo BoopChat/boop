@@ -7,12 +7,13 @@ const User = db.User;
 // Create and Save a new SigninOption
 module.exports.createSigninOption = async (req, res) => {
     let user_id = req.params.user_id;
-    // Need to check that user_id belongs to a valid user and matches the id of the requesting user
+    // Need to check that user_id belongs to a valid user and
+    // matches the id of the requesting user
 
     // Validate request
     if (!user_id || !req.body.service_name || !req.body.email) {
         res.status(400).send({
-        message: "Content can not be empty!"
+            message: "Content can not be empty!"
         });
         return;
     }
@@ -38,7 +39,8 @@ module.exports.createSigninOption = async (req, res) => {
 // Get all SigninOptions for a user
 module.exports.getSigninOptionsByUserID = async (req, res) => {
     let user_id = req.params.user_id;
-    // Need to check that user_id belongs to a valid user and matches the id of the requesting user
+    // Need to check that user_id belongs to a valid user and
+    // matches the id of the requesting user
 
     // access via user then access signinOptions as association
     let signinOptions = await User.findOne({//get user and all signinOptions
@@ -57,10 +59,12 @@ module.exports.getSigninOptionsByUserID = async (req, res) => {
 }
 
 // Find a single SigninOption using service_name and email
-module.exports.getSigninOption = async (req, res) => {//may need to change to a post request??
+//may need to change to a post request??
+module.exports.getSigninOption = async (req, res) => {
     let email = req.params.email;
     let service_name = req.params.service_name;
-    // Need to check that email belongs to a valid user and matches the email of the requesting user
+    // Need to check that email belongs to a valid user and
+    // matches the email of the requesting user
 
     // try to find the signinOption
     let signinOption = await SigninOption.findOne({
@@ -75,9 +79,10 @@ module.exports.getSigninOption = async (req, res) => {//may need to change to a 
         }
     });
 
-    // if the signinOption doesn't exist, then this turns into a sign up and a new user and signinOption are created
+    // if the signinOption doesn't exist, then this turns into a sign up
+    // and a new user and signinOption are created
     if (!signinOption) {
-    
+
         let user = await User.create({
             display_name: email,
             first_name: req.body.given_name,

@@ -33,7 +33,7 @@ const Chats = () => {
         <div id="chat_container">
             <h1>Chats</h1>
             <div id="chats">
-                {chats.map(chat => 
+                {chats.map(chat =>
                     <ChatItem
                         name={chat.name}
                         img={chat.img}

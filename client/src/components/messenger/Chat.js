@@ -3,13 +3,13 @@ let messages = [
         author: true,
         username: "John",
         elapsed: "1 hour ago",
-        content: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Amet quidem dolores ipsam, ad magnam recusandae?",
+        content: "Lorem ipsum dolor sit, amet consectetur adipisicing elit?",
         avatar: "https://picsum.photos/200?random=1"
     }, {
         author: false,
         username: "Jane",
         elapsed: "1 hour ago",
-        content: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore, accusantium.",
+        content: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
         avatar: "https://picsum.photos/200?random=2"
     }, {
         author: false,
@@ -21,7 +21,7 @@ let messages = [
         author: true,
         username: "John",
         elapsed: "4 mins ago",
-        content: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Labore quia aut provident pariatur accusantium.",
+        content: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
         avatar: "https://picsum.photos/200?random=1"
     }
 ]
@@ -33,7 +33,11 @@ const Chat = () => {
                 {
                     messages.map((msg, key) => {
                         return (
-                            <li key={key} className={"message " + (msg.author ? "author_message" : "friend_message")}>
+                            <li
+                                key={key}
+                                className={"message " + (msg.author ?
+                                    "author_message" : "friend_message")}
+                            >
                                 <div className="info">
                                     <span className="user">{msg.username}</span>
                                     <span className="time">{msg.elapsed}</span>

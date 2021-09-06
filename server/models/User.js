@@ -1,15 +1,26 @@
 module.exports = (sequelize, Sequelize) => {
     const User = sequelize.define("User", {
         //attributes
-        id: { primaryKey: true, type: Sequelize.INTEGER, autoIncrement: true, allowNull: false },
+        id: {
+            primaryKey: true,
+            type: Sequelize.INTEGER,
+            autoIncrement: true,
+            allowNull: false
+        },
         display_name: { type: Sequelize.STRING(50), allowNull: false, unique: true },
         first_name: { type: Sequelize.STRING(50), allowNull: true },
         last_name: { type: Sequelize.STRING(50), allowNull: true },
         image_url: { type: Sequelize.STRING(2048), allowNull: true },
         // timestamps
-        last_active: { type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.NOW },
-        createdAt: { type: Sequelize.DATE, field: 'created_at', defaultValue: Sequelize.NOW},
-        updatedAt: { type: Sequelize.DATE, field: 'updated_at', defaultValue: Sequelize.NOW }
+        last_active: {
+            type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.NOW
+        },
+        createdAt: {
+            type: Sequelize.DATE, field: 'created_at', defaultValue: Sequelize.NOW
+        },
+        updatedAt: {
+            type: Sequelize.DATE, field: 'updated_at', defaultValue: Sequelize.NOW
+        }
     });
 
     User.associate = ({
@@ -41,6 +52,6 @@ module.exports = (sequelize, Sequelize) => {
             foreignKey: "sender_id"
         });
     };
-    
+
     return User;
 };

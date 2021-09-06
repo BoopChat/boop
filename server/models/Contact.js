@@ -4,8 +4,12 @@ module.exports = (sequelize, Sequelize) => {
         contact_id: { primaryKey: true, type: Sequelize.INTEGER, allowNull: false },
         user_id: { primaryKey: true, type: Sequelize.INTEGER, allowNull: false },
         //timestamps
-        createdAt: { type: Sequelize.DATE, field: 'created_at', defaultValue: Sequelize.NOW},
-        updatedAt: { type: Sequelize.DATE, field: 'updated_at', defaultValue: Sequelize.NOW }
+        createdAt: {
+            type: Sequelize.DATE, field: 'created_at', defaultValue: Sequelize.NOW
+        },
+        updatedAt: {
+            type: Sequelize.DATE, field: 'updated_at', defaultValue: Sequelize.NOW
+        }
     });
 
     Contact.associate = ({
@@ -20,6 +24,6 @@ module.exports = (sequelize, Sequelize) => {
             foreignKey: "user_id"
         });
     };
-    
+
     return Contact;
 };

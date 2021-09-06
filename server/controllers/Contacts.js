@@ -6,9 +6,11 @@ const User = db.User;
 // Create and Save a new Contact
 module.exports.addContact = async (req, res) => {
     let user_id = req.params.user_id;
-    // Need to check that user_id belongs to a valid user and matches the id of the requesting user
+    // Need to check that user_id belongs to a valid user and
+    // matches the id of the requesting user
 
-    // Validate request (need to add check to ensure user exists) + (prevent user from adding self as contact????)
+    // Validate request (need to add check to ensure user exists) +
+    // (prevent user from adding self as contact????)
     if (!req.body.contactEmail) {
         res.status(400).send({
         message: "Content can not be empty!"
@@ -53,7 +55,8 @@ module.exports.addContact = async (req, res) => {
 
 module.exports.getContacts = async (req, res) => {
     let user_id = req.params.user_id;
-    // Need to check that user_id belongs to a valid user and matches the id of the requesting user
+    // Need to check that user_id belongs to a valid user and
+    // matches the id of the requesting user
 
     //get user and all contacts
     let user = await User.findByPk(user_id,{
@@ -61,7 +64,7 @@ module.exports.getContacts = async (req, res) => {
             model: Contact,
             as: "contactList",
             // get each contact's info from the Users table
-            include: { 
+            include: {
                 model: User,
                 as: "contactInfo"
             }
@@ -72,11 +75,12 @@ module.exports.getContacts = async (req, res) => {
     return res.send(user);
 }
 
-// Delete a Contact 
+// Delete a Contact
 exports.deleteContact = async (req, res) => {
     let user_id = req.params.user_id;
     let contact_id = req.params.contact_id;
-    // Need to check that user_id belongs to a valid user and matches the id of the requesting user
+    // Need to check that user_id belongs to a valid user and
+    // matches the id of the requesting user
 
     // Validate request
     if (!user_id || !contact_id) {
@@ -99,13 +103,15 @@ exports.deleteContact = async (req, res) => {
             });
         } else {
             res.status(404).send({
-                message: `Cannot delete Contact association with user_id=${user_id} and contact_id=${contact_id}. Maybe Contact association was not found!`
+                message: `Cannot delete Contact association with user_id=${user_id} and
+                    contact_id=${contact_id}. Maybe Contact association was not found!`
             });
         }
     })
     .catch(err => {
         res.status(500).send({
-            message: `Could not delete Contact association with user_id=${user_id} and contact_id=${contact_id}`
+            message: `Could not delete Contact association with user_id=${user_id}
+                and contact_id=${contact_id}`
         });
     });
 };

@@ -2,7 +2,7 @@ import "../styles/buttons.css"
 
 const TwitterButton = ({text="sign up with twitter", handler}) => {
     return (
-        <button 
+        <button
             className="twitter"
             type="button"
             onClick={handler}
