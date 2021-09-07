@@ -8,39 +8,40 @@ import FacebookButton from "../FacebookButton.js";
 import TwitterButton from "../TwitterButton.js";
 
 const Login = () => {
-  const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
-  //checks if the user has successfully logged in using a provider
-  //dispatches the logIn action to change the user's login state if true;
-  //useEffect executes everytime this login page loads or reloads.
-  useEffect(async () => {
-    const res = await fetch("http://localhost:5000/login/auth/success", {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Credentials": true,
-      },
+    //checks if the user has successfully logged in using a provider
+    //dispatches the logIn action to change the user's login state if true;
+    //useEffect executes everytime this login page loads or reloads.
+    useEffect(() => {
+        const fetchData = async () => {
+            const res = await fetch("/api/login/auth/success", {
+                method: "GET",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            const data = await res.json();
+            const { success } = data;
+            if (success) {
+                dispatch(logIn());
+            }
+        };
+
+        fetchData();
     });
-
-    const data = await res.json();
-    const { success } = data;
-
-    if (success) {
-      dispatch(logIn());
-    }
-  });
-  return (
-    <div className="sign-in-container">
-      <h1>Boop Chat</h1>
-      <div className="sign_btns">
-        <GoogleButton text="Continue with Google" />
-        <FacebookButton text="Continue with facebook" />
-        <TwitterButton text="Continue with twitter" />
-      </div>
-    </div>
-  );
+    return (
+        <div className="sign-in-container">
+            <h1>Boop Chat</h1>
+            <div className="sign_btns">
+                <GoogleButton text="Continue with Google" />
+                <FacebookButton text="Continue with facebook" />
+                <TwitterButton text="Continue with twitter" />
+            </div>
+        </div>
+    );
 };
 
 export default Login;

@@ -11,15 +11,13 @@ const GoogleButton = ({ text = "Sign up with google" }) => {
     //api check for a cookie with login information.
     //if the cookie is found the user is logged in with that information after verification.
     //user is redirected to social provider if no login cookie is found.
-    const handleLogin = async (e) => {
+    const handleLogin = async () => {
         //sends request to api which checks for the login cookie
-        const res = await fetch("http://localhost:5000/login/auth/cookie", {
+        const res = await fetch("/api/login/auth/cookie", {
             method: "GET",
             credentials: "include",
             headers: {
-                Accept: "application/json",
                 "Content-Type": "application/json",
-                "Access-Control-Allow-Credentials": true,
             },
         });
 
@@ -30,7 +28,7 @@ const GoogleButton = ({ text = "Sign up with google" }) => {
         if (success) {
             dispatch(logIn());
         } else {
-            window.open("http://localhost:5000/login/auth/google", "_self");
+            window.location.replace("/api/login/auth/google", "_self");
         }
     };
 

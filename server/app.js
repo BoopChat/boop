@@ -18,20 +18,14 @@ var messagesRouter = require("./routes/messages");
 var participantsRouter = require("./routes/participants");
 var signinOptionsRouter = require("./routes/signinOptions");
 var usersRouter = require("./routes/users");
-var LoginAuthRouter = require("./routes/loginAuth");//handles login requests
-
+var LoginAuthRouter = require("./routes/loginAuth"); //handles login requests
 
 var app = express();
-
 
 // MAY NOT BE NEEDED
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
-
-//cors
-const cors = require("cors");
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -46,7 +40,7 @@ app.use("/messages", messagesRouter);
 app.use("/participants", participantsRouter);
 app.use("/signinOptions", signinOptionsRouter);
 app.use("/users", usersRouter);
-app.use("/login/auth", LoginAuthRouter);
+app.use("/api/login/auth", LoginAuthRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -116,13 +116,11 @@ const Sidebar = ({ username, user_pic, user_email }) => {
     // deletes access token cookie from browser
     // dispatches logOut action
     const handleLogOut = async () => {
-        const res = await fetch("http://localhost:5000/login/auth/logout", {
+        const res = await fetch("/api/login/auth/logout", {
             method: "GET",
             credentials: "include",
             headers: {
-                Accept: "application/json",
                 "Content-Type": "application/json",
-                "Access-Control-Allow-Credentials": true,
             },
         });
 
@@ -145,7 +143,7 @@ const Sidebar = ({ username, user_pic, user_email }) => {
                             <h4>{username}</h4>
                             <h5>{user_email}</h5>
                         </div>
-                        <button id="logout" onClick={() => dispatch(logOut())}>
+                        <button id="logout" onClick={handleLogOut}>
                             <img src={logout} alt="logout" />
                         </button>
                     </Details>
