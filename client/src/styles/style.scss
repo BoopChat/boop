@@ -6,24 +6,24 @@ App
 =======================
 */
 #root {
-  height: 100vh;
+    height: 100vh;
 }
 .App {
-  height: 100vh;
-  background: $clr-primary-5;
+    height: 100vh;
+    background: $clr-primary-5;
 }
 @media screen and (min-width: 900px) {
-  .App {
-    width: 95vw;
-    height: 95vh;
-    max-width: 1170px;
-    border-radius: $radius;
-    box-shadow: $dark-shadow;
-  }
-  #root {
-    display: grid;
-    place-items: center;
-  }
+    .App {
+        width: 95vw;
+        height: 95vh;
+        max-width: 1170px;
+        border-radius: $radius;
+        box-shadow: $dark-shadow;
+    }
+    #root {
+        display: grid;
+        place-items: center;
+    }
 }
 /*
 =======================
@@ -31,27 +31,27 @@ Login
 =======================
 */
 .login {
-  text-align: center;
-  width: 400px;
-  padding: 1rem 0rem;
-  border-radius: $radius;
-  .title {
-    color: $clr-orange-5;
-    background: $clr-primary-5;
-    font-family: $ff-primary;
-  }
-  .hr-line {
-    margin-bottom: 1rem;
-    display: grid;
-    grid-template-columns: 1fr 5rem 1fr;
-    align-items: center;
-    div {
-      height: 1px;
-      background: $clr-text;
+    text-align: center;
+    width: 400px;
+    padding: 1rem 0rem;
+    border-radius: $radius;
+    .title {
+        color: $clr-orange-5;
+        background: $clr-primary-5;
+        font-family: $ff-primary;
     }
-    span {
-      // font-weight: 700;
-      letter-spacing: $spacing;
+    .hr-line {
+        margin-bottom: 1rem;
+        display: grid;
+        grid-template-columns: 1fr 5rem 1fr;
+        align-items: center;
+        div {
+            height: 1px;
+            background: $clr-text;
+        }
+        span {
+            // font-weight: 700;
+            letter-spacing: $spacing;
+        }
     }
-  }
 }
