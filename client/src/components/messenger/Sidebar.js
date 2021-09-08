@@ -9,7 +9,7 @@ import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { logOut } from "../login/userSlice";
+import { logOut, setToken } from "../login/userSlice";
 
 const Button = styled.button`
     background-color: black;
@@ -118,7 +118,6 @@ const Sidebar = ({ username, user_pic, user_email }) => {
     const handleLogOut = async () => {
         const res = await fetch("/api/login/auth/logout", {
             method: "GET",
-            credentials: "include",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -128,6 +127,9 @@ const Sidebar = ({ username, user_pic, user_email }) => {
         const { success } = data;
 
         if (success) {
+            // Removes the access token from the redux store.
+            dispatch(setToken(""));
+            // Logs the user out.
             dispatch(logOut());
         }
     };

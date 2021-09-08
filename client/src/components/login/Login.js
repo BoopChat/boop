@@ -1,7 +1,7 @@
 import "../../styles/login.css";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { logIn } from "./userSlice";
+import { logIn, setToken } from "./userSlice";
 
 import GoogleButton from "../GoogleButton.js";
 import FacebookButton from "../FacebookButton.js";
@@ -15,9 +15,8 @@ const Login = () => {
     //useEffect executes everytime this login page loads or reloads.
     useEffect(() => {
         const fetchData = async () => {
-            const res = await fetch("/api/login/auth/success", {
+            const res = await fetch("/api/login/auth/cookie", {
                 method: "GET",
-                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -25,7 +24,11 @@ const Login = () => {
 
             const data = await res.json();
             const { success } = data;
+
             if (success) {
+                // Saves the access token in the redux store.
+                dispatch(setToken(data.token));
+                // Logs in the user.
                 dispatch(logIn());
             }
         };
