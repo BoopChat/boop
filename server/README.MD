@@ -73,7 +73,7 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
             ADD URI "http://localhost:3000"
         
         Under Authorized redirect URIs
-           ADD URI "http://localhost:5000/api/login/auth/google/callback"
+            ADD URI "http://localhost:5000/api/login/auth/google/callback"
 
     Create
 
