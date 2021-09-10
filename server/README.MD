@@ -34,3 +34,57 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 
 5. (Optional) Use the [Thunder Client](https://marketplace.visualstudio.com/items?itemName=rangav.vscode-thunder-client) VSCode extension to test the routes. Here's a [JSON file](https://drive.google.com/drive/folders/14SfX97UpaPSqzPgeuLMLAoRXbzHXtx0O?usp=sharing) with some sample queries.
 
+# Getting Google Login to Work
+
+1. Installing Dependencies
+
+    Navigate to the Client directory and Run the command:
+        `npm i`
+
+    Navigate to the Server directory and run the command:
+        `npm i`
+
+1. Setting up Enviroment Variables
+
+    Create a .env file at the root of the server directory if it does not already exist.
+
+    Add the following variables to the .env file:
+
+        GOOGLE_CLIENT_ID = < Google client Id goes here >
+        GOOGLE_CLIENT_SECRET = < Google client secret goes here >
+        TOKEN_SECRET = < random secret string goes here >
+    
+    Replace "< random secret string goes here >" with a random string of your choice. You can use env.sample file as a reference.
+ 
+ 2. Getting Google App credentials
+    
+    Sign in to Google's Cloud Console [here](https://accounts.google.com/ServiceLogin/signinchooser?service=cloudconsole&passive=1209600&osid=1&continue=https%3A%2F%2Fconsole.cloud.google.com%2Fapis%2Fcredentials%3Fref%3Dhttps%3A%2F%2Fwww.google.com%2F&followup=https%3A%2F%2Fconsole.cloud.google.com%2Fapis%2Fcredentials%3Fref%3Dhttps%3A%2F%2Fwww.google.com%2F&flowName=GlifWebSignIn&flowEntry=ServiceLogin)
+ 
+    From the side menu select "Credetials" then  "+ CREATE CREDENTIALS" option.
+
+    Select the "OAuth client ID" option.
+
+    Fill out the Form as follows:
+
+        Set the "Application type" to "Web application".
+        Name : "Boop chat login" (You can use any name for this. Only you will be able to see this in your google console)
+        
+        Under Authorized JavaScript origins
+            ADD URI "http://localhost:3000"
+        
+        Under Authorized redirect URIs
+           ADD URI "http://localhost:5000/api/login/auth/google/callback"
+
+    Create
+
+    You will be given you Client ID and Client secret.
+
+ 3. Setting client ID and client Secret.
+    
+    In the .env file
+
+        replace < Google client Id goes here > with the acquired Goolge client ID.
+            e.g GOOGLE_CLIENT_ID = asdjkh489ajhkajshdjh389380.app.googlecontent.com
+
+        replace < Google client secret goes here > with the acquired Goolge client sercret.
+            e.g GOOGLE_CLIENT_SECRET = ajhasjdhjh48978387jkhfjkhzx
