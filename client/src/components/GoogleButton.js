@@ -15,7 +15,6 @@ const GoogleButton = ({ text = "Sign up with google" }) => {
         //sends request to api which checks for the login cookie
         const res = await fetch("/api/login/auth/cookie", {
             method: "GET",
-            credentials: "include",
             headers: {
                 "Content-Type": "application/json",
             },
