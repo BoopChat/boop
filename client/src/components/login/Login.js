@@ -1,46 +1,45 @@
-import { GoogleLogin } from "react-google-login";
+import "../../styles/login.css";
 import { useDispatch } from "react-redux";
-import { logIn } from "./userSlice";
+import { useEffect } from "react";
+import { logIn, setToken } from "./userSlice";
 
-import "../../styles/login.css"
-
-import FacebookButton from "../FacebookButton.js"
-import TwitterButton from "../TwitterButton.js"
+import GoogleButton from "../GoogleButton.js";
+import FacebookButton from "../FacebookButton.js";
+import TwitterButton from "../TwitterButton.js";
 
 const Login = () => {
-    //send action to redux store to change states
     const dispatch = useDispatch();
-    //handles google login process
-    const handleLogin = async (googleData) => {
-        const res = await fetch("http://localhost:5000/login/auth/google", {
-            method: "POST",
-            body: JSON.stringify({
-                token: googleData.tokenId,
-            }),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
 
-        //extract json data from server response
-        const data = await res.json();
+    //checks if the user has successfully logged in using a provider
+    //dispatches the logIn action to change the user's login state if true;
+    //useEffect executes everytime this login page loads or reloads.
+    useEffect(() => {
+        const fetchData = async () => {
+            const res = await fetch("/api/login/auth/cookie", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
 
-        if (!data.error) {
-            //sends the login action to the redux store to change user login state
-            dispatch(logIn());
-        }
-    };
+            const data = await res.json();
+            const { success } = data;
+
+            if (success) {
+                // Saves the access token in the redux store.
+                dispatch(setToken(data.token));
+                // Logs in the user.
+                dispatch(logIn());
+            }
+        };
+
+        fetchData();
+    });
     return (
         <div className="sign-in-container">
             <h1>Boop Chat</h1>
             <div className="sign_btns">
-                <GoogleLogin
-                    clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
-                    buttonText="Continue with Google"
-                    onSuccess={handleLogin}
-                    onFailure={handleLogin}
-                    cookiePolicy={"single_host_origin"}
-                />
+                <GoogleButton text="Continue with Google" />
                 <FacebookButton text="Continue with facebook" />
                 <TwitterButton text="Continue with twitter" />
             </div>

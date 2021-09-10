@@ -1,47 +1,59 @@
 const router = require("express").Router();
-
-//json web token
+const passport = require("passport");
 const jwt = require("jsonwebtoken");
+const dayjs = require("dayjs");
 
-//google authentication client for token verification
-const { OAuth2Client } = require("google-auth-library");
-const client = new OAuth2Client(process.env.CLIENT_ID);
+require("./loginStrategies/googleStrategy");
 
-router.post("/google", async (req, res) => {
-    const { token } = req.body;
+router.get("/google", passport.authenticate("google", { scope: ["email", "profile"] }));
 
-    try {
-        const ticket = await client.verifyIdToken({
-            idToken: token,
-            audience: process.env.CLIENT_ID,
-        });
+// after successful login with google strategy, user db record will be sent here in the req.user property.
+router.get("/google/callback", passport.authenticate("google", { session: false }), (req, res) => {
+    // Creates a cookie with the user's login information
+    res.cookie("loginCookie", JSON.stringify(req.user), {
+        secure: false,
+        httpOnly: true,
+        expires: dayjs().add(1, "year").toDate(),
+    });
 
-        const { given_name, family_name, email, picture } = ticket.getPayload();
+    // Redirects to the login page and stores the login cookie in the users browser.
+    res.status(301).redirect("http://localhost:3000");
+});
 
-        //send info to data base using an upsert requests
-        //return created or updated record so user id can be used for JWT.
+// Creates a jwt access token if the cookie with the users login information exists.
+router.get("/cookie", (req, res) => {
+    // If the cookie with users login information exists, create jwt and send to user.
+    if (req.cookies.loginCookie) {
+        // Extracts user id from the cookie with the users login information.
+        const { id } = JSON.parse(req.cookies.loginCookie);
 
-        //testing data of return record
-        const user = {
-            id: "aslkdjhjd7363",
-            first_name: given_name,
-            last_name: family_name,
-            email,
-            picture,
-        };
+        // Creates an access jwt token using the user id.
+        const token = jwt.sign({ id: id }, process.env.TOKEN_SECRET);
 
-        const authToken = jwt.sign({ id: user.id }, process.env.TOKEN_SECRET);
-
-        res.status(200).header("auth-token", authToken).json({
-            status: "success",
-            authToken,
-        });
-    } catch (err) {
-        res.status(400).json({
-            status: "failed",
-            error: err,
+        // Returns the jwt access token.
+        return res.status(200).json({
+            success: true,
+            msg: "User Authenticated",
+            token,
         });
     }
+
+    // If the cookie with the users login information does not exist
+    // return a login status of false
+    res.status(200).json({
+        success: false,
+        msg: "Login with social provider",
+    });
+});
+
+// logs the user out.
+router.get("/logout", (req, res) => {
+    // Deletes the cookie containing the users login information.
+    res.clearCookie("loginCookie");
+    res.status(200).json({
+        success: true,
+        msg: "Logged Out",
+    });
 });
 
 module.exports = router;
