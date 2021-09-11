@@ -29,12 +29,13 @@ const Contacts = () => {
         <div id="contact_container">
             <h1>Contacts</h1>
             <div id="contacts">
-                {contacts.map(contact =>
+                {contacts.map((contact, i) =>
                     <ContactItem
                         img={contact.img}
                         username={contact.username}
                         user_id={contact.user_id}
                         status={contact.status}
+                        key={i}
                     />
                 )}
             </div>

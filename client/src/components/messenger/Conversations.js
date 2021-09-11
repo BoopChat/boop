@@ -33,13 +33,14 @@ const Conversations = () => {
         <div id="chat_container">
             <h1>Conversations</h1>
             <div id="chats">
-                {convertations.map(chat =>
+                {convertations.map((chat, i) =>
                     <ConversationItem
                         name={chat.name}
                         img={chat.img}
                         lastMsg={chat.lastMsg}
                         lastDate={chat.lastDate}
                         unread={chat.unread}
+                        key={i}
                     />
                 )}
             </div>
