@@ -12,12 +12,12 @@ dotenv.config();
 
 //Server routes
 var indexRouter = require("./routes/index");
-var contactsRouter = require("./routes/contacts");
-var conversationsRouter = require("./routes/conversations");
-var messagesRouter = require("./routes/messages");
-var participantsRouter = require("./routes/participants");
-var signinOptionsRouter = require("./routes/signinOptions");
-var usersRouter = require("./routes/users");
+var contactsRouter = require("./routes/api/contacts");
+var conversationsRouter = require("./routes/api/conversations");
+var messagesRouter = require("./routes/api/messages");
+var participantsRouter = require("./routes/api/participants");
+var signinOptionsRouter = require("./routes/api/signinOptions");
+var usersRouter = require("./routes/api/users");
 var LoginAuthRouter = require("./routes/loginAuth"); //handles login requests
 
 var app = express();
@@ -34,12 +34,12 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
-app.use("/contacts", contactsRouter);
-app.use("/conversations", conversationsRouter);
-app.use("/messages", messagesRouter);
-app.use("/participants", participantsRouter);
-app.use("/signinOptions", signinOptionsRouter);
-app.use("/users", usersRouter);
+app.use("/api/contacts", contactsRouter);
+app.use("/api/conversations", conversationsRouter);
+app.use("/api/messages", messagesRouter);
+app.use("/api/participants", participantsRouter);
+app.use("/api/signinOptions", signinOptionsRouter);
+app.use("/api/users", usersRouter);
 app.use("/api/login/auth", LoginAuthRouter);
 
 // catch 404 and forward to error handler

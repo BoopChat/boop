@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var controller = require("../controllers/Contacts");
+var controller = require("../../controllers/Contacts");
 
 // Manage a single user's contacts
 router

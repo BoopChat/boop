@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var controller = require("../controllers/Participants");
+var controller = require("../../controllers/Participants");
 
 // Manage a single user's participation
 router
