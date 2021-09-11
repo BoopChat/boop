@@ -2,13 +2,16 @@ import "../../styles/login.css";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { logIn, setToken } from "./userSlice";
+import { useSelector } from "react-redux";
 
 import GoogleButton from "../GoogleButton.js";
 import FacebookButton from "../FacebookButton.js";
 import TwitterButton from "../TwitterButton.js";
+import Messenger from "../messenger/Messenger";
 
 const Login = () => {
     const dispatch = useDispatch();
+    const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
     //checks if the user has successfully logged in using a provider
     //dispatches the logIn action to change the user's login state if true;
@@ -36,14 +39,16 @@ const Login = () => {
         fetchData();
     });
     return (
-        <div className="sign-in-container">
-            <h1>Boop Chat</h1>
-            <div className="sign_btns">
-                <GoogleButton text="Continue with Google" />
-                <FacebookButton text="Continue with facebook" />
-                <TwitterButton text="Continue with twitter" />
+        isLoggedIn ? <Messenger/> : (
+            <div className="sign-in-container">
+                <h1>Boop Chat</h1>
+                <div className="sign_btns">
+                    <GoogleButton text="Continue with Google" />
+                    <FacebookButton text="Continue with facebook" />
+                    <TwitterButton text="Continue with twitter" />
+                </div>
             </div>
-        </div>
+        )
     );
 };
 

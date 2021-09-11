@@ -1,15 +1,16 @@
 import Login from "./components/login/Login";
-import Messenger from "./components/messenger/Messenger";
-import { useSelector } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
+import store from "./redux-store/store";
+import { Provider } from "react-redux";
 
 function App() {
-    const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
     return (
-        <BrowserRouter>
-            <div className="App">{!isLoggedIn ? <Login /> : <Messenger />}</div>
-        </BrowserRouter>
+        <Provider store={store}>
+            <BrowserRouter>
+                <div className="App"><Login /></div>
+            </BrowserRouter>
+        </Provider>
     );
 }
 
