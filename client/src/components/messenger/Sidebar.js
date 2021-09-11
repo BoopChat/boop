@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 
 import { logOut, setToken } from "../login/userSlice";
 
-const Button = styled.button`
+const MenuButton = styled.button`
     background-color: black;
     border: none;
     width: 40px;
@@ -136,7 +136,7 @@ const Sidebar = ({ username, user_pic, user_email }) => {
 
     return (
         <div>
-            <Button clicked={click} onClick={() => handleClick()}></Button>
+            <MenuButton title="Menu" clicked={click} onClick={() => handleClick()}></MenuButton>
             <div id="sidebar_container">
                 <Profile id="profile" clicked={profileClick}>
                     <img onClick={() => handleProfileClick()} src={user_pic} alt={username + " pic"} />
@@ -165,9 +165,6 @@ const Sidebar = ({ username, user_pic, user_email }) => {
                     </NavLink>
                 </SideItems>
             </div>
-            <button id="logout" onClick={handleLogOut}>
-                <img src={logout} alt="logout" />
-            </button>
         </div>
     );
 };

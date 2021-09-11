@@ -1,4 +1,4 @@
-const ChatItem = ({name, img, lastMsg, lastDate, unread}) => {
+const ConversationItem = ({name, img, lastMsg, lastDate, unread}) => {
 
     return (
         <div className="chat_item">
@@ -17,4 +17,4 @@ const ChatItem = ({name, img, lastMsg, lastDate, unread}) => {
     )
 }
 
-export default ChatItem;
+export default ConversationItem;

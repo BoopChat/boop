@@ -83,21 +83,6 @@ p {
 }
 
 /*  global classes */
-.btn {
-  text-transform: uppercase;
-  padding: 0.375rem 0.75rem;
-  letter-spacing: 0.25rem;
-  display: inline-block;
-  font-weight: 700;
-  -webkit-transition: all 0.3s linear;
-  transition: all 0.3s linear;
-  font-size: 0.875rem;
-  border: 2px solid transparent;
-  cursor: pointer;
-  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-  border-radius: 0.5rem;
-}
 
 .container {
   width: 100%;
@@ -155,42 +140,3 @@ App
     place-items: center;
   }
 }
-
-/*
-=======================
-Login
-=======================
-*/
-.login {
-  text-align: center;
-  width: 400px;
-  padding: 1rem 0rem;
-  border-radius: 0.5rem;
-}
-
-.login .title {
-  color: #ff8906;
-  background: #0f0e17;
-  font-family: "Roboto", sans-serif;
-}
-
-.login .hr-line {
-  margin-bottom: 1rem;
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: 1fr 5rem 1fr;
-      grid-template-columns: 1fr 5rem 1fr;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
-.login .hr-line div {
-  height: 1px;
-  background: #a7a9be;
-}
-
-.login .hr-line span {
-  letter-spacing: 0.25rem;
-}
-/*# sourceMappingURL=style.css.map */

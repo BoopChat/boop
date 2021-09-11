@@ -1,6 +1,6 @@
-import ChatItem from "./ChatItem"
+import ConversationItem from "./ConversationItem"
 
-let chats = [
+let convertations = [
     {
         name: "John",
         img: "https://picsum.photos/200?random=1",
@@ -28,18 +28,19 @@ let chats = [
     }
 ]
 
-const Chats = () => {
+const Conversations = () => {
     return (
         <div id="chat_container">
-            <h1>Chats</h1>
+            <h1>Conversations</h1>
             <div id="chats">
-                {chats.map(chat =>
-                    <ChatItem
+                {convertations.map((chat, i) =>
+                    <ConversationItem
                         name={chat.name}
                         img={chat.img}
                         lastMsg={chat.lastMsg}
                         lastDate={chat.lastDate}
                         unread={chat.unread}
+                        key={i}
                     />
                 )}
             </div>
@@ -47,4 +48,4 @@ const Chats = () => {
     )
 }
 
-export default Chats;
+export default Conversations;

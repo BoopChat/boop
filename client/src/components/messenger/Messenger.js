@@ -1,6 +1,6 @@
 import { Route, Switch, useLocation } from "react-router";
 
-import Chats from "./Chats";
+import Conversations from "./Conversations";
 import Contacts from "./Contacts";
 import Settings from "./Settings";
 import Sidebar from "./Sidebar";
@@ -16,10 +16,10 @@ const Messenger = () => {
             <Sidebar username="James Clarke" user_pic="https://picsum.photos/200" user_email="james243@live.com" />
             <div id="main_panel">
                 <Switch location={location} key={location.pathname}>
-                    <Route path="/chats" component={Chats} />
+                    <Route path="/conversations" component={Conversations} />
                     <Route path="/contacts" component={Contacts} />
                     <Route path="/settings" component={Settings} />
-                    <Route path="/" component={Chats} />
+                    <Route path="/" component={Conversations} />
                 </Switch>
             </div>
             <div id="chat_panel">
