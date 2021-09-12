@@ -166,12 +166,12 @@ module.exports.leaveConversation = async (req, res) => {
                 err.message || "Some error occurred while deleting the conversation."
             });
         });
-    
+
         if(!deleted_conversation_row){
             return res.send({msg:"Conversation couldn't be deleted. Probably didn't exist."})
         }
-    
-    
+
+
         //return a success msg
         return res.send({
             msg:"Conversation successfully deleted!"
@@ -190,7 +190,8 @@ module.exports.leaveConversation = async (req, res) => {
 
         // if this is the last admin and they chose a successor that's not a participant
         if(admins_count == 1 && !successor_is_participant){
-            // return a msg letting the user know they must choose a successor that's a participant and the list of participants
+            // return a msg letting the user know they must choose a successor that's a participant
+            // and the list of participants
             return res.send({
                 msg: "You must choose a successor that's a participant.",
                 participants: participants
