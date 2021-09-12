@@ -37,7 +37,7 @@ module.exports.addConversation = async (req, res) => {
     // add all users in the participants array as participants in the conversation
     await Promise.all(participants.map(async (participant) => {
         // if this is the user that created the chat make them the admin
-        var is_admin = ((participant == user_id) || (participants.length == 2)) ?  true : false;
+        var is_admin = ((participant == user_id) || (participants.length == 2));
 
         // create the association between the user and the conversation
         Participant.create({
@@ -129,7 +129,7 @@ module.exports.leaveConversation = async (req, res) => {
     var successor_is_participant = false;
 
     // Get the number of admins (count how many participants have is_admin set to true)
-    participants.map((participant) => {
+    for (let participant of participants) {
         if(participant.is_admin == true){
             admins_count += 1;
         }
@@ -145,7 +145,7 @@ module.exports.leaveConversation = async (req, res) => {
         if(participant.user_id == successor_id){
             successor_is_participant = true;
         }
-    })
+    };
 
     // if the user isn't a participant return an error message
     if(!user_is_participant){
