@@ -42,14 +42,14 @@ module.exports.addConversation = async (req, res) => {
 
     // add all other users in the participants array as participants in the conversation
     let is_admin = participants.length == 1;
-    await Promise.all(participants.map(async (participant) => {
+    participants.forEach(async (participant) => {
         // create the association between the user and the conversation
         Participant.create({
             user_id : participant,
             conversation_id: conversation.id,
             is_admin: is_admin
         })
-    }));
+    });
 
     //return a success message + the newly created conversation
     return res.status(201).send({msg:"Conversation successfully created!", conversation});
