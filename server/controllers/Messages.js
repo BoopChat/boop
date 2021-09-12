@@ -1,9 +1,8 @@
 const db = require("../models");
 const Participant = db.Participant;
 const Message = db.Message;
-
-// THIS FUNCTIONALITY COULD BE FOLDED INTO THE GETCONVERSATION METHOD
-// (IN AN INCLUDE STATMENT) IN THE CONVERSATIONS CONTROLLER
+const User = db.User;
+const Conversation = db.Conversation;
 
 // get all messages from a conversation
 module.exports.getMessages = async (req, res) => {
@@ -22,16 +21,30 @@ module.exports.getMessages = async (req, res) => {
         }
     })
     if (!is_participant)
-        return res.status(404).send("user is not a participant of conversation");
+        return res.status(404).send({msg: "User is not a participant of conversation"});
 
     //get all messages from the conversation
     let messages = await Message.findAll({
         where: {
             conversation_id: conversation_id
+        },
+        attributes: ["id", "content", "sender_id", "createdAt", "updatedAt"],
+        order: [["createdAt", "DESC"]],
+        include: {
+            model: User,
+            as: "sender",
+            // specify what atributes you want returned
+            attributes:["display_name", "image_url"],
+        },
+        include: {
+            model: Conversation,
+            as: "conversation",
+            // specify what atributes you want returned
+            attributes:["id", "title", "image_url"],
         }
     });
 
-    if (!messages) return res.status(404).send("messages not found");
+    if (!messages) return res.status(404).send({msg: "Messages not found"});
     return res.send({messages: messages});
 }
 
@@ -45,7 +58,7 @@ module.exports.addMessage = async (req, res) => {
     // Validate request
     if (!req.body.content) {
         res.status(400).send({
-            message: "Content can not be empty!"
+            msg: "Content can not be empty!"
         });
         return;
     }
@@ -58,7 +71,7 @@ module.exports.addMessage = async (req, res) => {
         }
     })
     if (!is_participant)
-        return res.status(404).send("user is not a participant of conversation");
+        return res.status(404).send({msg:"User is not a participant of conversation"});
 
     // create the message with the neccessary values
     let new_message = await Message.create({
@@ -69,12 +82,12 @@ module.exports.addMessage = async (req, res) => {
     //catch any errors
     .catch(err => {
         res.status(500).send({
-            message:
+            msg:
             err.message || "Some error occurred while creating the message."
         });
     });
     //return a success message + the newly created msg;
-    return res.send({
-        message:"Message successfully added to the conversation!", new_message
+    return res.status(201).send({
+        msg:"Message successfully added to the conversation!", new_message
     });
 }

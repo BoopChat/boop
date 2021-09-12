@@ -9,10 +9,7 @@ router
     .get(controller.getConversations)
     // create a new conversation
     .post(controller.addConversation)
-
-router
-    .route("/:user_id/add-participant")
-    // add a user to an existing conversation
-    .post(controller.addParticipantToConversation)
+    // soft deletes  participant association which "removes" a user from a conversation
+    .delete(controller.leaveConversation)
 
 module.exports = router;

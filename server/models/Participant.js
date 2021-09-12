@@ -10,23 +10,29 @@ module.exports = (sequelize, Sequelize) => {
         },
         updatedAt: {
             type: Sequelize.DATE, field: 'updated_at', defaultValue: Sequelize.NOW
-        }
-    });
+        },
+        deletedAt: { type: Sequelize.DATE, field: 'deleted_at' }
+    },
+    {
+        paranoid: true
+    }
+    );
 
     // MAY NOT BE NEEDED
-    // Participant.associate = ({
-    //     Conversation,
-    //     User
-    // })=>{
-    //     Participant.hasMany(Conversation, {
-    //         as: "conversations",
-    //         foreignKey: "conversation_id"
-    //     });
-    //     Participant.hasMany(User, {
-    //         as: "users",
-    //         foreignKey: "user_id"
-    //     });
-    // }
+    Participant.associate = ({
+        Conversation,
+        User
+    })=>{
+        Participant.belongsTo(Conversation, {
+            as: "conversationInfo",
+            foreignKey: "conversation_id",
+            onDelete: 'CASCADE'
+        });
+        Participant.belongsTo(User, {
+            as: "participantInfo",
+            foreignKey: "user_id"
+        });
+    }
 
     return Participant;
 };
