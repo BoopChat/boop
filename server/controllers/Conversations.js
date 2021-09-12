@@ -11,9 +11,7 @@ module.exports.addConversation = async (req, res) => {
 
     // Validate request
     if (!user_id) {
-        res.status(400).send({
-        message: "Content can not be empty!"
-        });
+        res.status(400).send({ msg: "Content can not be empty!" });
         return;
     }
 
@@ -27,8 +25,7 @@ module.exports.addConversation = async (req, res) => {
     //catch any errors
     .catch(err => {
         res.status(500).send({
-            message:
-            err.message || "Some error occurred while creating the Conversation."
+            msg: err.message || "Some error occurred while creating the Conversation."
         });
     });
 
@@ -40,7 +37,7 @@ module.exports.addConversation = async (req, res) => {
     // add all users in the participants array as participants in the conversation
     await Promise.all(participants.map(async (participant) => {
         // if this is the user that created the chat make them the admin
-        var is_admin = (participant == user_id) ?  true : false;
+        var is_admin = ((participant == user_id) || (participants.length == 2)) ?  true : false;
 
         // create the association between the user and the conversation
         Participant.create({
@@ -51,23 +48,23 @@ module.exports.addConversation = async (req, res) => {
     }));
 
     //return a success message + the newly created conversation
-    return res.send({message:"Conversation successfully created!", conversation});
+    return res.status(201).send({msg:"Conversation successfully created!", conversation});
 };
 
+// get all a user's conversations
 module.exports.getConversations = async (req, res) => {
     let user_id = req.params.user_id;
     // Need to check that user_id belongs to a valid user and
     // matches the id of the requesting user
 
-    //get user and all conversations
+    //get user and all conversations (where Participants.deleted_at is null)
     let user = await User.findByPk(user_id,{
         // get the conversation info
         include: {
             model: Conversation,
             as: "conversationList",
             // specify what atributes you want returned
-            attributes:["id", "title", "image_url", "user_editable_image",
-                        "user_editable_title"],
+            attributes:["id", "title", "image_url"],
             // Prevent the belongs-to-many mapping object (Participant)
             // from being returned
             through: {attributes: []},
@@ -76,63 +73,171 @@ module.exports.getConversations = async (req, res) => {
                 model: User,
                 as: "participants",
                 // specify what atributes you want returned
-                attributes:["id", "display_name", "image_url"],
+                attributes:["display_name"],
                 // Prevents the entire belongs-to-many mapping object (Participant)
-                // from being returned, just returns Participant -> is_admin
-                through: {attributes: ["is_admin"]}
+                // from being returned
+                through: {attributes: []}
             }
         }
     });
 
-    if (!user) return res.status(404).send("user not found");
-    return res.send(user);
+    if (!user) return res.status(404).send({msg:"User not found"});
+    return res.send({conversationList:user["conversationList"]});
 }
 
-// Add a user to an existing conversation
-module.exports.addParticipantToConversation = async (req, res) => {
+// remove a user from a conversation
+module.exports.leaveConversation = async (req, res) => {
     let user_id = req.params.user_id;
-    //get the conversation_id and the id of the user being added to the
-    // conversation (participant_id) from the request body
+    // get the conversation_id and id of the successor admin (successor_id)) from the request body
     let conversation_id = req.body.conversation_id;
-    let participant_id = req.body.participant_id;
+    let successor_id = req.body.successor_id
     // Need to check that user_id belongs to a valid user and
     // matches the id of the requesting user
 
     // Validate request
-    if (!user_id|| !conversation_id || !participant_id) {
+    if (!user_id|| !conversation_id) {
         res.status(400).send({
-        message: "Content can not be empty!"
+        msg: "Content can not be empty!"
         });
         return;
     }
 
-    //check if the requesting user is a participant of the conversation
-    let is_participant = await Participant.findOne({
-        where: {
-            user_id: user_id,
+    // Get the participants' user ids and is_admin values, along with the number of participants
+    let participants_info = await Participant.findAndCountAll({
+        where:{
             conversation_id: conversation_id
+        },
+        attributes:["user_id", "is_admin"],
+        include:{
+            model: User,
+            as: "participantInfo",
+            attributes: ["display_name"]
         }
     })
-    if (!is_participant)
-        return res.status(404).send("requesting user is not a participant of \
-                                    conversation");
 
-    // add the new participant to the conversation using participant_id
-    // passed in the body of the request
-    let participant = await Participant.create({
-        user_id : participant_id,
-        conversation_id: conversation_id
+    // The number of participants
+    var participants_count = participants_info.count;
+    // The participants' user ids and is_admin values
+    var participants = participants_info.rows;
+    // the number of admins
+    var admins_count = 0;
+    // whether or not the user is a participant
+    var user_is_participant = false;
+    // whether or not the user is an admin
+    var user_is_admin = false;
+    // whether or not the successor is a participant
+    var successor_is_participant = false;
+
+    // Get the number of admins (count how many participants have is_admin set to true)
+    participants.map((participant) => {
+        if(participant.is_admin == true){
+            admins_count += 1;
+        }
+        // check if user is a participant
+        if(participant.user_id == user_id){
+            user_is_participant = true;
+            //if the user's an admin set user_is_admin to true
+            if(participant.is_admin == true){
+                user_is_admin =true
+            }
+        }
+        // check if successor is a participant
+        if(participant.user_id == successor_id){
+            successor_is_participant = true;
+        }
+    })
+
+    // if the user isn't a participant return an error message
+    if(!user_is_participant){
+        return res.status(404).send({msg: "Requesting user is not a participant of the conversation"});
+    }
+
+    // if this is the only participant delete the conversation, all messages and participants
+    if(participants_count == 1){
+        let deleted_conversation_row = await Conversation.destroy({
+            where:{
+                id: conversation_id
+            }
+        })
+        //catch any errors
+        .catch(err => {
+            res.status(500).send({
+                msg:
+                err.message || "Some error occurred while deleting the conversation."
+            });
+        });
+    
+        if(!deleted_conversation_row){
+            return res.send({msg:"Conversation couldn't be deleted. Probably didn't exist."})
+        }
+    
+    
+        //return a success msg
+        return res.send({
+            msg:"Conversation successfully deleted!"
+        });
+    }
+
+    if(user_is_admin == true){
+        // if this is the last admin and they haven't chosen a successor
+        if(admins_count == 1 && !successor_id){
+            // return a msg letting the user know they must choose a successor and the list of participants
+            return res.send({
+                msg: "You're the only admin. You must choose a successor.",
+                participants: participants
+            });
+        }
+
+        // if this is the last admin and they chose a successor that's not a participant
+        if(admins_count == 1 && !successor_is_participant){
+            // return a msg letting the user know they must choose a successor that's a participant and the list of participants
+            return res.send({
+                msg: "You must choose a successor that's a participant.",
+                participants: participants
+            });
+        }
+
+        // if a successor was chosen
+        if(successor_id){
+            // set successor's is_admin value to true
+            let successor = Participant.update({
+                is_admin: true
+            },
+            {
+                where:{
+                    user_id: successor_id
+                }
+            })
+            //catch any errors
+            .catch(err => {
+                res.status(500).send({
+                    msg: err.message || "Some error occurred while making successor an admin."
+                });
+            });
+        }
+    }
+
+    let deleted_participant_row = await Participant.destroy({
+        where:{
+            user_id : user_id,
+            conversation_id: conversation_id
+        }
     })
     //catch any errors
     .catch(err => {
         res.status(500).send({
-            message:
-            err.message || "Some error occurred while adding the \
-                user to the conversation."
+            msg:
+            err.message || "Some error occurred while removing the user from the conversation."
         });
     });
-    //return a success message + the newly participant association;
+
+    if(!deleted_participant_row){
+        return res.send({msg:"User couldn't be removed from conversation. Probably wasn't a participant."})
+    }
+
+
+    //return a success msg
     return res.send({
-        message:"User successfully added to the conversation!", participant
+        msg:"User successfully removed from the conversation!"
     });
 }

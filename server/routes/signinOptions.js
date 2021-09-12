@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var controller = require("../../controllers/SigninOptions");
+var controller = require("../controllers/SigninOptions");
 // These routes could probably be moved to the login/auth router
 
 // Manage a single signinOption

@@ -1,9 +1,7 @@
 const db = require("../models");
 const Participant = db.Participant;
 const Message = db.Message;
-
-// THIS FUNCTIONALITY COULD BE FOLDED INTO THE GETCONVERSATION METHOD
-// (IN AN INCLUDE STATMENT) IN THE CONVERSATIONS CONTROLLER
+const User = db.User;
 
 // get all messages from a conversation
 module.exports.getMessages = async (req, res) => {
@@ -28,6 +26,12 @@ module.exports.getMessages = async (req, res) => {
     let messages = await Message.findAll({
         where: {
             conversation_id: conversation_id
+        },
+        include: {
+            model: User,
+            as: "sender",
+            // specify what atributes you want returned
+            attributes:["display_name", "image_url"],
         }
     });
 

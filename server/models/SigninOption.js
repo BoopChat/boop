@@ -11,7 +11,14 @@ module.exports = (sequelize, Sequelize) => {
         updatedAt: {
             type: Sequelize.DATE, field: 'updated_at', defaultValue: Sequelize.NOW
         }
-    });
+    },{
+        instanceMethods:{
+            findOrMake: function(email, service_name, first_name, last_name, image_url){
+
+            }
+        }
+    }
+    );
 
     SigninOption.associate = ({
         User

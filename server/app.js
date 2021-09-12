@@ -12,12 +12,12 @@ dotenv.config();
 
 //Server routes
 var indexRouter = require("./routes/index");
-var contactsRouter = require("./routes/api/contacts");
-var conversationsRouter = require("./routes/api/conversations");
-var messagesRouter = require("./routes/api/messages");
-var participantsRouter = require("./routes/api/participants");
-var signinOptionsRouter = require("./routes/api/signinOptions");
-var usersRouter = require("./routes/api/users");
+var contactsRouter = require("./routes/contacts");
+var conversationsRouter = require("./routes/conversations");
+var messagesRouter = require("./routes/messages");
+var participantsRouter = require("./routes/participants");
+var signinOptionsRouter = require("./routes/signinOptions");
+var usersRouter = require("./routes/users");
 var LoginAuthRouter = require("./routes/loginAuth"); //handles login requests
 
 var app = express();

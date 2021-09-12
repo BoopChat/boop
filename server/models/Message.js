@@ -25,7 +25,8 @@ module.exports = (sequelize, Sequelize) => {
     })=>{
         Message.belongsTo(Conversation, {
             as: "conversation",
-            foreignKey: "conversation_id"
+            foreignKey: "conversation_id",
+            onDelete: 'CASCADE'
         });
         Message.belongsTo(User, {
             as: "sender",
