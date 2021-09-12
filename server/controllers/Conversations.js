@@ -19,8 +19,9 @@ module.exports.addConversation = async (req, res) => {
     let conversation = await Conversation.create({
         title: req.body.title,
         image_url: req.body.image_url,
-        user_editable_image: req.body.user_editable_image,
-        user_editable_title: req.body.user_editable_title,
+        // if the options were null set their values to false else use the input values
+        user_editable_image: req.body.user_editable_image==null ? false :  req.body.user_editable_image,
+        user_editable_title: req.body.user_editable_title==null ? false :  req.body.user_editable_title,
     })
     //catch any errors
     .catch(err => {
@@ -31,14 +32,17 @@ module.exports.addConversation = async (req, res) => {
 
     // the participants' user_ids will be passed in an array
     let participants = req.body.participants;
-    //add the user to the array of participants
-    participants.push(user_id);
 
-    // add all users in the participants array as participants in the conversation
+    // add user creating convo as admin
+    Participant.create({
+        user_id: user_id,
+        conversation_id: conversation.id,
+        is_admin: true
+    })
+
+    // add all other users in the participants array as participants in the conversation
+    let is_admin = participants.length == 1;
     await Promise.all(participants.map(async (participant) => {
-        // if this is the user that created the chat make them the admin
-        var is_admin = ((participant == user_id) || (participants.length == 2));
-
         // create the association between the user and the conversation
         Participant.create({
             user_id : participant,

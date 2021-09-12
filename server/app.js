@@ -15,7 +15,6 @@ var indexRouter = require("./routes/index");
 var contactsRouter = require("./routes/contacts");
 var conversationsRouter = require("./routes/conversations");
 var messagesRouter = require("./routes/messages");
-var signinOptionsRouter = require("./routes/signinOptions");
 var LoginAuthRouter = require("./routes/loginAuth"); //handles login requests
 
 var app = express();
@@ -35,7 +34,6 @@ app.use("/", indexRouter);
 app.use("/api/contacts", contactsRouter);
 app.use("/api/conversations", conversationsRouter);
 app.use("/api/messages", messagesRouter);
-app.use("/api/signinOptions", signinOptionsRouter);
 app.use("/api/login/auth", LoginAuthRouter);
 
 // catch 404 and forward to error handler
