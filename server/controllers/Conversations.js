@@ -285,7 +285,7 @@ module.exports.leaveConversation = async (req, res) => {
         // if a successor was chosen
         if(successor_id){
             // set successor's is_admin value to true
-            let successor = Participant.update({
+            Participant.update({
                 is_admin: true
             },
             {
