@@ -50,7 +50,7 @@ module.exports.addContact = async (req, res) => {
     });
 
     //return a success message + the newly created contact
-    return res.send({message:"Contact successfully created!", contact});
+    return res.status(201).send({message:"Contact successfully created!", contact});
 };
 
 module.exports.getContacts = async (req, res) => {
