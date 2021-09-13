@@ -1,6 +1,6 @@
 import ConversationItem from "./ConversationItem"
 
-let convertations = [
+let conversations = [
     {
         name: "John",
         img: "https://picsum.photos/200?random=1",
@@ -33,7 +33,7 @@ const Conversations = () => {
         <div id="chat_container">
             <h1>Conversations</h1>
             <div id="chats">
-                {convertations.map((chat, i) =>
+                {conversations.map((chat, i) =>
                     <ConversationItem
                         name={chat.name}
                         img={chat.img}

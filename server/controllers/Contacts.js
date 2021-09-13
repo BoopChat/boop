@@ -37,18 +37,29 @@ module.exports.addContact = async (req, res) => {
 
 
     // creating the requested contact association
-    let contact = await Contact.create({
+    await Contact.create({
         user_id: user_id,
         contact_id: contact_id
-    }).catch(err => {//catch any errors
+    }).catch(err => {// catch any errors
         res.status(500).send({
             msg:
             err.message || "Some error occurred while creating the Contact."
         });
     });
 
-    //return a success message + the newly created contact
-    return res.status(201).send({msg:"Contact successfully created!", contact});
+    // retrieve the contact's info
+    let contactInfo = await User.findByPk(contact_id, {
+        // specify what attributes you want returned
+        attributes: ["display_name", "image_url", "last_active"]
+    }).catch(err => {//catch any errors
+        res.status(500).send({
+            msg:
+            err.message || "Some error occurred while retieving the Contact's info."
+        });
+    });
+
+    //return a success message + the newly created contact's info
+    return res.status(201).send({msg:"Contact successfully created!", contact:{contactInfo: contactInfo}});
 };
 
 module.exports.getContacts = async (req, res) => {
@@ -115,4 +126,3 @@ module.exports.deleteContact = async (req, res) => {
         });
     });
 };
-

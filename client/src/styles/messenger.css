@@ -236,6 +236,43 @@ div#contact_container, div#chat_container {
     height: 100%;
 }
 
+div.main_panel_header {
+    display: flex;
+    justify-content: space-between;
+}
+
+button.options {
+    border: none;
+    background-color: inherit;
+}
+
+button.options:hover {
+    cursor: pointer;
+}
+
+button.options > img {
+    width: 35px;
+}
+
+input.addContact {
+    padding: 10px 5px;
+    border: none;
+    border-top: 1px solid #60686d;
+    outline: none;
+}
+
+button.addContact {
+    padding: 10px;
+    color: white;
+    background-color:rgb(64, 108, 255);
+    border: none;
+}
+
+button.addContact:hover {
+    cursor: pointer;
+    background-color:rgb(17, 71, 248);
+}
+
 div.name_and_msg, div.time_and_badge {
     display: flex;
     flex-direction: column;
