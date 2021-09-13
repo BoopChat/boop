@@ -13,7 +13,7 @@ module.exports.addContact = async (req, res) => {
     // (prevent user from adding self as contact????)
     if (!req.body.contactEmail) {
         res.status(400).send({
-        message: "Content can not be empty!"
+            message: "Content can not be empty!"
         });
         return;
     }
@@ -28,8 +28,8 @@ module.exports.addContact = async (req, res) => {
     // return an error messageif the contact isn't a valid user
     if (!contact_info) {
         return res.status(404).send({
-                message: `${req.body.contactEmail} is not a valid user.`
-            });
+            message: `${req.body.contactEmail} is not a valid user.`
+        });
     }
 
     //get the user_id for the contact
@@ -40,9 +40,7 @@ module.exports.addContact = async (req, res) => {
     let contact = await Contact.create({
         user_id: user_id,
         contact_id: contact_id
-    })
-    //catch any errors
-    .catch(err => {
+    }).catch(err => { //catch any errors
         res.status(500).send({
             message:
             err.message || "Some error occurred while creating the Contact."
@@ -73,7 +71,7 @@ module.exports.getContacts = async (req, res) => {
 
     if (!user) return res.status(404).send("user not found");
     return res.send(user);
-}
+};
 
 // Delete a Contact
 exports.deleteContact = async (req, res) => {
@@ -85,7 +83,7 @@ exports.deleteContact = async (req, res) => {
     // Validate request
     if (!user_id || !contact_id) {
         res.status(400).send({
-        message: "Content can not be empty!"
+            message: "Content can not be empty!"
         });
         return;
     }
@@ -95,8 +93,7 @@ exports.deleteContact = async (req, res) => {
             user_id: user_id,
             contact_id: contact_id
         }
-    })
-    .then(affectedRows => {
+    }).then(affectedRows => {
         if (affectedRows == 1) {
             res.send({
                 message: "Contact was deleted successfully!"
@@ -107,8 +104,7 @@ exports.deleteContact = async (req, res) => {
                     contact_id=${contact_id}. Maybe Contact association was not found!`
             });
         }
-    })
-    .catch(err => {
+    }).catch(() => {
         res.status(500).send({
             message: `Could not delete Contact association with user_id=${user_id}
                 and contact_id=${contact_id}`

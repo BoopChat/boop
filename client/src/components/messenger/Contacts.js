@@ -1,4 +1,6 @@
-import ContactItem from "./ContactItem"
+import React from "react";
+
+import ContactItem from "./ContactItem";
 
 let contacts = [
     {
@@ -22,7 +24,7 @@ let contacts = [
         img: "https://picsum.photos/200?random=4",
         status: "dnd"
     }
-]
+];
 
 const Contacts = () => {
     return (
@@ -40,7 +42,7 @@ const Contacts = () => {
                 )}
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Contacts;

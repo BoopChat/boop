@@ -12,10 +12,10 @@ module.exports = (sequelize, Sequelize) => {
         sender_id: { type: Sequelize.INTEGER, allowNull: false },
         //timestamps
         createdAt: {
-            type: Sequelize.DATE, field: 'created_at', defaultValue: Sequelize.NOW
+            type: Sequelize.DATE, field: "created_at", defaultValue: Sequelize.NOW
         },
         updatedAt: {
-            type: Sequelize.DATE, field: 'updated_at', defaultValue: Sequelize.NOW
+            type: Sequelize.DATE, field: "updated_at", defaultValue: Sequelize.NOW
         }
     });
 
@@ -26,13 +26,13 @@ module.exports = (sequelize, Sequelize) => {
         Message.belongsTo(Conversation, {
             as: "conversation",
             foreignKey: "conversation_id",
-            onDelete: 'CASCADE'
+            onDelete: "CASCADE"
         });
         Message.belongsTo(User, {
             as: "sender",
             foreignKey: "sender_id"
         });
-    }
+    };
 
     return Message;
 };

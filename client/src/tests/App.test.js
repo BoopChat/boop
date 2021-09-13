@@ -1,9 +1,11 @@
-import { render } from '@testing-library/react';
-import App from '../App';
+import { render } from "@testing-library/react";
+import React from "react";
+
+import App from "../App";
 
 describe("Landing Page", () => {
 
-    test('fails if does not renders login component', () => {
+    test("fails if does not renders login component", () => {
         // simply check for the expected h1 content from login component
         const { getByText } = render(<App />);
         const h1 = getByText(/boop chat/i);
@@ -16,7 +18,7 @@ describe("Landing Page", () => {
         let button = getByText(/continue with google/i);
 
         expect(button).toBeInTheDocument();
-    })
+    });
 
     test("fails if facebook sign in button does not exist", () => {
         const { getByText } = render(<App />);
@@ -24,13 +26,13 @@ describe("Landing Page", () => {
         let button = getByText(/continue with facebook/i);
 
         expect(button).toBeInTheDocument();
-    })
+    });
 
     test("fails if twitter sign in button does not exist", () => {
         const { getByText } = render(<App />);
         let button = getByText(/continue with twitter/i);
 
         expect(button).toBeInTheDocument();
-    })
+    });
 
-})
+});

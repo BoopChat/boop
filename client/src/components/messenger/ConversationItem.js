@@ -1,3 +1,5 @@
+import React from "react";
+
 const ConversationItem = ({name, img, lastMsg, lastDate, unread}) => {
 
     return (
@@ -14,7 +16,7 @@ const ConversationItem = ({name, img, lastMsg, lastDate, unread}) => {
                 {unread > 0 ? <div className='unread'>{unread}</div> : ""}
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default ConversationItem;
