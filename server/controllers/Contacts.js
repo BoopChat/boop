@@ -40,9 +40,7 @@ module.exports.addContact = async (req, res) => {
     let contact = await Contact.create({
         user_id: user_id,
         contact_id: contact_id
-    })
-    //catch any errors
-    .catch(err => {
+    }).catch(err => {//catch any errors
         res.status(500).send({
             msg:
             err.message || "Some error occurred while creating the Contact."
@@ -77,7 +75,7 @@ module.exports.getContacts = async (req, res) => {
 
     if (!user) return res.status(404).send("user not found");
     return res.send({"contactList": user.contactList});
-}
+};
 
 // Delete a Contact
 module.exports.deleteContact = async (req, res) => {
@@ -99,8 +97,7 @@ module.exports.deleteContact = async (req, res) => {
             user_id: user_id,
             contact_id: contact_id
         }
-    })
-    .then(affectedRows => {
+    }).then(affectedRows => {
         if (affectedRows == 1) {
             res.send({
                 msg: "Contact was deleted successfully!"
@@ -111,8 +108,7 @@ module.exports.deleteContact = async (req, res) => {
                     contact_id=${contact_id}. Maybe Contact association was not found!`
             });
         }
-    })
-    .catch(err => {
+    }).catch(err => {
         res.status(500).send({
             msg: `Could not delete Contact association with user_id=${user_id}
                 and contact_id=${contact_id}`
