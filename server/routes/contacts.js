@@ -8,11 +8,8 @@ router
     // get all a user's contacts
     .get(controller.getContacts)
     // add a contact
-    .post(controller.addContact);
-
-// delete a contact
-router
-    .route("/:user_id/:contact_id")
+    .post(controller.addContact)
+    // delete a contact
     .delete(controller.deleteContact);
 
 module.exports = router;
