@@ -3,7 +3,7 @@ const db = require("../../models");
 const SigninOption = db.SigninOption;
 const User = db.User;
 
-module.exports.getSigninOption = async function(email, service_name, first_name, last_name, image_url){
+module.exports.getSigninOption = async function({email, service_name, first_name, last_name, image_url}){
     // try to find the signinOption
     let signinOption = await SigninOption.findOne({
         where: {
@@ -48,9 +48,7 @@ module.exports.getSigninOption = async function(email, service_name, first_name,
                     service_name: service_name
                 },
             }
-        })
-        //catch any errors
-        .catch(err => {
+        }).catch(err => { //catch any errors
             return {
                 "msg":
                 err.message || "Some error occurred while creating the User."

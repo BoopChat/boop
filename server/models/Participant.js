@@ -6,19 +6,18 @@ module.exports = (sequelize, Sequelize) => {
         is_admin: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false},
         //timestamps
         createdAt: {
-            type: Sequelize.DATE, field: 'created_at', defaultValue: Sequelize.NOW
+            type: Sequelize.DATE, field: "created_at", defaultValue: Sequelize.NOW
         },
         updatedAt: {
-            type: Sequelize.DATE, field: 'updated_at', defaultValue: Sequelize.NOW
+            type: Sequelize.DATE, field: "updated_at", defaultValue: Sequelize.NOW
         },
-        deletedAt: { type: Sequelize.DATE, field: 'deleted_at' }
+        deletedAt: { type: Sequelize.DATE, field: "deleted_at" }
     },
     {
         paranoid: true
     }
     );
 
-    // MAY NOT BE NEEDED
     Participant.associate = ({
         Conversation,
         User
@@ -26,13 +25,13 @@ module.exports = (sequelize, Sequelize) => {
         Participant.belongsTo(Conversation, {
             as: "conversationInfo",
             foreignKey: "conversation_id",
-            onDelete: 'CASCADE'
+            onDelete: "CASCADE"
         });
         Participant.belongsTo(User, {
             as: "participantInfo",
             foreignKey: "user_id"
         });
-    }
+    };
 
     return Participant;
 };

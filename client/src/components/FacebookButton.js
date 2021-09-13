@@ -1,4 +1,6 @@
-import "../styles/buttons.css"
+import "../styles/buttons.css";
+
+import React from "react";
 
 const FacebookButton = ({text="Sign up with Facebook", handler}) => {
     return (
@@ -7,7 +9,7 @@ const FacebookButton = ({text="Sign up with Facebook", handler}) => {
                 {text}
             </button>
         </span>
-    )
-}
+    );
+};
 
 export default FacebookButton;

@@ -16,10 +16,10 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.NOW
         },
         createdAt: {
-            type: Sequelize.DATE, field: 'created_at', defaultValue: Sequelize.NOW
+            type: Sequelize.DATE, field: "created_at", defaultValue: Sequelize.NOW
         },
         updatedAt: {
-            type: Sequelize.DATE, field: 'updated_at', defaultValue: Sequelize.NOW
+            type: Sequelize.DATE, field: "updated_at", defaultValue: Sequelize.NOW
         }
     });
 

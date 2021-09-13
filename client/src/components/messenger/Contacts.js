@@ -1,9 +1,9 @@
-import ContactItem from "./ContactItem";
 import plus from "../../assets/plus.svg";
+import ContactItem from "./ContactItem";
 
 import {React, useState, useEffect} from "react";
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Dialog from "@material-ui/core/Dialog";
 
 const AddContactDialog = ({open, onClose}) => {
     const [email, setEmail] = useState("");

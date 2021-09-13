@@ -19,7 +19,7 @@ module.exports.getMessages = async (req, res) => {
             user_id: user_id,
             conversation_id: conversation_id
         }
-    })
+    });
     if (!is_participant)
         return res.status(404).send({msg: "User is not a participant of conversation"});
 
@@ -46,7 +46,7 @@ module.exports.getMessages = async (req, res) => {
 
     if (!messages) return res.status(404).send({msg: "Messages not found"});
     return res.send({messages: messages});
-}
+};
 
 // Create a new message in the conversation
 module.exports.addMessage = async (req, res) => {
@@ -69,7 +69,7 @@ module.exports.addMessage = async (req, res) => {
             user_id: user_id,
             conversation_id: conversation_id
         }
-    })
+    });
     if (!is_participant)
         return res.status(404).send({msg:"User is not a participant of conversation"});
 
@@ -78,9 +78,7 @@ module.exports.addMessage = async (req, res) => {
         sender_id : user_id,
         conversation_id: conversation_id,
         content: req.body.content
-    })
-    //catch any errors
-    .catch(err => {
+    }).catch(err => { //catch any errors
         res.status(500).send({
             msg:
             err.message || "Some error occurred while creating the message."
@@ -90,4 +88,4 @@ module.exports.addMessage = async (req, res) => {
     return res.status(201).send({
         msg:"Message successfully added to the conversation!", new_message
     });
-}
+};

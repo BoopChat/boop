@@ -1,3 +1,5 @@
+import React from "react";
+
 let messages = [
     {
         author: true,
@@ -24,7 +26,7 @@ let messages = [
         content: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
         avatar: "https://picsum.photos/200?random=1"
     }
-]
+];
 
 const Chat = () => {
     return (
@@ -43,7 +45,7 @@ const Chat = () => {
                                 </div>
                                 <p>{msg.content}</p>
                             </li>
-                        )
+                        );
                     })
                 }
             </ul>
@@ -52,7 +54,7 @@ const Chat = () => {
                 <button>Send</button>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Chat;

@@ -1,4 +1,6 @@
-import ConversationItem from "./ConversationItem"
+import React from "react";
+
+import ConversationItem from "./ConversationItem";
 
 let conversations = [
     {
@@ -26,7 +28,7 @@ let conversations = [
         lastDate: "8/28/21",
         unread: 4,
     }
-]
+];
 
 const Conversations = () => {
     return (
@@ -45,7 +47,7 @@ const Conversations = () => {
                 )}
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Conversations;

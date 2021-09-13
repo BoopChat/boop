@@ -22,9 +22,7 @@ module.exports.addConversation = async (req, res) => {
         // if the options were null set their values to false else use the input values
         user_editable_image: req.body.user_editable_image==null ? false :  req.body.user_editable_image,
         user_editable_title: req.body.user_editable_title==null ? false :  req.body.user_editable_title,
-    })
-    //catch any errors
-    .catch(err => {
+    }).catch(err => { //catch any errors
         res.status(500).send({
             msg: err.message || "Some error occurred while creating the Conversation."
         });
@@ -38,7 +36,7 @@ module.exports.addConversation = async (req, res) => {
         user_id: user_id,
         conversation_id: conversation.id,
         is_admin: true
-    })
+    });
 
     // add all other users in the participants array as participants in the conversation
     let is_admin = participants.length == 1;
@@ -48,7 +46,7 @@ module.exports.addConversation = async (req, res) => {
             user_id : participant,
             conversation_id: conversation.id,
             is_admin: is_admin
-        })
+        });
     });
 
     //return a success message + the newly created conversation
@@ -87,21 +85,21 @@ module.exports.getConversations = async (req, res) => {
 
     if (!user) return res.status(404).send({msg:"User not found"});
     return res.send({conversationList:user["conversationList"]});
-}
+};
 
 // remove a user from a conversation
 module.exports.leaveConversation = async (req, res) => {
     let user_id = req.params.user_id;
     // get the conversation_id and id of the successor admin (successor_id)) from the request body
     let conversation_id = req.body.conversation_id;
-    let successor_id = req.body.successor_id
+    let successor_id = req.body.successor_id;
     // Need to check that user_id belongs to a valid user and
     // matches the id of the requesting user
 
     // Validate request
     if (!user_id|| !conversation_id) {
         res.status(400).send({
-        msg: "Content can not be empty!"
+            msg: "Content can not be empty!"
         });
         return;
     }
@@ -117,7 +115,7 @@ module.exports.leaveConversation = async (req, res) => {
             as: "participantInfo",
             attributes: ["display_name"]
         }
-    })
+    });
 
     // The number of participants
     var participants_count = participants_info.count;
@@ -142,14 +140,14 @@ module.exports.leaveConversation = async (req, res) => {
             user_is_participant = true;
             //if the user's an admin set user_is_admin to true
             if(participant.is_admin == true){
-                user_is_admin =true
+                user_is_admin = true;
             }
         }
         // check if successor is a participant
         if(participant.user_id == successor_id){
             successor_is_participant = true;
         }
-    };
+    }
 
     // if the user isn't a participant return an error message
     if(!user_is_participant){
@@ -162,9 +160,7 @@ module.exports.leaveConversation = async (req, res) => {
             where:{
                 id: conversation_id
             }
-        })
-        //catch any errors
-        .catch(err => {
+        }).catch(err => { //catch any errors
             res.status(500).send({
                 msg:
                 err.message || "Some error occurred while deleting the conversation."
@@ -172,12 +168,12 @@ module.exports.leaveConversation = async (req, res) => {
         });
 
         if(!deleted_conversation_row){
-            return res.send({msg:"Conversation couldn't be deleted. Probably didn't exist."})
+            return res.status(404).send({msg:"Conversation couldn't be deleted. Probably didn't exist."});
         }
 
 
         //return a success msg
-        return res.send({
+        return res.status(200).send({
             msg:"Conversation successfully deleted!"
         });
     }
@@ -186,7 +182,7 @@ module.exports.leaveConversation = async (req, res) => {
         // if this is the last admin and they haven't chosen a successor
         if(admins_count == 1 && !successor_id){
             // return a msg letting the user know they must choose a successor and the list of participants
-            return res.send({
+            return res.status(400).send({
                 msg: "You're the only admin. You must choose a successor.",
                 participants: participants
             });
@@ -196,7 +192,7 @@ module.exports.leaveConversation = async (req, res) => {
         if(admins_count == 1 && !successor_is_participant){
             // return a msg letting the user know they must choose a successor that's a participant
             // and the list of participants
-            return res.send({
+            return res.status(400).send({
                 msg: "You must choose a successor that's a participant.",
                 participants: participants
             });
@@ -205,16 +201,14 @@ module.exports.leaveConversation = async (req, res) => {
         // if a successor was chosen
         if(successor_id){
             // set successor's is_admin value to true
-            let successor = Participant.update({
+            Participant.update({
                 is_admin: true
             },
             {
                 where:{
                     user_id: successor_id
                 }
-            })
-            //catch any errors
-            .catch(err => {
+            }).catch(err => { //catch any errors
                 res.status(500).send({
                     msg: err.message || "Some error occurred while making successor an admin."
                 });
@@ -227,9 +221,7 @@ module.exports.leaveConversation = async (req, res) => {
             user_id : user_id,
             conversation_id: conversation_id
         }
-    })
-    //catch any errors
-    .catch(err => {
+    }).catch(err => { //catch any errors
         res.status(500).send({
             msg:
             err.message || "Some error occurred while removing the user from the conversation."
@@ -237,12 +229,12 @@ module.exports.leaveConversation = async (req, res) => {
     });
 
     if(!deleted_participant_row){
-        return res.send({msg:"User couldn't be removed from conversation. Probably wasn't a participant."})
+        return res.status(404).send({msg:"User couldn't be removed from conversation. Probably wasn't a participant."});
     }
 
 
     //return a success msg
-    return res.send({
+    return res.status(200).send({
         msg:"User successfully removed from the conversation!"
     });
-}
+};

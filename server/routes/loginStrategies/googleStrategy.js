@@ -13,13 +13,13 @@ passport.use(
 
             // try to retrieve the user from the database, or create a new user and signinOption
             // using the information retrieved from the social login, along with the service name
-            let user_from_db = await utils.getSigninOption(
-                email = profile.emails[0].value,
-                service_name = "Google",
-                first_name = profile.name.givenName,
-                last_name = profile.name.familyName,
-                image_url = profile.photos[0].value
-            );
+            let user_from_db = await utils.getSigninOption({
+                email: profile.emails[0].value,
+                service_name: "Google",
+                first_name: profile.name.givenName,
+                last_name: profile.name.familyName,
+                image_url: profile.photos[0].value
+            });
 
             // store the returned message (success or error)
             let msg = user_from_db["msg"];
