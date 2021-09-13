@@ -168,12 +168,12 @@ module.exports.leaveConversation = async (req, res) => {
         });
 
         if(!deleted_conversation_row){
-            return res.send({msg:"Conversation couldn't be deleted. Probably didn't exist."});
+            return res.status(404).send({msg:"Conversation couldn't be deleted. Probably didn't exist."});
         }
 
 
         //return a success msg
-        return res.send({
+        return res.status(200).send({
             msg:"Conversation successfully deleted!"
         });
     }
@@ -182,7 +182,7 @@ module.exports.leaveConversation = async (req, res) => {
         // if this is the last admin and they haven't chosen a successor
         if(admins_count == 1 && !successor_id){
             // return a msg letting the user know they must choose a successor and the list of participants
-            return res.send({
+            return res.status(400).send({
                 msg: "You're the only admin. You must choose a successor.",
                 participants: participants
             });
@@ -192,7 +192,7 @@ module.exports.leaveConversation = async (req, res) => {
         if(admins_count == 1 && !successor_is_participant){
             // return a msg letting the user know they must choose a successor that's a participant
             // and the list of participants
-            return res.send({
+            return res.status(400).send({
                 msg: "You must choose a successor that's a participant.",
                 participants: participants
             });
@@ -201,7 +201,6 @@ module.exports.leaveConversation = async (req, res) => {
         // if a successor was chosen
         if(successor_id){
             // set successor's is_admin value to true
-            // let successor = // not sure a value could have been caught here
             Participant.update({
                 is_admin: true
             },
@@ -230,12 +229,12 @@ module.exports.leaveConversation = async (req, res) => {
     });
 
     if(!deleted_participant_row){
-        return res.send({msg:"User couldn't be removed from conversation. Probably wasn't a participant."});
+        return res.status(404).send({msg:"User couldn't be removed from conversation. Probably wasn't a participant."});
     }
 
 
     //return a success msg
-    return res.send({
+    return res.status(200).send({
         msg:"User successfully removed from the conversation!"
     });
 };

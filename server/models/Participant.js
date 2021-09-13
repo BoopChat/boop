@@ -18,7 +18,6 @@ module.exports = (sequelize, Sequelize) => {
     }
     );
 
-    // MAY NOT BE NEEDED
     Participant.associate = ({
         Conversation,
         User
