@@ -1,4 +1,5 @@
 import plus from "../../assets/plus.svg";
+import ContactItem from "./ContactItem";
 
 import {React, useState, useEffect} from "react";
 import DialogTitle from "@material-ui/core/DialogTitle";
