@@ -3,12 +3,12 @@ const db = require("../../models");
 const SigninOption = db.SigninOption;
 const User = db.User;
 
-module.exports.getSigninOption = async function({email, service_name, first_name, last_name, image_url}){
+module.exports.getSigninOption = async function({email, serviceName, firstName, lastName, imageUrl}){
     // try to find the signinOption
     let signinOption = await SigninOption.findOne({
         where: {
             email: email,
-            service_name: service_name
+            serviceName: serviceName
         },
         include: {
             model: User,
@@ -18,9 +18,9 @@ module.exports.getSigninOption = async function({email, service_name, first_name
                 as: "signinOptions",
                 where: {
                     email: email,
-                    service_name: service_name
+                    serviceName: serviceName
                 },
-                attributes: ["service_name","email"]
+                attributes: ["serviceName","email"]
             }
         }
     });
@@ -29,14 +29,14 @@ module.exports.getSigninOption = async function({email, service_name, first_name
     // and a new user and signinOption are created
     if (!signinOption) {
         //try to create the new user and associate it with a new signinOption
-        // with the input service_name and email
+        // with the input serviceName and email
         let user = await User.create({
-            display_name: email,
-            first_name: first_name,
-            last_name: last_name,
-            image_url: image_url,
+            displayName: email,
+            firstName: firstName,
+            lastName: lastName,
+            imageUrl: imageUrl,
             signinOptions: {
-                service_name: service_name,
+                serviceName: serviceName,
                 email: email,
             }
         }, {
@@ -45,7 +45,7 @@ module.exports.getSigninOption = async function({email, service_name, first_name
                 as: "signinOptions",
                 where: {
                     email: email,
-                    service_name: service_name
+                    serviceName: serviceName
                 },
             }
         }).catch(err => { //catch any errors
