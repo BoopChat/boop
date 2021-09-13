@@ -249,7 +249,7 @@ module.exports.leaveConversation = async (req, res) => {
         });
 
         if(!deletedConversationRow){
-            return res.send({msg:"Conversation couldn't be deleted. Probably didn't exist."});
+            return res.status(500).send({msg:"Conversation couldn't be deleted. Probably didn't exist."});
         }
 
 
@@ -263,7 +263,7 @@ module.exports.leaveConversation = async (req, res) => {
         // if this is the last admin and they haven't chosen a successor
         if(adminsCount == 1 && !successorId){
             // return a msg letting the user know they must choose a successor and the list of participants
-            return res.send({
+            return res.status(400).send({
                 msg: "You're the only admin. You must choose a successor.",
                 participants: participants
             });
@@ -273,7 +273,7 @@ module.exports.leaveConversation = async (req, res) => {
         if(adminsCount == 1 && !successorIsParticipant){
             // return a msg letting the user know they must choose a successor that's a participant
             // and the list of participants
-            return res.send({
+            return res.status(400).send({
                 msg: "You must choose a successor that's a participant.",
                 participants: participants
             });
@@ -310,7 +310,7 @@ module.exports.leaveConversation = async (req, res) => {
     });
 
     if(!deletedParticipantRow){
-        return res.send({msg:"User couldn't be removed from conversation. Probably wasn't a participant."});
+        return res.status(404).send({msg:"User couldn't be removed from conversation. Probably wasn't a participant."});
     }
 
 
