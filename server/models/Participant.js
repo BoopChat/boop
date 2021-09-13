@@ -1,19 +1,16 @@
 module.exports = (sequelize, Sequelize) => {
     const Participant = sequelize.define("Participant", {
         //attributes
-        user_id: { primaryKey: true, type: Sequelize.INTEGER, allowNull: false },
-        conversation_id: { primaryKey: true, type: Sequelize.BIGINT, allowNull: false },
-        is_admin: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false},
+        userId: { primaryKey: true, type: Sequelize.INTEGER, allowNull: false, field: "user_id" },
+        conversationId: { primaryKey: true, type: Sequelize.BIGINT, allowNull: false, field: "conversation_id" },
+        isAdmin: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false, field: "is_admin"},
         //timestamps
-        createdAt: {
-            type: Sequelize.DATE, field: "created_at", defaultValue: Sequelize.NOW
-        },
-        updatedAt: {
-            type: Sequelize.DATE, field: "updated_at", defaultValue: Sequelize.NOW
-        },
+        createdAt: { type: Sequelize.DATE, field: "created_at", defaultValue: Sequelize.NOW },
+        updatedAt: { type: Sequelize.DATE, field: "updated_at", defaultValue: Sequelize.NOW },
         deletedAt: { type: Sequelize.DATE, field: "deleted_at" }
     },
     {
+        // use soft delete by default
         paranoid: true
     }
     );
@@ -24,12 +21,12 @@ module.exports = (sequelize, Sequelize) => {
     })=>{
         Participant.belongsTo(Conversation, {
             as: "conversationInfo",
-            foreignKey: "conversation_id",
+            foreignKey: "conversationId",
             onDelete: "CASCADE"
         });
         Participant.belongsTo(User, {
             as: "participantInfo",
-            foreignKey: "user_id"
+            foreignKey: "userId"
         });
     };
 

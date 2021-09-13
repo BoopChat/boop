@@ -1,8 +1,8 @@
 module.exports = (sequelize, Sequelize) => {
     const Contact = sequelize.define("Contact", {
         //attributes
-        contact_id: { primaryKey: true, type: Sequelize.INTEGER, allowNull: false },
-        user_id: { primaryKey: true, type: Sequelize.INTEGER, allowNull: false },
+        contactId: { primaryKey: true, type: Sequelize.INTEGER, allowNull: false, field: "contact_id" },
+        userId: { primaryKey: true, type: Sequelize.INTEGER, allowNull: false, field: "user_id" },
         //timestamps
         createdAt: {
             type: Sequelize.DATE, field: "created_at", defaultValue: Sequelize.NOW
@@ -17,11 +17,11 @@ module.exports = (sequelize, Sequelize) => {
     })=>{
         Contact.belongsTo(User, {
             as: "contactInfo",
-            foreignKey: "contact_id"
+            foreignKey: "contactId"
         });
         Contact.belongsTo(User, {
             as: "userInfo",
-            foreignKey: "user_id"
+            foreignKey: "userId"
         });
     };
 
