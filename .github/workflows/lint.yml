@@ -10,6 +10,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install modules
-      run: npm install client/ && npm install server/
+      run: npm install client/ && npm install server/ && npm install eslint
     - name: Run ESLint
       run: eslint . --ext .js,.jsx
