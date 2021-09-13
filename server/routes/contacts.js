@@ -9,10 +9,7 @@ router
     .get(controller.getContacts)
     // add a contact
     .post(controller.addContact)
-
-// delete a contact
-router
-    .route("/:user_id/:contact_id")
+    // delete a contact
     .delete(controller.deleteContact);
 
 module.exports = router;
