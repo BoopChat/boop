@@ -13,10 +13,10 @@ module.exports = (sequelize, Sequelize) => {
         user_editable_title:  { type: Sequelize.BOOLEAN, defaultValue: false},
         //timestamps
         createdAt: {
-            type: Sequelize.DATE, field: 'created_at', defaultValue: Sequelize.NOW
+            type: Sequelize.DATE, field: "created_at", defaultValue: Sequelize.NOW
         },
         updatedAt: {
-            type: Sequelize.DATE, field: 'updated_at', defaultValue: Sequelize.NOW
+            type: Sequelize.DATE, field: "updated_at", defaultValue: Sequelize.NOW
         }
     });
 
@@ -34,7 +34,7 @@ module.exports = (sequelize, Sequelize) => {
             through: Participant,
             foreignKey: "conversation_id"
         });
-    }
+    };
 
     return Conversation;
 };

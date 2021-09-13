@@ -1,37 +1,37 @@
-'use strict';
+"use strict";
 
 module.exports = {
-    up: async (queryInterface, Sequelize) => {
+    up: async (queryInterface) => {
         await queryInterface.removeConstraint(
-        'Messages',
-        'Messages_conversation_id_fkey'
+            "Messages",
+            "Messages_conversation_id_fkey"
         );
-        await queryInterface.addConstraint('Messages', {
-        fields: ['conversation_id'],
-        type: 'foreign key',
-        name: 'Messages_conversation_id_fkey',
-        references: {
-            table: 'Conversations',
-            field: 'id',
-        },
-        onDelete: 'CASCADE'
+        await queryInterface.addConstraint("Messages", {
+            fields: ["conversation_id"],
+            type: "foreign key",
+            name: "Messages_conversation_id_fkey",
+            references: {
+                table: "Conversations",
+                field: "id",
+            },
+            onDelete: "CASCADE"
         });
 
     },
 
-    down: async (queryInterface, Sequelize) => {
+    down: async (queryInterface) => {
         await queryInterface.removeConstraint(
-        'Messages',
-        'Messages_conversation_id_fkey'
+            "Messages",
+            "Messages_conversation_id_fkey"
         );
-        await queryInterface.addConstraint('Messages', {
-        fields: ['conversation_id'],
-        type: 'foreign key',
-        name: 'Messages_conversation_id_fkey',
-        references: {
-            table: 'Conversations',
-            field: 'id',
-        }
+        await queryInterface.addConstraint("Messages", {
+            fields: ["conversation_id"],
+            type: "foreign key",
+            name: "Messages_conversation_id_fkey",
+            references: {
+                table: "Conversations",
+                field: "id",
+            }
         });
     }
 };

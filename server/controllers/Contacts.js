@@ -13,7 +13,7 @@ module.exports.addContact = async (req, res) => {
     // (prevent user from adding self as contact????)
     if (!req.body.contactEmail) {
         res.status(400).send({
-        msg: "Content can not be empty!"
+            msg: "Content can not be empty!"
         });
         return;
     }
@@ -28,8 +28,8 @@ module.exports.addContact = async (req, res) => {
     // return an error message if the contact isn't a valid user
     if (!contact_info) {
         return res.status(404).send({
-                msg: `${req.body.contactEmail} is not a valid user.`
-            });
+            msg: `${req.body.contactEmail} is not a valid user.`
+        });
     }
 
     //get the user_id for the contact
@@ -40,7 +40,7 @@ module.exports.addContact = async (req, res) => {
     await Contact.create({
         user_id: user_id,
         contact_id: contact_id
-    }).catch(err => {// catch any errors
+    }).catch(err => { //catch any errors
         res.status(500).send({
             msg:
             err.message || "Some error occurred while creating the Contact."
@@ -98,7 +98,7 @@ module.exports.deleteContact = async (req, res) => {
     // Validate request
     if (!user_id || !contact_id) {
         res.status(400).send({
-        msg: "Content can not be empty!"
+            msg: "Content can not be empty!"
         });
         return;
     }
@@ -119,7 +119,7 @@ module.exports.deleteContact = async (req, res) => {
                     contact_id=${contact_id}. Maybe Contact association was not found!`
             });
         }
-    }).catch(err => {
+    }).catch(() => {
         res.status(500).send({
             msg: `Could not delete Contact association with user_id=${user_id}
                 and contact_id=${contact_id}`

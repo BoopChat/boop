@@ -8,6 +8,6 @@ router
     // get all messages from a conversation
     .get(controller.getMessages)
     //create a new message in the conversation
-    .post(controller.addMessage)
+    .post(controller.addMessage);
 
 module.exports = router;

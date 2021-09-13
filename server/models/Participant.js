@@ -31,7 +31,7 @@ module.exports = (sequelize, Sequelize) => {
             as: "participantInfo",
             foreignKey: "user_id"
         });
-    }
+    };
 
     return Participant;
 };

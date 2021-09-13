@@ -1,6 +1,7 @@
 import "../styles/buttons.css";
 import { useDispatch } from "react-redux";
 import { logIn } from "./login/userSlice";
+import React from "react";
 
 const GoogleButton = ({ text = "Sign up with google" }) => {
     //send action to redux store to change states

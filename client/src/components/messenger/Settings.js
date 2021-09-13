@@ -1,6 +1,6 @@
-import edit_icon from "../../assets/icons8-edit.svg"
+import edit_icon from "../../assets/icons8-edit.svg";
 
-import { useState } from 'react';
+import { useState, React } from "react";
 
 // this is just test data
 // this data should really be fetched
@@ -10,7 +10,7 @@ let user_data = {
     first_name: "Cassandra",
     last_name: "Stevens",
     image_url: "https://picsum.photos/200"
-}
+};
 
 const Settings = () => {
     const [Name, setName] = useState({
@@ -21,9 +21,9 @@ const Settings = () => {
     });
 
     const handleNameChange = (e) => {
-        const { name, value } = e.target
-        setName({ ...Name, [name]: value })
-    }
+        const { name, value } = e.target;
+        setName({ ...Name, [name]: value });
+    };
 
     const [displayName, setDisplayName] = useState({
         displayname: user_data.display_name,
@@ -32,9 +32,9 @@ const Settings = () => {
     });
 
     const handleDNameChange = (e) => {
-        const { name, value } = e.target
-        setDisplayName({ ...displayName, [name]: value })
-    }
+        const { name, value } = e.target;
+        setDisplayName({ ...displayName, [name]: value });
+    };
 
     const handleEditName = () => {
         if (!Name.editing)
@@ -44,10 +44,10 @@ const Settings = () => {
                 // commit changes
                 user_data.first_name = Name.firstname;
                 user_data.last_name = Name.lastname;
-                setName({ ...Name, editing: false })
+                setName({ ...Name, editing: false });
             }
         }
-    }
+    };
 
     const handleEditDName = () => {
         if (!displayName.editing)
@@ -55,11 +55,11 @@ const Settings = () => {
         else {
             if (!displayName.editLock) { // ignore validation for now
                 // commit changes
-                user_data.display_name = displayName.displayname
+                user_data.display_name = displayName.displayname;
                 setDisplayName({ ...displayName, editing: false });
             }
         }
-    }
+    };
 
     return (
         <div>
@@ -68,25 +68,25 @@ const Settings = () => {
                 <div>
                     <span className="attribute">Name</span>
                     {Name.editing ? (
-                            <div>
-                                <input
-                                    value={Name.firstname}
-                                    placeholder="First Name"
-                                    name="firstname"
-                                    type="text"
-                                    onChange={(e) => handleNameChange(e)}
-                                />
-                                <input
-                                    value={Name.lastname}
-                                    placeholder="Last Name"
-                                    name="lastname"
-                                    type="text"
-                                    onChange={(e) => handleNameChange(e)}
-                                />
-                            </div>
-                        ) : <span>
-                                {user_data.first_name + " " + user_data.last_name}
-                            </span>
+                        <div>
+                            <input
+                                value={Name.firstname}
+                                placeholder="First Name"
+                                name="firstname"
+                                type="text"
+                                onChange={(e) => handleNameChange(e)}
+                            />
+                            <input
+                                value={Name.lastname}
+                                placeholder="Last Name"
+                                name="lastname"
+                                type="text"
+                                onChange={(e) => handleNameChange(e)}
+                            />
+                        </div>
+                    ) : <span>
+                        {user_data.first_name + " " + user_data.last_name}
+                    </span>
                     }
                 </div>
                 <button title="edit name" className="edit" onClick={() => handleEditName()}>
@@ -98,13 +98,13 @@ const Settings = () => {
                 <div>
                     <span className="attribute">Display Name</span>
                     {displayName.editing ?
-                            <input
-                                value={displayName.displayname}
-                                placeholder="Display Name"
-                                name="displayname"
-                                type="text"
-                                onChange={(e) => handleDNameChange(e)}
-                            />
+                        <input
+                            value={displayName.displayname}
+                            placeholder="Display Name"
+                            name="displayname"
+                            type="text"
+                            onChange={(e) => handleDNameChange(e)}
+                        />
                         :   <span>{user_data.display_name}</span>
                     }
                 </div>
@@ -123,7 +123,7 @@ const Settings = () => {
                 </button>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Settings;

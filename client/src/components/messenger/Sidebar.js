@@ -6,7 +6,7 @@ import "../../styles/sidebar.css";
 
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
-import { useState } from "react";
+import { useState, React } from "react";
 import { useDispatch } from "react-redux";
 
 import { logOut, setToken } from "../login/userSlice";

@@ -5,10 +5,10 @@ module.exports = (sequelize, Sequelize) => {
         user_id: { primaryKey: true, type: Sequelize.INTEGER, allowNull: false },
         //timestamps
         createdAt: {
-            type: Sequelize.DATE, field: 'created_at', defaultValue: Sequelize.NOW
+            type: Sequelize.DATE, field: "created_at", defaultValue: Sequelize.NOW
         },
         updatedAt: {
-            type: Sequelize.DATE, field: 'updated_at', defaultValue: Sequelize.NOW
+            type: Sequelize.DATE, field: "updated_at", defaultValue: Sequelize.NOW
         }
     });
 

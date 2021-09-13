@@ -1,0 +1,15 @@
+name: ESlint
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install modules
+      run: npm install client/ && npm install server/ && npm i -g eslint
+    - name: Run ESLint
+      run: eslint . --ext .js,.jsx
