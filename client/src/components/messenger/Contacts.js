@@ -12,18 +12,18 @@ const AddContactDialog = ({open, onClose}) => {
     const handleChange = (e) => setEmail(e.target.value);
 
     return (
-      <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
-        <DialogTitle id="simple-dialog-title">Add a contact by email</DialogTitle>
-        <input
-            type="email"
-            name="email"
-            placeholder="email..."
-            value={email}
-            onChange={(e) => handleChange(e)}
-            className="addContact"
-        />
-        <button onClick={() => handleClose()} name="add" className="addContact">Add</button>
-      </Dialog>
+        <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
+            <DialogTitle id="simple-dialog-title">Add a contact by email</DialogTitle>
+            <input
+                type="email"
+                name="email"
+                placeholder="email..."
+                value={email}
+                onChange={(e) => handleChange(e)}
+                className="addContact"
+            />
+            <button onClick={() => handleClose()} name="add" className="addContact">Add</button>
+        </Dialog>
     );
 };
 
