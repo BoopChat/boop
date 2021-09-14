@@ -24,6 +24,9 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 
     `cd server`
 
+    Install dependencies:
+    `npm i`
+
     Run the migrations:
 
     `npx sequelize-cli db:migrate `
@@ -44,7 +47,7 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
     Navigate to the Server directory and run the command:
         `npm i`
 
-1. Setting up Enviroment Variables
+2. Setting up Enviroment Variables
 
     Create a .env file at the root of the server directory if it does not already exist.
 
@@ -56,7 +59,7 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
     
     Replace "< random secret string goes here >" with a random string of your choice. You can use env.sample file as a reference.
  
- 2. Getting Google App credentials
+ 3. Getting Google App credentials
     
     Sign in to Google's Cloud Console [here](https://accounts.google.com/ServiceLogin/signinchooser?service=cloudconsole&passive=1209600&osid=1&continue=https%3A%2F%2Fconsole.cloud.google.com%2Fapis%2Fcredentials%3Fref%3Dhttps%3A%2F%2Fwww.google.com%2F&followup=https%3A%2F%2Fconsole.cloud.google.com%2Fapis%2Fcredentials%3Fref%3Dhttps%3A%2F%2Fwww.google.com%2F&flowName=GlifWebSignIn&flowEntry=ServiceLogin)
  
@@ -79,7 +82,7 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 
     You will be given you Client ID and Client secret.
 
- 3. Setting client ID and client Secret.
+ 4. Setting client ID and client Secret.
     
     In the .env file
 
