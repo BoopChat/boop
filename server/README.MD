@@ -10,19 +10,29 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 
 1. Docker
     1. If you don't have docker desktop download it [here](https://www.docker.com/products/docker-desktop)
-    2. Create your container and database using the following command in the terminal (change the variables in quotes + remove quotes):
+    2. Create your container and database by either:
+        1. Using the following command in the terminal (change the variables in quotes + remove quotes):
     
-        `docker run -d -p 5432:5432 --name "container-name" -e POSTGRES_PASSWORD="database-password" -e POSTGRES_DB="database-name" -e POSTGRES_USER="database-user" postgres`
+            `docker run -d -p 5432:5432 --name "container-name" -e POSTGRES_PASSWORD="database-password" -e POSTGRES_DB="database-name" -e POSTGRES_USER="database-user" postgres`
+
+        OR
+
+        2. Navigating to the server sub directory and using the docker compose file:
+
+            `docker-compose up -d`
 
 2. Database settings in server files:
     1. In VSCode or whatever code editor you're using open server/config and create a new file called config.json. 
-    2. Use the sample_config.json file as a guide for the structure of the contents of config.json and fill in the information used in the command from step 1.
+    2. Use the sample_config.json file as a guide for the structure of the contents of config.json and fill in the information used in the command from step 1 or the server/docker-compose.yml file.
 
 3. Run database migrations to create your tables in the database in docker (container MUST be running) using:
 
     Change to the server dir in the project:
 
     `cd server`
+
+    Install dependencies:
+    `npm i`
 
     Run the migrations:
 
@@ -44,7 +54,7 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
     Navigate to the Server directory and run the command:
         `npm i`
 
-1. Setting up Enviroment Variables
+2. Setting up Enviroment Variables
 
     Create a .env file at the root of the server directory if it does not already exist.
 
@@ -56,7 +66,7 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
     
     Replace "< random secret string goes here >" with a random string of your choice. You can use env.sample file as a reference.
  
- 2. Getting Google App credentials
+ 3. Getting Google App credentials
     
     Sign in to Google's Cloud Console [here](https://accounts.google.com/ServiceLogin/signinchooser?service=cloudconsole&passive=1209600&osid=1&continue=https%3A%2F%2Fconsole.cloud.google.com%2Fapis%2Fcredentials%3Fref%3Dhttps%3A%2F%2Fwww.google.com%2F&followup=https%3A%2F%2Fconsole.cloud.google.com%2Fapis%2Fcredentials%3Fref%3Dhttps%3A%2F%2Fwww.google.com%2F&flowName=GlifWebSignIn&flowEntry=ServiceLogin)
  
@@ -79,7 +89,7 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 
     You will be given you Client ID and Client secret.
 
- 3. Setting client ID and client Secret.
+ 4. Setting client ID and client Secret.
     
     In the .env file
 
