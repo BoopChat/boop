@@ -3,7 +3,7 @@ const Conversation = db.Conversation;
 const Participant = db.Participant;
 const User = db.User;
 
-// create a conversation
+// Attempting to create a conversation using a transaction
 module.exports.addConversation = async (req, res) => {
     let userId = req.params.userId;
     // Need to check that userId belongs to a valid user and
@@ -15,125 +15,75 @@ module.exports.addConversation = async (req, res) => {
         return;
     }
 
-    // create the conversation with the input attributes
-    let conversation = await Conversation.create({
-        title: req.body.title,
-        imageUrl: req.body.imageUrl,
-        // if the options were null set their values to false else use the input values
-        userEditableImage: req.body.userEditableImage==null ? false :  req.body.userEditableImage,
-        userEditableTitle: req.body.userEditableTitle==null ? false :  req.body.userEditableTitle,
-    }).catch(err => { // catch any errors
-        res.status(500).send({
-            msg: err.message || "Some error occurred while creating the Conversation."
+    // Managed Transaction
+    let t = await db.sequelize.transaction();
+
+    try {
+        //create the conversation with the input attributes
+        let conversationInfo = await Conversation.create({
+            title: req.body.title,
+            imageUrl: req.body.imageUrl,
+            // if the options were null set their values to false else use the input values
+            userEditableImage: req.body.userEditableImage==null ? false :  req.body.userEditableImage,
+            userEditableTitle: req.body.userEditableTitle==null ? false :  req.body.userEditableTitle,
+        }, { transaction: t });
+
+        // add user creating convo as admin
+        await Participant.create({
+            userId: userId,
+            conversationId: conversationInfo.id,
+            isAdmin: true
+        }, { transaction: t });
+
+        // the participants' userIds will be passed in an array
+        let participants = req.body.participants;
+
+        // add all other users in the participants array as participants in the conversation
+        let isAdmin = participants.length == 1;
+
+        const promises = participants.map(async participant => {
+            // console.log(`participant=${participant}`);
+            await Participant.create({
+                userId : participant,
+                conversationId: conversationInfo.id,
+                isAdmin: isAdmin
+            },
+            { transaction: t });
         });
-    });
 
-    // the participants' userIds will be passed in an array
-    let participants = req.body.participants;
+        await Promise.all(promises);
 
-    // add user creating convo as admin
-    Participant.create({
-        userId: userId,
-        conversationId: conversation.id,
-        isAdmin: true
-    });
-
-    // add all other users in the participants array as participants in the conversation
-    let isAdmin = participants.length == 1;
-    participants.forEach(async (participant) => {
-        // create the association between the user and the conversation
-        Participant.create({
-            userId : participant,
-            conversationId: conversation.id,
-            isAdmin: isAdmin
+        // everything worked as planned - commit the changes
+        await t.commit();
+        // retrieve the newly created conversation with it's participants' info
+        let conversation = await Conversation.findByPk(conversationInfo.id,{
+            attributes:["id", "title", "imageUrl"],
+            // get each participant's info from the Users table
+            include: {
+                model: User,
+                as: "participants",
+                // specify what atributes you want returned
+                attributes:["displayName"],
+                // Prevents the entire belongs-to-many mapping object (Participant)
+                // from being returned
+                through: {attributes: []}
+            }
         });
-    });
+        //return a success message + the newly created conversation
+        return res.status(201).send({msg:"Conversation successfully created!", conversation});
+    } catch (err){
+        await t.rollback();
 
-    //return a success message + the newly created conversation
-    return res.status(201).send({msg:"Conversation successfully created!", conversation});
+        if(err.message.includes("insert or update on table") ){
+            return res.status(404).send({msg: "Atleast one of your participants isn't a valid user."});
+        }
+
+        return res.status(500).send({
+            msg:
+            err.message || "Some error occurred while creating the Conversation."
+        });
+    }
 };
-
-// Attempting to create a conversation using transactions
-// module.exports.addConversation = async (req, res) => {
-//     let userId = req.params.userId;
-//     // Need to check that userId belongs to a valid user and
-//     // matches the id of the requesting user
-
-//     // Validate request
-//     if (!userId) {
-//         res.status(400).send({ msg: "Content can not be empty!" });
-//         return;
-//     }
-
-//     try {
-//         // Managed Transaction
-//         let transaction = await db.sequelize.transaction();
-
-//         //create the conversation with the input attributes
-//         let conversation = await Conversation.create({
-//             title: req.body.title,
-//             imageUrl: req.body.imageUrl,
-//             // if the options were null set their values to false else use the input values
-//             userEditableImage: req.body.userEditableImage==null ? false :  req.body.userEditableImage,
-//             userEditableTitle: req.body.userEditableTitle==null ? false :  req.body.userEditableTitle,
-//         }, { transaction });
-
-//         // the participants' userIds will be passed in an array
-//         let participants = req.body.participants;
-
-//         // add user creating convo as admin
-//         await Participant.create({
-//             userId: userId,
-//             conversationId: conversation.id,
-//             isAdmin: true
-//         }, { transaction });
-
-//         // add all other users in the participants array as participants in the conversation
-//         let isAdmin = participants.length == 1;
-
-//         try{
-//             let transaction2 = await db.sequelize.transaction(); // Managed Transaction
-//             participants.forEach(async (participant) => {
-//                 // create the association between the user and the conversation
-//                 await Participant.create({
-//                     userId: participant,
-//                     conversationId: conversation.id,
-//                     isAdmin: isAdmin
-//                 },
-//                 { transaction: transaction2}).catch(err => {
-//                     // transaction2.rollback()
-//                     // transaction.rollback()
-//                     return res.status(500).send({
-//                         msg:
-//                         err.message || "Some error occurred while creating the Conversation."
-//                     });
-//                 });
-//             });
-//             // everything worked as planned - commit the changes
-//             // await transaction2.commit()
-//         } catch (err){
-//             // await transaction2.rollback()
-//             // await transaction.rollback()
-
-//             return res.status(500).send({
-//                 msg:
-//                 err.message || "Some error occurred while creating the Conversation."
-//             });
-//         }
-
-//         // everything worked as planned - commit the changes
-//         // await transaction.commit()
-//         //return a success message + the newly created conversation
-//         return res.status(201).send({msg:"Conversation successfully created!", conversation});
-//     } catch (err){
-//         // await transaction.rollback()
-
-//         return res.status(500).send({
-//             msg:
-//             err.message || "Some error occurred while creating the Conversation."
-//         });
-//     }
-// };
 
 module.exports.getConversations = async (req, res) => {
     let userId = req.params.userId;
