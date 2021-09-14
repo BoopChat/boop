@@ -6,12 +6,14 @@ const User = db.User;
 // Attempting to create a conversation using a transaction
 module.exports.addConversation = async (req, res) => {
     let userId = req.params.userId;
+    // the participants' userIds will be passed in an array
+    let participants = req.body.participants;
     // Need to check that userId belongs to a valid user and
     // matches the id of the requesting user
 
     // Validate request
-    if (!userId) {
-        res.status(400).send({ msg: "Content can not be empty!" });
+    if (!participants || !participants.length) {
+        res.status(400).send({ msg: "Participants list can not be empty!" });
         return;
     }
 
@@ -34,9 +36,6 @@ module.exports.addConversation = async (req, res) => {
             conversationId: conversationInfo.id,
             isAdmin: true
         }, { transaction: t });
-
-        // the participants' userIds will be passed in an array
-        let participants = req.body.participants;
 
         // add all other users in the participants array as participants in the conversation
         let isAdmin = participants.length == 1;
