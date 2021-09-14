@@ -95,10 +95,10 @@ const Contacts = () => {
             <div id="contacts">
                 {contacts.length > 0 ? contacts.map((contact, i) =>
                     <ContactItem
-                        img={contact.contactInfo.image_url}
-                        username={contact.contactInfo.display_name}
-                        user_id={contact.contact_id}
-                        status={evaluateStatus(contact.contactInfo.last_active)}
+                        img={contact.contactInfo.imageUrl}
+                        username={contact.contactInfo.displayName}
+                        user_id={contact.contactId}
+                        status={evaluateStatus(contact.contactInfo.lastActive)}
                         key={i}
                     />
                 ) : <span>You have no contacts :(</span>}

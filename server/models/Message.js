@@ -1,15 +1,10 @@
 module.exports = (sequelize, Sequelize) => {
     const Message = sequelize.define("Message", {
         //attributes
-        id: {
-            primaryKey: true,
-            type: Sequelize.BIGINT,
-            autoIncrement: true,
-            allowNull: false
-        },
+        id: { primaryKey: true, type: Sequelize.BIGINT, autoIncrement: true, allowNull: false },
         content: { type: Sequelize.TEXT , allowNull: false },
-        conversation_id: { type: Sequelize.BIGINT, allowNull: false },
-        sender_id: { type: Sequelize.INTEGER, allowNull: false },
+        conversationId: { type: Sequelize.BIGINT, allowNull: false, field: "conversation_id" },
+        senderId: { type: Sequelize.INTEGER, allowNull: false, field: "sender_id" },
         //timestamps
         createdAt: {
             type: Sequelize.DATE, field: "created_at", defaultValue: Sequelize.NOW
@@ -25,12 +20,12 @@ module.exports = (sequelize, Sequelize) => {
     })=>{
         Message.belongsTo(Conversation, {
             as: "conversation",
-            foreignKey: "conversation_id",
+            foreignKey: "conversationId",
             onDelete: "CASCADE"
         });
         Message.belongsTo(User, {
             as: "sender",
-            foreignKey: "sender_id"
+            foreignKey: "senderId"
         });
     };
 

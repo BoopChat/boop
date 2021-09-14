@@ -6,41 +6,41 @@ const Conversation = db.Conversation;
 
 // get all messages from a conversation
 module.exports.getMessages = async (req, res) => {
-    let user_id = req.params.user_id;
-    let conversation_id = req.params.conversation_id;
+    let userId = req.params.userId;
+    let conversationId = req.params.conversationId;
 
-    // Need to check that user_id belongs to a valid user and
+    // Need to check that userId belongs to a valid user and
     // matches the id of the requesting user
 
 
     //check if the user is a participant of the conversation
-    let is_participant = await Participant.findOne({
+    let isParticipant = await Participant.findOne({
         where: {
-            user_id: user_id,
-            conversation_id: conversation_id
+            userId: userId,
+            conversationId: conversationId
         }
     });
-    if (!is_participant)
+    if (!isParticipant)
         return res.status(404).send({msg: "User is not a participant of conversation"});
 
     //get all messages from the conversation
     let messages = await Message.findAll({
         where: {
-            conversation_id: conversation_id
+            conversationId: conversationId
         },
-        attributes: ["id", "content", "sender_id", "createdAt", "updatedAt"],
+        attributes: ["id", "content", "senderId", "createdAt", "updatedAt"],
         order: [["createdAt", "DESC"]],
         include: {
             model: User,
             as: "sender",
             // specify what atributes you want returned
-            attributes:["display_name", "image_url"],
+            attributes:["displayName", "imageUrl"],
         },
         include: {
             model: Conversation,
             as: "conversation",
             // specify what atributes you want returned
-            attributes:["id", "title", "image_url"],
+            attributes:["id", "title", "imageUrl"],
         }
     });
 
@@ -50,9 +50,9 @@ module.exports.getMessages = async (req, res) => {
 
 // Create a new message in the conversation
 module.exports.addMessage = async (req, res) => {
-    let user_id = req.params.user_id;
-    let conversation_id = req.params.conversation_id;
-    // Need to check that user_id belongs to a valid user and
+    let userId = req.params.userId;
+    let conversationId = req.params.conversationId;
+    // Need to check that userId belongs to a valid user and
     // matches the id of the requesting user
 
     // Validate request
@@ -64,19 +64,19 @@ module.exports.addMessage = async (req, res) => {
     }
 
     //check if the user is a participant of the conversation
-    let is_participant = await Participant.findOne({
+    let isParticipant = await Participant.findOne({
         where: {
-            user_id: user_id,
-            conversation_id: conversation_id
+            userId: userId,
+            conversationId: conversationId
         }
     });
-    if (!is_participant)
+    if (!isParticipant)
         return res.status(404).send({msg:"User is not a participant of conversation"});
 
     // create the message with the neccessary values
-    let new_message = await Message.create({
-        sender_id : user_id,
-        conversation_id: conversation_id,
+    let newMessage = await Message.create({
+        senderId : userId,
+        conversationId: conversationId,
         content: req.body.content
     }).catch(err => { //catch any errors
         res.status(500).send({
@@ -86,6 +86,6 @@ module.exports.addMessage = async (req, res) => {
     });
     //return a success message + the newly created msg;
     return res.status(201).send({
-        msg:"Message successfully added to the conversation!", new_message
+        msg:"Message successfully added to the conversation!", newMessage
     });
 };
