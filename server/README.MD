@@ -10,13 +10,20 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 
 1. Docker
     1. If you don't have docker desktop download it [here](https://www.docker.com/products/docker-desktop)
-    2. Create your container and database using the following command in the terminal (change the variables in quotes + remove quotes):
+    2. Create your container and database by either:
+        1. Using the following command in the terminal (change the variables in quotes + remove quotes):
     
-        `docker run -d -p 5432:5432 --name "container-name" -e POSTGRES_PASSWORD="database-password" -e POSTGRES_DB="database-name" -e POSTGRES_USER="database-user" postgres`
+            `docker run -d -p 5432:5432 --name "container-name" -e POSTGRES_PASSWORD="database-password" -e POSTGRES_DB="database-name" -e POSTGRES_USER="database-user" postgres`
+
+        OR
+
+        2. Navigating to the server sub directory and using the docker compose file:
+
+            `docker-compose up -d`
 
 2. Database settings in server files:
     1. In VSCode or whatever code editor you're using open server/config and create a new file called config.json. 
-    2. Use the sample_config.json file as a guide for the structure of the contents of config.json and fill in the information used in the command from step 1.
+    2. Use the sample_config.json file as a guide for the structure of the contents of config.json and fill in the information used in the command from step 1 or the server/docker-compose.yml file.
 
 3. Run database migrations to create your tables in the database in docker (container MUST be running) using:
 
