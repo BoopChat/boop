@@ -16,6 +16,10 @@ var LoginAuthRouter = require("./routes/loginAuth"); //handles login requests
 
 var app = express();
 
+// set the server timezone
+// using UTC so times are neutral and can be adjusted to user's timezone in the client
+process.env.TZ = "UTC";
+
 // MAY NOT BE NEEDED
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
