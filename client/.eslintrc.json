@@ -23,7 +23,8 @@
     "rules": {
         "indent": [
             "error",
-            4
+            4,
+            { "SwitchCase": 1 }
         ],
         "linebreak-style": [
             "error",
@@ -38,8 +39,5 @@
             "always"
         ],
         "react/prop-types": "off",
-        "no-restricted-imports": ["error", {
-            "patterns": ["setupProxy"]
-        }]
     }
 }

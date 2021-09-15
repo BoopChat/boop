@@ -1,6 +1,7 @@
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const passport = require("passport");
 const utils = require("../loginStrategies/utils");
+const logger = require("../../logger");
 
 passport.use(
     new GoogleStrategy(
@@ -33,6 +34,7 @@ passport.use(
             }
             else{
                 //deal with error messages
+                logger.error(msg);
             }
 
             //this send the google profile to the callback url (/api/login/auth/google/callback)

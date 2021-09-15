@@ -1,3 +1,4 @@
+const logger = require("../logger");
 const db = require("../models");
 const Contact = db.Contact;
 const SigninOption = db.SigninOption;
@@ -12,6 +13,7 @@ module.exports.addContact = async (req, res) => {
     // Validate request (need to add check to ensure user exists) +
     // (prevent user from adding self as contact????)
     if (!req.body.contactEmail) {
+        logger.error("Cannot add a contact without their email");
         res.status(400).send({
             msg: "Content can not be empty!"
         });
@@ -27,6 +29,7 @@ module.exports.addContact = async (req, res) => {
 
     // return an error message if the contact isn't a valid user
     if (!contactData) {
+        logger.error(`${req.body.contactEmail} is not a valid user.`);
         return res.status(404).send({
             msg: `${req.body.contactEmail} is not a valid user.`
         });
@@ -41,10 +44,9 @@ module.exports.addContact = async (req, res) => {
         userId: userId,
         contactId: contactId
     }).catch(err => { //catch any errors
-        res.status(500).send({
-            msg:
-            err.message || "Some error occurred while creating the Contact."
-        });
+        let msg = err.message || "Some error occurred while creating the Contact.";
+        logger.error(msg);
+        res.status(500).send({msg});
     });
 
     // retrieve the contact's info
@@ -52,13 +54,12 @@ module.exports.addContact = async (req, res) => {
         // specify what attributes you want returned
         attributes: ["displayName", "imageUrl", "lastActive"]
     }).catch(err => {//catch any errors
-        res.status(500).send({
-            msg:
-            err.message || "Some error occurred while retieving the Contact's info."
-        });
+        let msg = err.message || "Some error occurred while retieving the Contact's info.";
+        res.status(500).send({msg});
     });
 
     //return a success message + the newly created contact's info
+    logger.info("Contact successfully created: " + contactInfo.displayName);
     return res.status(201).send({msg:"Contact successfully created!", contact:{contactInfo: contactInfo}});
 };
 
@@ -84,8 +85,13 @@ module.exports.getContacts = async (req, res) => {
         }
     });
 
-    if (!user) return res.status(404).send("user not found");
-    return res.send({"contactList": user.contactList});
+    if (!user) {
+        logger.error("User [" + userId + "] not found");
+        return res.status(404).send("user not found");
+    } else {
+        logger.info("Returned contact list");
+        return res.send({"contactList": user.contactList});
+    }
 };
 
 // Delete a Contact
@@ -97,6 +103,7 @@ module.exports.deleteContact = async (req, res) => {
 
     // Validate request
     if (!userId || !contactId) {
+        logger.error("missing " + (userId ? "contact" : "user") + " id");
         res.status(400).send({
             msg: "Content can not be empty!"
         });
@@ -110,16 +117,20 @@ module.exports.deleteContact = async (req, res) => {
         }
     }).then(affectedRows => {
         if (affectedRows == 1) {
+            logger.info("Contact was deleted successfully:" + contactId);
             res.send({
                 msg: "Contact was deleted successfully!"
             });
         } else {
-            res.status(404).send({
-                msg: `Cannot delete Contact association with userId=${userId} and
-                    contactId=${contactId}. Maybe Contact association was not found!`
-            });
+            let msg = `Cannot delete Contact association with userId=${userId} and
+            contactId=${contactId}. Maybe Contact association was not found!`;
+            logger.error(msg);
+            res.status(404).send({msg});
         }
     }).catch(() => {
+        let msg = `Could not delete Contact association with userId=${userId}
+        and contactId=${contactId}`;
+        logger.error(msg);
         res.status(500).send({
             msg: `Could not delete Contact association with userId=${userId}
                 and contactId=${contactId}`

@@ -2,6 +2,7 @@ const router = require("express").Router();
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const dayjs = require("dayjs");
+const logger = require("../logger");
 
 require("./loginStrategies/googleStrategy");
 
@@ -17,6 +18,7 @@ router.get("/google/callback", passport.authenticate("google", { session: false 
     });
 
     // Redirects to the login page and stores the login cookie in the users browser.
+    logger.info("Redirected to login");
     res.status(301).redirect("http://localhost:3000");
 });
 
@@ -30,6 +32,7 @@ router.get("/cookie", (req, res) => {
         // Creates an access jwt token using the user id.
         const token = jwt.sign({ id: id }, process.env.TOKEN_SECRET);
 
+        logger.info("User [" + id + "] Authenticated");
         // Returns the jwt access token.
         return res.status(200).json({
             success: true,
@@ -40,6 +43,7 @@ router.get("/cookie", (req, res) => {
 
     // If the cookie with the users login information does not exist
     // return a login status of false
+    logger.warn("No valid cookie for user");
     res.status(200).json({
         success: false,
         msg: "Login with social provider",
@@ -50,6 +54,7 @@ router.get("/cookie", (req, res) => {
 router.get("/logout", (req, res) => {
     // Deletes the cookie containing the users login information.
     res.clearCookie("loginCookie");
+    logger.info("Logged out user");
     res.status(200).json({
         success: true,
         msg: "Logged Out",

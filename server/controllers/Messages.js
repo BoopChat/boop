@@ -1,3 +1,4 @@
+const logger = require("../logger");
 const db = require("../models");
 const Participant = db.Participant;
 const Message = db.Message;
@@ -20,8 +21,10 @@ module.exports.getMessages = async (req, res) => {
             conversationId: conversationId
         }
     });
-    if (!isParticipant)
+    if (!isParticipant) {
+        logger.error("User [" + userId + "] is not a participant of conversation");
         return res.status(404).send({msg: "User is not a participant of conversation"});
+    }
 
     //get all messages from the conversation
     let messages = await Message.findAll({
@@ -44,8 +47,14 @@ module.exports.getMessages = async (req, res) => {
         }
     });
 
-    if (!messages) return res.status(404).send({msg: "Messages not found"});
-    return res.send({messages: messages});
+    if (!messages) {
+        let msg = "Messages not found";
+        logger.error(msg);
+        return res.status(404).send({msg});
+    } else {
+        logger.info("Returned messages");
+        return res.send({messages: messages});
+    }
 };
 
 // Create a new message in the conversation
@@ -57,6 +66,7 @@ module.exports.addMessage = async (req, res) => {
 
     // Validate request
     if (!req.body.content) {
+        logger.error("Message content cannot be empty");
         res.status(400).send({
             msg: "Content can not be empty!"
         });
@@ -70,8 +80,10 @@ module.exports.addMessage = async (req, res) => {
             conversationId: conversationId
         }
     });
-    if (!isParticipant)
+    if (!isParticipant) {
+        logger.error("User ["+ userId + "] is not a participant of conversation");
         return res.status(404).send({msg:"User is not a participant of conversation"});
+    }
 
     // create the message with the neccessary values
     let newMessage = await Message.create({
@@ -79,12 +91,12 @@ module.exports.addMessage = async (req, res) => {
         conversationId: conversationId,
         content: req.body.content
     }).catch(err => { //catch any errors
-        res.status(500).send({
-            msg:
-            err.message || "Some error occurred while creating the message."
-        });
+        let msg = err.message || "Some error occurred while creating the message.";
+        logger.error(msg);
+        res.status(500).send({msg});
     });
     //return a success message + the newly created msg;
+    logger.info("Message successfully added to the conversation");
     return res.status(201).send({
         msg:"Message successfully added to the conversation!", newMessage
     });
