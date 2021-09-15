@@ -139,7 +139,7 @@ module.exports.leaveConversation = async (req, res) => {
 
     // Validate request
     if (!conversationId) {
-        let msg = "missing conversation id";
+        let msg = "No conversation selected";
         logger.error(msg);
         res.status(400).send({msg});
         return;

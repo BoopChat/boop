@@ -31,8 +31,8 @@ passport.use(
             // extract the returned user information
             if (msg.includes("success")){
                 user = userFromDb["user"];
-            }
-            else{
+                logger.info(`[${user.userId}] Successfully signed in using ${user.serviceName}`);
+            } else {
                 //deal with error messages
                 logger.error(msg);
             }
