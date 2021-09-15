@@ -22,8 +22,9 @@ module.exports.getMessages = async (req, res) => {
         }
     });
     if (!isParticipant) {
-        logger.error("User [" + userId + "] is not a participant of conversation");
-        return res.status(404).send({msg: "User is not a participant of conversation"});
+        let msg = "User [" + userId + "] is not a participant of conversation";
+        logger.error(msg);
+        return res.status(404).send({msg});
     }
 
     //get all messages from the conversation
@@ -66,10 +67,9 @@ module.exports.addMessage = async (req, res) => {
 
     // Validate request
     if (!req.body.content) {
-        logger.error("Message content cannot be empty");
-        res.status(400).send({
-            msg: "Content can not be empty!"
-        });
+        let msg = "Message content cannot be empty";
+        logger.error(msg);
+        res.status(400).send({msg});
         return;
     }
 
@@ -81,8 +81,9 @@ module.exports.addMessage = async (req, res) => {
         }
     });
     if (!isParticipant) {
-        logger.error("User ["+ userId + "] is not a participant of conversation");
-        return res.status(404).send({msg:"User is not a participant of conversation"});
+        let msg = "User ["+ userId + "] is not a participant of conversation";
+        logger.error(msg);
+        return res.status(404).send({msg});
     }
 
     // create the message with the neccessary values
@@ -96,8 +97,9 @@ module.exports.addMessage = async (req, res) => {
         res.status(500).send({msg});
     });
     //return a success message + the newly created msg;
-    logger.info("Message successfully added to the conversation");
+    let msg = "Message successfully added to the conversation";
+    logger.info(msg);
     return res.status(201).send({
-        msg:"Message successfully added to the conversation!", newMessage
+        msg: msg, newMessage
     });
 };

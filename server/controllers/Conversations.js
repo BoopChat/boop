@@ -71,14 +71,16 @@ module.exports.addConversation = async (req, res) => {
             }
         });
         //return a success message + the newly created conversation
-        logger.info("Conversation successfully created: "+conversation.id);
-        return res.status(201).send({msg: "Conversation successfully created!", conversation});
+        let msg = "Conversation successfully created: "+conversation.id;
+        logger.info(msg);
+        return res.status(201).send({msg});
     } catch (err){
         await t.rollback();
 
         if(err.message.includes("insert or update on table") ){
-            logger.error("At least one of your participants isn't a valid user");
-            return res.status(404).send({msg: "At least one of your participants isn't a valid user."});
+            let msg = "At least one of your participants isn't a valid user";
+            logger.error(msg);
+            return res.status(404).send({msg});
         }
 
         let msg = err.message || "Some error occurred while creating the Conversation.";
@@ -136,11 +138,10 @@ module.exports.leaveConversation = async (req, res) => {
     // matches the id of the requesting user
 
     // Validate request
-    if (!userId|| !conversationId) {
-        logger.error("missing " + (userId ? "conversation" : "user") + " id");
-        res.status(400).send({
-            msg: "Content can not be empty!"
-        });
+    if (!conversationId) {
+        let msg = "missing conversation id";
+        logger.error(msg);
+        res.status(400).send({msg});
         return;
     }
 
