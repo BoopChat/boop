@@ -29,3 +29,4 @@ package-lock.json
 yarn.lock
 
 config.json
+.eslintrc.json
