@@ -38,7 +38,7 @@ const getContacts = async ( token, id) => {
             "Authorization": `Bearer ${token}`,
         },
     })).json();
-    
+
     // get the list of contacts if successful
     return data ? data.contactList : [];
 };
