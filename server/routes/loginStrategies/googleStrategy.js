@@ -34,7 +34,7 @@ passport.use(
                 logger.info(`[${user.userId}] Successfully signed in using ${user.serviceName}`);
             } else {
                 //deal with error messages
-                logger.error(msg);
+                logger.error(user.userId + ":" + msg);
             }
 
             //this send the google profile to the callback url (/api/login/auth/google/callback)

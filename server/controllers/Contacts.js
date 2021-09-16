@@ -13,9 +13,10 @@ module.exports.addContact = async (req, res) => {
     // Validate request (need to add check to ensure user exists) +
     // (prevent user from adding self as contact????)
     if (!req.body.contactEmail) {
-        let msg = "Cannot add a contact without their email";
-        logger.error(msg);
-        res.status(400).send({msg});
+        logger.error(userId + " tried adding a contact with an email");
+        res.status(400).send({
+            msg: "Cannot add a contact without their email"
+        });
         return;
     }
 
@@ -28,22 +29,20 @@ module.exports.addContact = async (req, res) => {
 
     // return an error message if the contact isn't a valid user
     if (!contactData) {
-        let msg = `${req.body.contactEmail} is not a valid user.`;
-        logger.error(msg);
-        return res.status(404).send({msg});
+        logger.error(userId + " tried adding invalid user: " + req.body.contactEmail);
+        return res.status(404).send({msg: `${req.body.contactEmail} is not a valid user.`});
     }
 
     //get the userId for the contact
     var contactId = contactData.userId;
-
 
     // creating the requested contact association
     await Contact.create({
         userId: userId,
         contactId: contactId
     }).catch(err => { //catch any errors
-        let msg = err.message || "Some error occurred while creating the Contact.";
-        logger.error(msg);
+        let msg = err.message || "Some error occurred while creating the Contact";
+        logger.error(msg + `${userId} - ${contactId}`);
         res.status(500).send({msg});
     });
 
@@ -52,13 +51,13 @@ module.exports.addContact = async (req, res) => {
         // specify what attributes you want returned
         attributes: ["displayName", "imageUrl", "lastActive"]
     }).catch(err => {//catch any errors
-        let msg = err.message || "Some error occurred while retieving the Contact's info.";
-        logger.error(msg);
+        let msg = err.message || "Some error occurred while retieving the Contact's info";
+        logger.error(msg + `${userId} - ${contactId}`);
         res.status(500).send({msg});
     });
 
     //return a success message + the newly created contact's info
-    logger.info("Contact successfully created: " + contactInfo.displayName);
+    logger.info(`Contact successfully created for ${userId} - ${contactInfo.displayName}`);
     return res.status(201).send({msg:"Contact successfully created!", contact:{contactInfo: contactInfo}});
 };
 
@@ -85,11 +84,10 @@ module.exports.getContacts = async (req, res) => {
     });
 
     if (!user) {
-        let msg = "User [" + userId + "] not found";
-        logger.error(msg);
-        return res.status(404).send(msg);
+        logger.error("Couldn't get contacts for user [" + userId + "] because user not found");
+        return res.status(404).send("We couldn't get your contacts because you shouldn't be here");
     } else {
-        logger.info("Returned contact list");
+        logger.info("Returned contact list for: " + userId);
         return res.send({"contactList": user.contactList});
     }
 };
@@ -103,9 +101,8 @@ module.exports.deleteContact = async (req, res) => {
 
     // Validate request
     if (!contactId) {
-        let msg = "missing contact id";
-        logger.error(msg);
-        res.status(400).send({msg});
+        logger.error(userId + " tried deleting a contact without their id");
+        res.status(400).send({msg: "Unable to delete contact"});
         return;
     }
 
@@ -116,19 +113,18 @@ module.exports.deleteContact = async (req, res) => {
         }
     }).then(affectedRows => {
         if (affectedRows == 1) {
-            let msg = "Contact was deleted successfully:" + contactId;
-            logger.info(msg);
-            res.send({msg});
+            logger.info("Contact was deleted successfully: " + contactId + " - " + userId);
+            res.send({msg: "Contact deleted successfully"});
         } else {
             let msg = `Cannot delete Contact association with userId=${userId} and
             contactId=${contactId}. Maybe Contact association was not found!`;
             logger.error(msg);
-            res.status(404).send({msg});
+            res.status(404).send({msg: "Unable to delete contact"});
         }
     }).catch(() => {
         let msg = `Could not delete Contact association with userId=${userId}
         and contactId=${contactId}`;
         logger.error(msg);
-        res.status(500).send({msg});
+        res.status(500).send({msg: "Unable to delete contact"});
     });
 };
