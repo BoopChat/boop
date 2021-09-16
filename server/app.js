@@ -8,6 +8,9 @@ var logger = require("morgan");
 const dotenv = require("dotenv");
 dotenv.config();
 
+// Middleware to verify the jwt
+const { verifyToken } = require('./routes/middleware');
+
 //Server routes
 var contactsRouter = require("./routes/contacts");
 var conversationsRouter = require("./routes/conversations");
@@ -31,7 +34,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/api/contacts", contactsRouter);
+app.use("/api/contacts",verifyToken, contactsRouter);
 app.use("/api/conversations", conversationsRouter);
 app.use("/api/messages", messagesRouter);
 app.use("/api/login/auth", LoginAuthRouter);

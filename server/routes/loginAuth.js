@@ -15,7 +15,7 @@ router.get("/google/callback", passport.authenticate("google", { session: false 
     res.cookie("loginCookie", JSON.stringify(req.user), {
         secure: false,
         httpOnly: true,
-        expires: dayjs().add(1, "year").toDate(),
+        expires: dayjs().add(1, "month").toDate(),
     });
 
     // Redirects to the login page and stores the login cookie in the users browser.
@@ -43,16 +43,17 @@ router.get("/cookie", (req, res) => {
     // If the cookie with users login information exists, create jwt and send to user.
     if (req.cookies.loginCookie) {
         // Extracts user id from the cookie with the users login information.
-        const { id } = JSON.parse(req.cookies.loginCookie);
+        const userInfo = JSON.parse(req.cookies.loginCookie);
 
         // Creates an access jwt token using the user id.
-        const token = jwt.sign({ id: id }, process.env.TOKEN_SECRET);
+        const token = jwt.sign({ ...userInfo }, process.env.TOKEN_SECRET);
 
-        // Returns the jwt access token.
+        // Returns the jwt access token and user information.
         return res.status(200).json({
             success: true,
             msg: "User Authenticated",
             token,
+            userInfo
         });
     }
 
