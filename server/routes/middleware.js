@@ -1,22 +1,22 @@
-const jwt = require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
 
 const verifyToken = (req, res, next) => {
     // If no authorization header return unauthorized message.
     if (!req.header("Authorization"))
         return res.status(401).json({
-        success: false,
-        msg: "Unauthorized"
-    })
+            success: false,
+            msg: "Unauthorized",
+        });
 
     // Check for the authorization bearer header.
-    if (req.header('Authorization') && req.header('Authorization').split(' ')[0] === "Bearer") {
+    if (req.header("Authorization") && req.header("Authorization").split(" ")[0] === "Bearer") {
         // Gets jwt token from the header.
         const token = req.header("Authorization").split(" ")[1];
 
         try {
             // Verifies jwt token and returns the decoded user information.
             // Throws an error if jwt is invalid (tampered with or encoded with a different secret).
-            const userInfo = jwt.verify(token, process.env.TOKEN_SECRET)
+            const userInfo = jwt.verify(token, process.env.TOKEN_SECRET);
 
             // Add user info to the request object and continue to next middleware
             req.user = userInfo;
@@ -24,15 +24,15 @@ const verifyToken = (req, res, next) => {
         } catch (e) {
             res.status(401).json({
                 success: false,
-                msg: "Invalid token"
-            })
+                msg: "Invalid token",
+            });
         }
     } else {
         return res.status(401).json({
             success: false,
-            msg: "Unauthorized"
-        })
+            msg: "Unauthorized",
+        });
     }
-}
+};
 
-module.exports = { verifyToken }
+module.exports = { verifyToken };

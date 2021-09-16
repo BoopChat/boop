@@ -6,7 +6,6 @@ const dayjs = require("dayjs");
 require("./loginStrategies/googleStrategy");
 require("./loginStrategies/facebookStrategy");
 
-
 router.get("/google", passport.authenticate("google", { scope: ["email", "profile"] }));
 
 // after successful login with google strategy, user db record will be sent here in the req.user property.
@@ -23,7 +22,7 @@ router.get("/google/callback", passport.authenticate("google", { session: false 
 });
 
 //Facebook login route
-router.get('/facebook', passport.authenticate("facebook", { scope: ["email","public_profile"] }));
+router.get("/facebook", passport.authenticate("facebook", { scope: ["email", "public_profile"] }));
 
 // after successful login with Facebook strategy, user db record will be sent here in the req.user property.
 router.get("/facebook/callback", passport.authenticate("facebook", { session: false }), (req, res) => {
@@ -53,7 +52,7 @@ router.get("/cookie", (req, res) => {
             success: true,
             msg: "User Authenticated",
             token,
-            userInfo
+            userInfo,
         });
     }
 
