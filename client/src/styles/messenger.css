@@ -1,9 +1,10 @@
 #main_panel {
-    background-color: rgb(216, 216, 216);
     padding: 10px;
     margin: auto 0 auto 10px;
     width: 40%;
     height: 90vh;
+    background-color: white;
+    border-right: #60686d 2px solid;
 }
 
 div.container {
@@ -148,7 +149,7 @@ div.interactions {
 div.interactions input {
     padding: 8px;
     width: 85%;
-    outline: none
+    outline: none;
 }
 
 div.interactions button {
@@ -173,6 +174,15 @@ div.chat_container {
     height: 100%;
 }
 
+header.chat_title {
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px;
+    color: white;
+    background-color: rgb(64, 108, 255);
+    text-align: center;
+}
+
 div.contact_item, div.chat_item {
     background-color: white;
     padding: 30px 15px;
@@ -180,6 +190,12 @@ div.contact_item, div.chat_item {
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+div.contact_item:hover, div.chat_item:hover {
+    cursor: pointer;
+    background-color: rgb(169, 216, 255);
+    color: white;
 }
 
 div.chat_item {

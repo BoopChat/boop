@@ -46,7 +46,7 @@ const evaluateStatus = (lastActive) => {
     return diff > (5 * 60 * 1000) ? "offline": "online";
 };
 
-const Contacts = () => {
+const Contacts = ({selectConversation}) => {
     const [addOpen, setAddOpen] = useState(false);
     const [contacts, setContacts] = useState([]);
     const [init, setInit] = useState(false);
@@ -83,6 +83,15 @@ const Contacts = () => {
             })();
     };
 
+    const startConvo = () => {
+        // search the database for a conversation with current user and chosen contact
+        // if does exist the server should create it
+
+        // update the conversation panel to display messages by passing the convo id
+        // and title returned by the server
+        selectConversation(19, "title");
+    };
+
     return (
         <div id="contact_container">
             <div className="main_panel_header">
@@ -97,9 +106,9 @@ const Contacts = () => {
                     <ContactItem
                         img={contact.contactInfo.imageUrl}
                         username={contact.contactInfo.displayName}
-                        user_id={contact.contactId}
                         status={evaluateStatus(contact.contactInfo.lastActive)}
                         key={i}
+                        onClick={() => startConvo()}
                     />
                 ) : <span>You have no contacts :(</span>}
             </div>

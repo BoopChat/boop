@@ -1,9 +1,9 @@
 import React from "react";
 
-const ConversationItem = ({name, img, lastMsg, lastDate, unread}) => {
+const ConversationItem = ({name, img, lastMsg, lastDate, unread, onClick}) => {
 
     return (
-        <div className="chat_item">
+        <div className="chat_item" onClick={onClick}>
             <div className="img_and_name">
                 <img src={img} alt="chat_img"/>
                 <div className="name_and_msg">
