@@ -9,7 +9,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 // Middleware to verify the jwt
-const { verifyToken } = require("./routes/middleware");
+const jwt = require("express-jwt");
 
 //Server routes
 var contactsRouter = require("./routes/contacts");
@@ -34,7 +34,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/api/contacts", verifyToken, contactsRouter);
+// Use jwt verification middleware on every request except for the api/login/auth requests.
+app.use(
+    jwt({ secret: process.env.TOKEN_SECRET, algorithms: ["HS256"] }).unless((req) => {
+        return req.originalUrl.includes("/api/login/auth");
+    })
+);
+app.use("/api/contacts", contactsRouter);
 app.use("/api/conversations", conversationsRouter);
 app.use("/api/messages", messagesRouter);
 app.use("/api/login/auth", LoginAuthRouter);
