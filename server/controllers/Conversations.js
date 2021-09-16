@@ -140,9 +140,8 @@ module.exports.leaveConversation = async (req, res) => {
 
     // Validate request
     if (!conversationId) {
-        let msg = "No conversation selected";
-        logger.error(msg);
-        res.status(400).send({msg});
+        logger.error(userId + " did not select the conversation they wanted to leave");
+        res.status(400).send({msg: "No conversation selected"});
         return;
     }
 
