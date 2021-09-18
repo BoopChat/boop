@@ -7,7 +7,7 @@ passport.use(
         {
             clientID: process.env.FACEBOOK_CLIENT_ID,
             clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-            callbackURL: "http://localhost:5000/api/login/auth/facebook/callback",
+            callbackURL: global.gConfig.facebookCallbackUrl,
             profileFields: ["first_name", "last_name", "photos", "email"],
         },
         async function (accessToken, refreshToken, profile, done) {
@@ -19,7 +19,7 @@ passport.use(
                     serviceName: "Facebook",
                     firstName: profile._json.first_name,
                     lastName: profile._json.last_name,
-                    imageUrl: profile.photos[0].value
+                    imageUrl: profile.photos[0].value,
                 });
 
                 // store the returned message (success or error)
@@ -29,18 +29,17 @@ passport.use(
                 //if the message contains "success"
                 // (if user exists and was retrieved or new user and signinOption were created)
                 // extract the returned user information
-                if (msg.includes("success")){
+                if (msg.includes("success")) {
                     user = userFromDb["user"];
                     //this send the google profile to the callback url (/api/login/auth/google/callback)
                     //on the req.user property.
                     done(null, user);
-                }
-                else{
+                } else {
                     // Displays a blank page with the error message.
                     done(msg, null);
                 }
             } catch (err) {
-                done( err, null);
+                done(err, null);
             }
         }
     )

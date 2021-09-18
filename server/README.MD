@@ -66,7 +66,7 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
     
     Replace "< random secret string goes here >" with a random string of your choice. You can use env.sample file as a reference.
  
- 3. Getting Google App credentials
+3. Getting Google App credentials
     
     Sign in to Google's Cloud Console [here](https://accounts.google.com/ServiceLogin/signinchooser?service=cloudconsole&passive=1209600&osid=1&continue=https%3A%2F%2Fconsole.cloud.google.com%2Fapis%2Fcredentials%3Fref%3Dhttps%3A%2F%2Fwww.google.com%2F&followup=https%3A%2F%2Fconsole.cloud.google.com%2Fapis%2Fcredentials%3Fref%3Dhttps%3A%2F%2Fwww.google.com%2F&flowName=GlifWebSignIn&flowEntry=ServiceLogin)
  
@@ -89,7 +89,7 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 
     You will be given you Client ID and Client secret.
 
- 4. Setting client ID and client Secret.
+4. Setting client ID and client Secret.
     
     In the .env file
 
@@ -98,6 +98,15 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 
         replace < Google client secret goes here > with the acquired Goolge client sercret.
             e.g GOOGLE_CLIENT_SECRET = ajhasjdhjh48978387jkhfjkhzx
+
+5. Adding the google callback URL to the config.json file
+    
+    view the sample_config.json file for the example.
+    add the following url as the googeCallbackUrl under development:
+    "http://localhost:5000/api/login/auth/google/callback"
+
+You are Finished. Login using Google.
+
 
 # Getting Facebook Login to Work
 
@@ -137,4 +146,10 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
         Click show next to the App secret.
         Copy the app secret into the .env file in the FACEBOOK_CLIENT_SECRET variable.
 
-    You are Finished. Login in via Boop chat application.
+3. Adding the google callback URL to the config.json file.
+    
+    view the sample_config.json file for the example.
+    add the following url as the facebookCallbackUrl under development:
+    "http://localhost:5000/api/login/auth/facebook/callback"
+
+You are Finished. Login using Facebook.

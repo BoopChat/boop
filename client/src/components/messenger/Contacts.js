@@ -29,9 +29,9 @@ const AddContactDialog = ({open, onClose}) => {
     );
 };
 
-const getContacts = async ( token, id) => {
+const getContacts = async ( token ) => {
     // make request for the contacts of user with id 1 and wait for the json response\
-    const data = await (await fetch(`/api/contacts/${id}`, {
+    const data = await (await fetch("/api/contacts", {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -73,10 +73,11 @@ const Contacts = () => {
         // ask the server to add the user with this email to user's contacts
         if (email)
             (async () => {
-                const res = await fetch("/api/contacts/1", {
+                const res = await fetch("/api/contacts", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
                     },
                     body: JSON.stringify({
                         contactEmail: email

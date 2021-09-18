@@ -1,7 +1,7 @@
 import "../../styles/login.css";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
-import {logIn, setToken, setDisplayName, setUserInfo } from "./userSlice";
+import { logIn, setToken, setUserInfo } from "./userSlice";
 import { useSelector } from "react-redux";
 import React from "react";
 
@@ -32,7 +32,6 @@ const Login = () => {
             if (success) {
                 const { token, userInfo } = data;
                 // Store the user Information and access token in the redux store.
-                dispatch(setDisplayName(userInfo.displayName));
                 dispatch(setUserInfo({...userInfo}));
                 dispatch(setToken(token));
                 // Logs in the user.
