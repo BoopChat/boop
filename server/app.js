@@ -12,7 +12,7 @@ dotenv.config();
 const jwt = require("express-jwt");
 
 // Configuration of the login callback URLs depending on the environment.
-const environment = process.env.NODE_ENV || 'development';
+const environment = process.env.NODE_ENV || "development";
 const config = require("./config/config.json")[environment];
 global.gConfig = config;
 
