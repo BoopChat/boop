@@ -1,6 +1,6 @@
 const FacebookStrategy = require("passport-facebook").Strategy;
 const passport = require("passport");
-const utils = require("../loginStrategies/utils");
+const loginUtils = require("../loginStrategies/loginUtils");
 
 passport.use(
     new FacebookStrategy(
@@ -14,7 +14,7 @@ passport.use(
             try {
                 // try to retrieve the user from the database, or create a new user and signinOption
                 // using the information retrieved from the social login, along with the service name
-                let userFromDb = await utils.getSigninOption({
+                let userFromDb = await loginUtils.getSigninOption({
                     email: profile._json.email,
                     serviceName: "Facebook",
                     firstName: profile._json.first_name,
