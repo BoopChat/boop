@@ -1,6 +1,6 @@
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const passport = require("passport");
-const utils = require("../loginStrategies/utils");
+const loginUtils = require("../loginStrategies/loginUtils");
 
 passport.use(
     new GoogleStrategy(
@@ -14,7 +14,7 @@ passport.use(
             try {
                 // try to retrieve the user from the database, or create a new user and signinOption
                 // using the information retrieved from the social login, along with the service name
-                let userFromDb = await utils.getSigninOption({
+                let userFromDb = await loginUtils.getSigninOption({
                     email: profile.emails[0].value,
                     serviceName: "Google",
                     firstName: profile.name.givenName,
