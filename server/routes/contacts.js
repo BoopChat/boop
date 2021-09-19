@@ -4,7 +4,7 @@ var controller = require("../controllers/Contacts");
 
 // Manage a single user's contacts
 router
-    .route("/:userId")
+    .route("/")
     // get all a user's contacts
     .get(controller.getContacts)
     // add a contact

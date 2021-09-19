@@ -6,7 +6,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const loginSlice = createSlice({
     name: "user",
     initialState: {
-        userName: "",
+        userInfo: {},
         isLoggedIn: false,
         token: "",
     },
@@ -16,12 +16,23 @@ export const loginSlice = createSlice({
         },
         logOut: (state) => {
             state.isLoggedIn = false;
+            state.token = "";
+            state.userInfo = {};
         },
         setToken: (state, action) => {
             state.token = action.payload;
         },
+        setDisplayName: (state, action) => {
+            state.userInfo.displayName = action.payload;
+        },
+        setImageUrl: (state, action) => {
+            state.userInfo.imageUrl = action.payload;
+        },
+        setUserInfo: (state, action) => {
+            state.userInfo = action.payload;
+        }
     },
 });
 
-export const { logIn, logOut, setToken } = loginSlice.actions;
+export const { logIn, logOut, setToken, setDisplayName, setImageUrl, setUserInfo} = loginSlice.actions;
 export default loginSlice.reducer;

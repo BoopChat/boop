@@ -8,6 +8,14 @@ var logger = require("morgan");
 const dotenv = require("dotenv");
 dotenv.config();
 
+// Middleware to verify the jwt
+const jwt = require("express-jwt");
+
+// Configuration of the login callback URLs depending on the environment.
+const environment = process.env.NODE_ENV || "development";
+const config = require("./config/config.json")[environment];
+global.gConfig = config;
+
 //Server routes
 var contactsRouter = require("./routes/contacts");
 var conversationsRouter = require("./routes/conversations");
@@ -31,6 +39,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+// Use jwt verification middleware on every request except for the api/login/auth requests.
+app.use(
+    jwt({ secret: process.env.TOKEN_SECRET, algorithms: ["HS256"] }).unless((req) => {
+        return req.originalUrl.includes("/api/login/auth");
+    })
+);
 app.use("/api/contacts", contactsRouter);
 app.use("/api/conversations", conversationsRouter);
 app.use("/api/messages", messagesRouter);

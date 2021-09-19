@@ -5,6 +5,8 @@ import {React, useState, useEffect} from "react";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
 
+import { useSelector } from "react-redux";
+
 const AddContactDialog = ({open, onClose}) => {
     const [email, setEmail] = useState("");
 
@@ -27,14 +29,16 @@ const AddContactDialog = ({open, onClose}) => {
     );
 };
 
-const getContacts = async () => {
-    // make request for the contacts of user with id 1 and wait for the json response
-    const data = await (await fetch("/api/contacts/1", {
+const getContacts = async ( token ) => {
+    // make request for the contacts of user with id 1 and wait for the json response\
+    const data = await (await fetch("/api/contacts", {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
         },
     })).json();
+
     // get the list of contacts if successful
     return data ? data.contactList : [];
 };
@@ -51,9 +55,12 @@ const Contacts = () => {
     const [contacts, setContacts] = useState([]);
     const [init, setInit] = useState(false);
 
+    // Get the token from the users global state.
+    const token = useSelector((state) => state.user.token);
+
     useEffect(() => {
         if (!init) { // if this is the first time rendering, get user contacts from server
-            (async () => setContacts(await getContacts()))();
+            (async () => setContacts(await getContacts( token )))();
             setInit(true);
         }
     }, [init]);
@@ -65,10 +72,11 @@ const Contacts = () => {
         // ask the server to add the user with this email to user's contacts
         if (email)
             (async () => {
-                const res = await fetch("/api/contacts/1", {
+                const res = await fetch("/api/contacts", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
                     },
                     body: JSON.stringify({
                         contactEmail: email
