@@ -6,8 +6,6 @@ const User = db.User;
 // Create and Save a new Contact
 module.exports.addContact = async (req, res) => {
     let userId = req.user.id;
-    // Need to check that userId belongs to a valid user and
-    // matches the id of the requesting user
 
     // Validate request (need to add check to ensure user exists) +
     // (prevent user from adding self as contact????)
@@ -64,8 +62,6 @@ module.exports.addContact = async (req, res) => {
 
 module.exports.getContacts = async (req, res) => {
     let userId = req.user.id;
-    // Need to check that userId belongs to a valid user and
-    // matches the id of the requesting user
 
     //get user and all contacts
     let user = await User.findByPk(userId,{
@@ -92,8 +88,6 @@ module.exports.getContacts = async (req, res) => {
 module.exports.deleteContact = async (req, res) => {
     let userId = req.user.id;
     let contactId = req.body.contactId;
-    // Need to check that userId belongs to a valid user and
-    // matches the id of the requesting user
 
     // Validate request
     if (!userId || !contactId) {
