@@ -12,6 +12,7 @@
         "define": {
             "timestamps": true
         },
+        "homeUrl": "http://www.example.com",
         "facebookCallbackUrl": "http://www.example.com",
         "googleCallbackUrl": "http://www.example.com"
     },
@@ -28,6 +29,7 @@
         "define": {
             "timestamps": true
         },
+        "homeUrl": "http://www.example.com",
         "facebookCallbackUrl": "http://www.example.com",
         "googleCallbackUrl": "http://www.example.com"
     },
@@ -44,6 +46,7 @@
         "define": {
             "timestamps": true
         },
+        "homeUrl": "http://wwww.example.com",
         "facebookCallbackUrl": "http://www.example.com",
         "googleCallbackUrl": "http://www.example.com"
     }

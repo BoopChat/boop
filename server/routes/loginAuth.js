@@ -18,7 +18,7 @@ router.get("/google/callback", passport.authenticate("google", { session: false 
     });
 
     // Redirects to the login page and stores the login cookie in the users browser.
-    res.status(200).redirect("http://localhost:3000");
+    res.status(200).redirect(global.gConfig.homeUrl);
 });
 
 //Facebook login route
@@ -34,7 +34,7 @@ router.get("/facebook/callback", passport.authenticate("facebook", { session: fa
     });
 
     // Redirects to the login page and stores the login cookie in the users browser.
-    res.status(200).redirect("http://localhost:3000");
+    res.status(200).redirect(global.gConfig.homeUrl);
 });
 
 // Creates a jwt access token if the cookie with the users login information exists.

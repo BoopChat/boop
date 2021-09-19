@@ -104,6 +104,8 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
     view the sample_config.json file for the example.
     add the following url as the googeCallbackUrl under development:
     "http://localhost:5000/api/login/auth/google/callback"
+    add the following url as the homeUrl under develoment:
+    "http://localhost:3000"
 
 You are Finished. Login using Google.
 
@@ -146,10 +148,12 @@ You are Finished. Login using Google.
         Click show next to the App secret.
         Copy the app secret into the .env file in the FACEBOOK_CLIENT_SECRET variable.
 
-3. Adding the google callback URL to the config.json file.
+3. Adding the faceboook callback URL to the config.json file.
     
     view the sample_config.json file for the example.
     add the following url as the facebookCallbackUrl under development:
     "http://localhost:5000/api/login/auth/facebook/callback"
+    add the following url as the homeUrl under develoment:
+    "http://localhost:3000"
 
 You are Finished. Login using Facebook.
