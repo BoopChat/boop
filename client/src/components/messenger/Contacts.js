@@ -55,13 +55,12 @@ const Contacts = () => {
     const [contacts, setContacts] = useState([]);
     const [init, setInit] = useState(false);
 
-    // get data from the users global state.
+    // Get the token from the users global state.
     const token = useSelector((state) => state.user.token);
-    const { id } = useSelector((state) => state.user.userInfo);
 
     useEffect(() => {
         if (!init) { // if this is the first time rendering, get user contacts from server
-            (async () => setContacts(await getContacts(token, id)))();
+            (async () => setContacts(await getContacts( token )))();
             setInit(true);
         }
     }, [init]);
