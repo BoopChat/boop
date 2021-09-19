@@ -5,6 +5,7 @@ const dayjs = require("dayjs");
 const logger = require("../logger");
 
 require("./loginStrategies/googleStrategy");
+require("./loginStrategies/facebookStrategy");
 
 router.get("/google", passport.authenticate("google", { scope: ["email", "profile"] }));
 
@@ -14,12 +15,28 @@ router.get("/google/callback", passport.authenticate("google", { session: false 
     res.cookie("loginCookie", JSON.stringify(req.user), {
         secure: false,
         httpOnly: true,
-        expires: dayjs().add(1, "year").toDate(),
+        expires: dayjs().add(1, "month").toDate(),
     });
 
     // Redirects to the login page and stores the login cookie in the users browser.
     logger.info("Redirected to login: " + req.user);
-    res.status(301).redirect("http://localhost:3000");
+    res.status(200).redirect(global.gConfig.homeUrl);
+});
+
+//Facebook login route
+router.get("/facebook", passport.authenticate("facebook", { scope: ["email", "public_profile"] }));
+
+// after successful login with Facebook strategy, user db record will be sent here in the req.user property.
+router.get("/facebook/callback", passport.authenticate("facebook", { session: false }), (req, res) => {
+    // Creates a cookie with the user's login information
+    res.cookie("loginCookie", JSON.stringify(req.user), {
+        secure: false,
+        httpOnly: true,
+        expires: dayjs().add(1, "month").toDate(),
+    });
+
+    // Redirects to the login page and stores the login cookie in the users browser.
+    res.status(200).redirect(global.gConfig.homeUrl);
 });
 
 // Creates a jwt access token if the cookie with the users login information exists.
@@ -27,17 +44,18 @@ router.get("/cookie", (req, res) => {
     // If the cookie with users login information exists, create jwt and send to user.
     if (req.cookies.loginCookie) {
         // Extracts user id from the cookie with the users login information.
-        const { id } = JSON.parse(req.cookies.loginCookie);
+        const userInfo = JSON.parse(req.cookies.loginCookie);
 
         // Creates an access jwt token using the user id.
-        const token = jwt.sign({ id: id }, process.env.TOKEN_SECRET);
+        const token = jwt.sign({ ...userInfo }, process.env.TOKEN_SECRET);
 
+        // Returns the jwt access token and user information.
         logger.info("User [" + id + "] Authenticated");
-        // Returns the jwt access token.
         return res.status(200).json({
             success: true,
             msg: "User Authenticated",
             token,
+            userInfo,
         });
     }
 
