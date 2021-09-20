@@ -1,6 +1,6 @@
 import plus from "../../assets/plus.svg";
 import ContactItem from "./ContactItem";
-import { ContactsController } from "./controllers.js/Contacts";
+import { ContactsController } from "./controllers/Contacts";
 
 import {React, useState, useEffect} from "react";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -30,8 +30,8 @@ const AddContactDialog = ({open, onClose}) => {
     );
 };
 
-const Contacts = ({selectConversation}) => {
-    const [addOpen, setAddOpen] = useState(false);
+const Contacts = () => {
+    const [dialogOpen, setDialogOpen] = useState(false);
     const [contacts, setContacts] = useState([]);
     const [init, setInit] = useState(false);
 
@@ -45,29 +45,19 @@ const Contacts = ({selectConversation}) => {
         }
     }, [init]);
 
-    const handleClickAdd = () => setAddOpen(true);
+    const handleClickAdd = () => setDialogOpen(true);
 
     const addContact = (email) => {
-        setAddOpen(false); // close add dialog
+        setDialogOpen(false); // close add dialog
         // ask the server to add the user with this email to user's contacts
         if (email)
             (async () => {
                 let result = ContactsController.addContact(token, email);
-                if (result.success)
+                if (result.success) // add new contact to the back of the list
                     setContacts(contacts.length > 0 ? [...contacts, result.contact]: [result.contact]);
                 else // display error message
                     alert(result.msg);
             })();
-    };
-
-    const switchConvo = contactId => {
-        const {id, title} = ContactsController.startConvo(contactId);
-
-        if (id) {
-            // update the conversation panel to display messages by passing the convo id
-            // and title returned by the server
-            selectConversation(id, title);
-        }
     };
 
     return (
@@ -77,7 +67,7 @@ const Contacts = ({selectConversation}) => {
                 <button className="options" title="options" onClick={() => handleClickAdd()}>
                     <img src={plus} alt="options"/>
                 </button>
-                <AddContactDialog open={addOpen} onClose={addContact} />
+                <AddContactDialog open={dialogOpen} onClose={addContact} />
             </div>
             <div id="contacts">
                 {contacts.length > 0 ? contacts.map((contact, i) =>
@@ -86,7 +76,6 @@ const Contacts = ({selectConversation}) => {
                         username={contact.contactInfo.displayName}
                         status={ContactsController.evaluateStatus(contact.contactInfo.lastActive)}
                         key={i}
-                        onClick={() => switchConvo(contact.contactInfo.contactId)}
                     />
                 ) : <span>You have no contacts :(</span>}
             </div>

@@ -5,7 +5,7 @@ const User = db.User;
 
 // Attempting to create a conversation using a transaction
 module.exports.addConversation = async (req, res) => {
-    let userId = req.params.userId;
+    let userId = req.user.id;
     // the participants' userIds will be passed in an array
     let participants = req.body.participants;
     // Need to check that userId belongs to a valid user and
@@ -41,7 +41,6 @@ module.exports.addConversation = async (req, res) => {
         let isAdmin = participants.length == 1;
 
         const promises = participants.map(async participant => {
-            // console.log(`participant=${participant}`);
             await Participant.create({
                 userId : participant,
                 conversationId: conversationInfo.id,

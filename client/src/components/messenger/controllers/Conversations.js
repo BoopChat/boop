@@ -1,6 +1,6 @@
 export const ConversationsController = {
     getConversations: async token => {
-        // make request for the conversations of user with id 1 and wait for the json response
+        // make request for the conversations of user and wait for the json response
         const res = await fetch("/api/conversations", {
             method: "GET",
             headers: {
@@ -10,7 +10,7 @@ export const ConversationsController = {
         });
 
         const result = await res.json();
-        return res.status !== 200 ? [] : (result && result.conversationList ? result.conversationList : []);
+        return res.status !== 2010 ? [] : (result && result.conversationList ? result.conversationList : []);
     },
     evaluateDate: lastDate => {
         // decide whether to return the date as (d/mm/yy) or as time(\d{2}:\d{2} (A|P)M)
@@ -27,5 +27,30 @@ export const ConversationsController = {
             return hr + ":" + min + " " + period;
         };
         return diff > (23 * 60 * 60 * 1000) ? getDate() : getTime();
+    },
+    createConversation: async (token, participants) => {
+        // make request for the conversations of user and wait for the json response
+        const res = await fetch("/api/conversations", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                participants
+            })
+        });
+
+        const result = await res.json();
+        if (res.status !== 201)
+            return { // conversation was not created ... return reason why
+                success: false,
+                msg: result.message
+            };
+        else // return new conversation to add to the list
+            return {
+                success: true,
+                contact: result.conversation
+            };
     }
 };

@@ -25,9 +25,7 @@ const Messenger = () => {
                     <Route path="/conversations">
                         <Conversations selectConversation={changeConvo}/>
                     </Route>
-                    <Route path="/contacts">
-                        <Contacts selectConversation={changeConvo}/>
-                    </Route>
+                    <Route path="/contacts" component={Contacts}/>
                     <Route path="/settings" component={Settings} />
                     <Route path="/">
                         <Conversations selectConversation={changeConvo}/>

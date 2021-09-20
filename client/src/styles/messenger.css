@@ -202,7 +202,7 @@ div.chat_item {
     padding: 34px 18px;
 }
 
-div.contact_item img, div.chat_item img {
+div.contact_item img, div.chat_item img, ul.add_participants img {
     border-radius: 50%;
     height: 35px;
     width: auto;
@@ -361,4 +361,15 @@ div.setting_item img.profile_img {
     height: 55px;
     width: auto;
     margin-top: 20px;
+}
+
+ul.add_participants li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+}
+
+div.MuiPaper-root {
+    max-width: 600px;
+    min-width: 320px;
 }
