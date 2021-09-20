@@ -50,7 +50,7 @@ router.get("/cookie", (req, res) => {
         const token = jwt.sign({ ...userInfo }, process.env.TOKEN_SECRET);
 
         // Returns the jwt access token and user information.
-        logger.info("User [" + id + "] Authenticated");
+        logger.info("User [" + userInfo.id + "] Authenticated");
         return res.status(200).json({
             success: true,
             msg: "User Authenticated",
