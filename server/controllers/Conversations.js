@@ -8,8 +8,6 @@ module.exports.addConversation = async (req, res) => {
     let userId = req.user.id;
     // the participants' userIds will be passed in an array
     let participants = req.body.participants;
-    // Need to check that userId belongs to a valid user and
-    // matches the id of the requesting user
 
     // Validate request
     if (!participants || !participants.length) {
@@ -60,6 +58,12 @@ module.exports.addConversation = async (req, res) => {
             include: {
                 model: User,
                 as: "participants",
+                // exclude the requesting user's info from the participants list
+                where: {
+                    [db.Sequelize.Op.not]:[
+                        {id:userId}
+                    ]
+                },
                 // specify what atributes you want returned
                 attributes:["displayName"],
                 // Prevents the entire belongs-to-many mapping object (Participant)
@@ -84,9 +88,7 @@ module.exports.addConversation = async (req, res) => {
 };
 
 module.exports.getConversations = async (req, res) => {
-    let userId = req.params.userId;
-    // Need to check that userId belongs to a valid user and
-    // matches the id of the requesting user
+    let userId = req.user.id;
 
     //get user and all conversations (where Participants.deletedAt is null)
     let user = await User.findByPk(userId,{
@@ -103,6 +105,12 @@ module.exports.getConversations = async (req, res) => {
             include: {
                 model: User,
                 as: "participants",
+                // exclude the requesting user's info from the participants list
+                where: {
+                    [db.Sequelize.Op.not]:[
+                        {id:userId}
+                    ]
+                },
                 // specify what atributes you want returned
                 attributes:["displayName"],
                 // Prevents the entire belongs-to-many mapping object (Participant)
@@ -118,7 +126,7 @@ module.exports.getConversations = async (req, res) => {
 
 // remove a user from a conversation
 module.exports.leaveConversation = async (req, res) => {
-    let userId = req.params.userId;
+    let userId = req.user.id;
     // get the conversationId and id of the successor admin (successorId)) from the request body
     let conversationId = req.body.conversationId;
     let successorId = req.body.successorId;
@@ -208,6 +216,9 @@ module.exports.leaveConversation = async (req, res) => {
     }
 
     if(userIsAdmin == true){
+        // Remove the user's info from the list of participants
+        participants = participants.filter( participant => participant.id !== userId );
+
         // if this is the last admin and they haven't chosen a successor
         if(adminsCount == 1 && !successorId){
             // return a msg letting the user know they must choose a successor and the list of participants

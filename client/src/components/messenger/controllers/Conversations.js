@@ -10,7 +10,7 @@ export const ConversationsController = {
         });
 
         const result = await res.json();
-        return res.status !== 2010 ? [] : (result && result.conversationList ? result.conversationList : []);
+        return res.status !== 200 ? [] : (result && result.conversationList ? result.conversationList : []);
     },
     evaluateDate: lastDate => {
         // decide whether to return the date as (d/mm/yy) or as time(\d{2}:\d{2} (A|P)M)
