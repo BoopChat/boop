@@ -1,6 +1,5 @@
 import { Route, Switch, useLocation } from "react-router";
 import { useState, React } from "react";
-// import { useSelector } from "react-redux";
 
 import Conversations from "./Conversations";
 import Contacts from "./Contacts";
@@ -12,8 +11,6 @@ import "../../styles/messenger.css";
 
 const Messenger = () => {
     const location = useLocation();
-
-    // const { userId } = useSelector((state) => state.user.userInfo);
 
     const [currentConvo, setCurrentConvo] = useState({});
     const changeConvo = (id, title) => {

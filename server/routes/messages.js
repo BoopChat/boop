@@ -4,7 +4,7 @@ var controller = require("../controllers/Messages");
 
 // Manage a single user's conversations
 router
-    .route("/:userId/:conversationId")
+    .route("/:conversationId")
     // get all messages from a conversation
     .get(controller.getMessages)
     //create a new message in the conversation

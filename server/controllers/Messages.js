@@ -6,7 +6,7 @@ const Conversation = db.Conversation;
 
 // get all messages from a conversation
 module.exports.getMessages = async (req, res) => {
-    let userId = req.params.userId;
+    let userId = req.user.id;
     let conversationId = req.params.conversationId;
 
     // Need to check that userId belongs to a valid user and
@@ -45,12 +45,12 @@ module.exports.getMessages = async (req, res) => {
     });
 
     if (!messages) return res.status(404).send({msg: "Messages not found"});
-    return res.send({messages: messages});
+    return res.status(200).send({messages: messages});
 };
 
 // Create a new message in the conversation
 module.exports.addMessage = async (req, res) => {
-    let userId = req.params.userId;
+    let userId = req.user.id;
     let conversationId = req.params.conversationId;
     // Need to check that userId belongs to a valid user and
     // matches the id of the requesting user

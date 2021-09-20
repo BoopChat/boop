@@ -1,5 +1,6 @@
 import plus from "../../assets/plus.svg";
 import ContactItem from "./ContactItem";
+import { ContactsController } from "./controllers.js/Contacts";
 
 import {React, useState, useEffect} from "react";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -29,27 +30,6 @@ const AddContactDialog = ({open, onClose}) => {
     );
 };
 
-const getContacts = async ( token ) => {
-    // make request for the contacts of user with id 1 and wait for the json response\
-    const data = await (await fetch("/api/contacts", {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-        },
-    })).json();
-
-    // get the list of contacts if successful
-    return data ? data.contactList : [];
-};
-
-const evaluateStatus = (lastActive) => {
-    // for now status is either online or offline
-    // if user not active within the last 5mins - offline
-    let diff = Date.now() - (new Date(lastActive)).getTime();
-    return diff > (5 * 60 * 1000) ? "offline": "online";
-};
-
 const Contacts = ({selectConversation}) => {
     const [addOpen, setAddOpen] = useState(false);
     const [contacts, setContacts] = useState([]);
@@ -60,44 +40,34 @@ const Contacts = ({selectConversation}) => {
 
     useEffect(() => {
         if (!init) { // if this is the first time rendering, get user contacts from server
-            (async () => setContacts(await getContacts( token )))();
+            (async () => setContacts(await ContactsController.getContacts( token )))();
             setInit(true);
         }
     }, [init]);
 
     const handleClickAdd = () => setAddOpen(true);
 
-    const handleClose = (email) => {
+    const addContact = (email) => {
         setAddOpen(false); // close add dialog
         // ask the server to add the user with this email to user's contacts
         if (email)
             (async () => {
-                const res = await fetch("/api/contacts", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({
-                        contactEmail: email
-                    })
-                });
-
-                const result = await res.json();
-                if (res.status !== 201)
-                    alert(result.message); // contact was not added ... display why
-                else // add new contact to the back of the list
+                let result = ContactsController.addContact(token, email);
+                if (result.success)
                     setContacts(contacts.length > 0 ? [...contacts, result.contact]: [result.contact]);
+                else // display error message
+                    alert(result.msg);
             })();
     };
 
-    const startConvo = () => {
-        // search the database for a conversation with current user and chosen contact
-        // if does exist the server should create it
+    const switchConvo = contactId => {
+        const {id, title} = ContactsController.startConvo(contactId);
 
-        // update the conversation panel to display messages by passing the convo id
-        // and title returned by the server
-        selectConversation(19, "title");
+        if (id) {
+            // update the conversation panel to display messages by passing the convo id
+            // and title returned by the server
+            selectConversation(id, title);
+        }
     };
 
     return (
@@ -107,16 +77,16 @@ const Contacts = ({selectConversation}) => {
                 <button className="options" title="options" onClick={() => handleClickAdd()}>
                     <img src={plus} alt="options"/>
                 </button>
-                <AddContactDialog open={addOpen} onClose={handleClose} />
+                <AddContactDialog open={addOpen} onClose={addContact} />
             </div>
             <div id="contacts">
                 {contacts.length > 0 ? contacts.map((contact, i) =>
                     <ContactItem
                         img={contact.contactInfo.imageUrl}
                         username={contact.contactInfo.displayName}
-                        status={evaluateStatus(contact.contactInfo.lastActive)}
+                        status={ContactsController.evaluateStatus(contact.contactInfo.lastActive)}
                         key={i}
-                        onClick={() => startConvo()}
+                        onClick={() => switchConvo(contact.contactInfo.contactId)}
                     />
                 ) : <span>You have no contacts :(</span>}
             </div>

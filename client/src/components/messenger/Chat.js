@@ -1,10 +1,10 @@
 import {useState, useEffect, React} from "react";
-
+import { useSelector } from "react-redux";
 
 const getMessages = async (conversationId) => {
     if (conversationId) {
         // make request for the messages of conversationid and wait for the json response
-        const data = await (await fetch("/api/messages/1/" + conversationId, {
+        const data = await (await fetch("/api/messages/" + conversationId, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -34,8 +34,9 @@ const evaluateElapsed = (sent) => {
     }
 };
 
-const Chat = ({conversationId, title, userId}) => {
+const Chat = ({conversationId, title}) => {
     const [messages, setMessages] = useState([]);
+    const { userId } = useSelector((state) => state.user.userInfo);
 
     useEffect(() => { // will call this at a defined interval later
         (async () => setMessages(await getMessages(conversationId)))();
