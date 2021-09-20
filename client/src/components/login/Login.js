@@ -1,7 +1,7 @@
 import "../../styles/login.css";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { logIn, setToken } from "./userSlice";
+import { logIn, setToken, setUserInfo } from "./userSlice";
 import { useSelector } from "react-redux";
 import React from "react";
 
@@ -14,9 +14,9 @@ const Login = () => {
     const dispatch = useDispatch();
     const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
-    //checks if the user has successfully logged in using a provider
-    //dispatches the logIn action to change the user's login state if true;
-    //useEffect executes everytime this login page loads or reloads.
+    // Checks if the user has successfully logged in using a provider
+    // Dispatches the logIn action to change the user's login state if true;
+    // UseEffect executes everytime this login page loads or reloads.
     useEffect(() => {
         const fetchData = async () => {
             const res = await fetch("/api/login/auth/cookie", {
@@ -30,8 +30,10 @@ const Login = () => {
             const { success } = data;
 
             if (success) {
-                // Saves the access token in the redux store.
-                dispatch(setToken(data.token));
+                const { token, userInfo } = data;
+                // Store the user Information and access token in the redux store.
+                dispatch(setUserInfo({...userInfo}));
+                dispatch(setToken(token));
                 // Logs in the user.
                 dispatch(logIn());
             }

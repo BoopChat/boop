@@ -11,7 +11,10 @@
         "timezone" : "+00:00",
         "define": {
             "timestamps": true
-        }
+        },
+        "homeUrl": "http://www.example.com",
+        "facebookCallbackUrl": "http://www.example.com",
+        "googleCallbackUrl": "http://www.example.com"
     },
     "test": {
         "username": "root",
@@ -25,7 +28,10 @@
         "timezone" : "+00:00",
         "define": {
             "timestamps": true
-        }
+        },
+        "homeUrl": "http://www.example.com",
+        "facebookCallbackUrl": "http://www.example.com",
+        "googleCallbackUrl": "http://www.example.com"
     },
     "production": {
         "username": "root",
@@ -39,6 +45,9 @@
         "timezone" : "+00:00",
         "define": {
             "timestamps": true
-        }
+        },
+        "homeUrl": "http://wwww.example.com",
+        "facebookCallbackUrl": "http://www.example.com",
+        "googleCallbackUrl": "http://www.example.com"
     }
 }

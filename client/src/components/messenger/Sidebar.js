@@ -9,7 +9,7 @@ import { NavLink } from "react-router-dom";
 import { useState, React } from "react";
 import { useDispatch } from "react-redux";
 
-import { logOut, setToken } from "../login/userSlice";
+import { logOut } from "../login/userSlice";
 
 const MenuButton = styled.button`
     background-color: black;
@@ -127,8 +127,6 @@ const Sidebar = ({ username, user_pic, user_email }) => {
         const { success } = data;
 
         if (success) {
-            // Removes the access token from the redux store.
-            dispatch(setToken(""));
             // Logs the user out.
             dispatch(logOut());
         }
