@@ -27,7 +27,7 @@ const AddConversationDialog = ({open, onClose, token}) => {
     }, [init]);
 
     return (
-        <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} className="add_conversation_dialog">
+        <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
             <DialogTitle id="simple-dialog-title">Create a conversation</DialogTitle>
             <ul className="add_participants">
                 {contacts.map(contact =>

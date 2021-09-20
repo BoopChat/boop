@@ -18,7 +18,7 @@ export const ConversationsController = {
         lastDate = new Date(lastDate);
         let diff = Date.now() - lastDate.getTime();
 
-        const getDate = () => lastDate.getDate() + "/" + (lastDate.getMonth() + 1) + lastDate.getFullYear().substring(2);
+        const getDate = () => lastDate.getDate() + "/" + (lastDate.getMonth()+1) + lastDate.getFullYear().substring(2);
         const getTime = () => {
             let hr = lastDate.getHours() % 12 || 12; // convert 24hr to 12hr
             // pad minutes with 0 to maintain 2 digits in mins section
