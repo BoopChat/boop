@@ -4,8 +4,8 @@ module.exports = (sequelize, Sequelize) => {
         id: { primaryKey: true, type: Sequelize.BIGINT, autoIncrement: true, allowNull: false },
         title: { type: Sequelize.STRING(25), allowNull: true },
         imageUrl: { type: Sequelize.STRING(2048), allowNull: true, field: "image_url" },
-        userEditableImage:  { type: Sequelize.BOOLEAN, defaultValue: false, field: "user_editable_image" },
-        userEditableTitle:  { type: Sequelize.BOOLEAN, defaultValue: false, field: "user_editable_title" },
+        userEditableImage: { type: Sequelize.BOOLEAN, defaultValue: false, field: "user_editable_image" },
+        userEditableTitle: { type: Sequelize.BOOLEAN, defaultValue: false, field: "user_editable_title" },
         //timestamps
         createdAt: { type: Sequelize.DATE, field: "created_at", defaultValue: Sequelize.NOW },
         updatedAt: { type: Sequelize.DATE, field: "updated_at", defaultValue: Sequelize.NOW  }
@@ -15,7 +15,7 @@ module.exports = (sequelize, Sequelize) => {
         Message,
         Participant,
         User
-    })=>{
+    }) => {
         Conversation.hasMany(Message, {
             as: "messages",
             foreignKey: "conversationId"

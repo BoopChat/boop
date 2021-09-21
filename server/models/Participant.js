@@ -18,7 +18,7 @@ module.exports = (sequelize, Sequelize) => {
     Participant.associate = ({
         Conversation,
         User
-    })=>{
+    }) => {
         Participant.belongsTo(Conversation, {
             as: "conversationInfo",
             foreignKey: "conversationId",

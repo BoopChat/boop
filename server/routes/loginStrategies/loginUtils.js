@@ -20,7 +20,7 @@ module.exports.getSigninOption = async function({email, serviceName, firstName, 
                     email: email,
                     serviceName: serviceName
                 },
-                attributes: ["serviceName","email"]
+                attributes: ["serviceName", "email"]
             }
         }
     });

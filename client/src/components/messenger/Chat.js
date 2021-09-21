@@ -23,7 +23,7 @@ const Chat = ({conversationId, title}) => {
                             return (
                                 <li
                                     key={key}
-                                    className={"message " + (msg.senderId == userId ? "author": "friend" + "_message")}
+                                    className={"message " + (msg.senderId === userId ? "author": "friend" + "_message")}
                                 >
                                     <div className="info">
                                         <span className="user">{msg.displayName}</span>

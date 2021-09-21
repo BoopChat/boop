@@ -34,13 +34,13 @@ module.exports.getMessages = async (req, res) => {
             model: User,
             as: "sender",
             // specify what atributes you want returned
-            attributes:["displayName", "imageUrl"],
+            attributes: ["displayName", "imageUrl"],
         },
         include: {
             model: Conversation,
             as: "conversation",
             // specify what atributes you want returned
-            attributes:["id", "title", "imageUrl"],
+            attributes: ["id", "title", "imageUrl"],
         }
     });
 
@@ -71,11 +71,11 @@ module.exports.addMessage = async (req, res) => {
         }
     });
     if (!isParticipant)
-        return res.status(404).send({msg:"User is not a participant of conversation"});
+        return res.status(404).send({msg: "User is not a participant of conversation"});
 
     // create the message with the neccessary values
     let newMessage = await Message.create({
-        senderId : userId,
+        senderId: userId,
         conversationId: conversationId,
         content: req.body.content
     }).catch(err => { //catch any errors
@@ -86,6 +86,6 @@ module.exports.addMessage = async (req, res) => {
     });
     //return a success message + the newly created msg;
     return res.status(201).send({
-        msg:"Message successfully added to the conversation!", newMessage
+        msg: "Message successfully added to the conversation!", newMessage
     });
 };
