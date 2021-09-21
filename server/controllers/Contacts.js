@@ -57,7 +57,7 @@ module.exports.addContact = async (req, res) => {
     });
 
     //return a success message + the newly created contact's info
-    return res.status(201).send({msg: "Contact successfully created!", contact: {contactInfo: contactInfo}});
+    return res.status(201).send({ msg: "Contact successfully created!", contact: { contactInfo: contactInfo } });
 };
 
 module.exports.getContacts = async (req, res) => {
@@ -81,7 +81,7 @@ module.exports.getContacts = async (req, res) => {
     });
 
     if (!user) return res.status(404).send("user not found");
-    return res.send({"contactList": user.contactList});
+    return res.status(200).send({ "contactList": user.contactList });
 };
 
 // Delete a Contact

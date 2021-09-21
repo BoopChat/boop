@@ -1,16 +1,24 @@
 export const ContactsController = {
     getContacts: async token => {
         // make request for the contacts of user and wait for the json response
-        const data = await (await fetch("/api/contacts", {
+        const res = await fetch("/api/contacts", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`,
             },
-        })).json();
+        });
 
-        // get the list of contacts if successful
-        return data ? data.contactList : [];
+        const result = await res.json();
+        if (res.status !== 200)
+            return { // error getting contact list ... return why
+                success: false,
+            };
+        else // get the list of contacts if successful
+            return {
+                success: true,
+                contactList: result?.contactList ?? []
+            };
     },
     evaluateStatus: lastActive => {
         // for now status is either online or offline
@@ -18,7 +26,7 @@ export const ContactsController = {
         let diff = Date.now() - (new Date(lastActive)).getTime();
         return diff > (5 * 60 * 1000) ? "offline": "online";
     },
-    addContact: async ( token, email ) => {
+    addContact: async (token, email) => {
         const res = await fetch("/api/contacts", {
             method: "POST",
             headers: {
@@ -42,7 +50,7 @@ export const ContactsController = {
                 contact: result.contact
             };
     },
-    startConvo: async (token, contactId) => {
+    startConversation: async (token, contactId) => {
         // search the database for a conversation with current user and chosen contact
         // if doesn't exist the server should create it
         // this feature is for phase 2 of the project

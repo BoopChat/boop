@@ -61,23 +61,23 @@ module.exports.addConversation = async (req, res) => {
                 // exclude the requesting user's info from the participants list
                 where: {
                     [db.Sequelize.Op.not]: [
-                        {id: userId}
+                        { id: userId }
                     ]
                 },
                 // specify what atributes you want returned
                 attributes: ["displayName"],
                 // Prevents the entire belongs-to-many mapping object (Participant)
                 // from being returned
-                through: {attributes: []}
+                through: { attributes: [] }
             }
         });
         //return a success message + the newly created conversation
-        return res.status(201).send({msg: "Conversation successfully created!", conversation});
+        return res.status(201).send({ msg: "Conversation successfully created!", conversation });
     } catch (err){
         await t.rollback();
 
         if (err.message.includes("insert or update on table") ){
-            return res.status(404).send({msg: "Atleast one of your participants isn't a valid user."});
+            return res.status(404).send({ msg: "Atleast one of your participants isn't a valid user." });
         }
 
         return res.status(500).send({
@@ -100,7 +100,7 @@ module.exports.getConversations = async (req, res) => {
             attributes: ["id", "title", "imageUrl"],
             // Prevent the belongs-to-many mapping object (Participant)
             // from being returned
-            through: {attributes: []},
+            through: { attributes: [] },
             // get each conversation's participants' info from the Users table
             include: {
                 model: User,
@@ -108,20 +108,20 @@ module.exports.getConversations = async (req, res) => {
                 // exclude the requesting user's info from the participants list
                 where: {
                     [db.Sequelize.Op.not]: [
-                        {id: userId}
+                        { id: userId }
                     ]
                 },
                 // specify what atributes you want returned
                 attributes: ["displayName"],
                 // Prevents the entire belongs-to-many mapping object (Participant)
                 // from being returned
-                through: {attributes: []}
+                through: { attributes: [] }
             }
         }
     });
 
-    if (!user) return res.status(404).send({msg: "User not found"});
-    return res.send({conversationList: user["conversationList"]});
+    if (!user) return res.status(404).send({ msg: "User not found" });
+    return res.send({ conversationList: user["conversationList"] });
 };
 
 // remove a user from a conversation
@@ -188,7 +188,7 @@ module.exports.leaveConversation = async (req, res) => {
 
     // if the user isn't a participant return an error message
     if (!userIsParticipant){
-        return res.status(404).send({msg: "Requesting user is not a participant of the conversation"});
+        return res.status(404).send({ msg: "Requesting user is not a participant of the conversation" });
     }
 
     // if this is the only participant delete the conversation, all messages and participants
@@ -205,7 +205,7 @@ module.exports.leaveConversation = async (req, res) => {
         });
 
         if (!deletedConversationRow){
-            return res.status(500).send({msg: "Conversation couldn't be deleted. Probably didn't exist."});
+            return res.status(500).send({ msg: "Conversation couldn't be deleted. Probably didn't exist." });
         }
 
 
@@ -215,9 +215,9 @@ module.exports.leaveConversation = async (req, res) => {
         });
     }
 
-    if (userIsAdmin === true){
+    if (userIsAdmin === true) {
         // Remove the user's info from the list of participants
-        participants = participants.filter( participant => participant.id !== userId );
+        participants = participants.filter(participant => participant.id !== userId);
 
         // if this is the last admin and they haven't chosen a successor
         if (adminsCount === 1 && !successorId){
@@ -269,7 +269,7 @@ module.exports.leaveConversation = async (req, res) => {
     });
 
     if (!deletedParticipantRow){
-        return res.status(404).send({msg: "User couldn't be removed from conversation. Probably wasn't a participant."});
+        return res.status(404).send({ msg: "User couldn't be removed from conversation. Probably wasn't a participant." });
     }
 
 

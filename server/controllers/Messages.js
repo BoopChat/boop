@@ -21,7 +21,7 @@ module.exports.getMessages = async (req, res) => {
         }
     });
     if (!isParticipant)
-        return res.status(404).send({msg: "User is not a participant of conversation"});
+        return res.status(404).send({ msg: "User is not a participant of conversation" });
 
     //get all messages from the conversation
     let messages = await Message.findAll({
@@ -44,8 +44,8 @@ module.exports.getMessages = async (req, res) => {
         }
     });
 
-    if (!messages) return res.status(404).send({msg: "Messages not found"});
-    return res.status(200).send({messages: messages});
+    if (!messages) return res.status(404).send({ msg: "Messages not found" });
+    return res.status(200).send({ messages: messages });
 };
 
 // Create a new message in the conversation
@@ -71,7 +71,7 @@ module.exports.addMessage = async (req, res) => {
         }
     });
     if (!isParticipant)
-        return res.status(404).send({msg: "User is not a participant of conversation"});
+        return res.status(404).send({ msg: "User is not a participant of conversation" });
 
     // create the message with the neccessary values
     let newMessage = await Message.create({

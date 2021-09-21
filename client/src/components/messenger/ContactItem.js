@@ -1,6 +1,6 @@
 import React from "react";
 
-const ContactItem = ({img, username, status="offline", onClick}) => {
+const ContactItem = ({ img, username, status="offline", onClick }) => {
 
     return (
         <div className="contact_item" onClick={onClick}>

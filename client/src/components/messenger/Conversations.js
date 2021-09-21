@@ -1,4 +1,4 @@
-import {useEffect, useState, React} from "react";
+import { useEffect, useState, React } from "react";
 import { useSelector } from "react-redux";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
@@ -8,7 +8,7 @@ import ConversationItem from "./ConversationItem";
 import { ConversationsController } from "./controllers/Conversations";
 import { ContactsController } from "./controllers/Contacts";
 
-const AddConversationDialog = ({open, onClose, token}) => {
+const AddConversationDialog = ({ open, onClose, token }) => {
     const [list, setList] = useState([]);
     const [contacts, setContacts] = useState([]);
     const [init, setInit] = useState(false);
@@ -21,7 +21,11 @@ const AddConversationDialog = ({open, onClose, token}) => {
 
     useEffect(() => {
         if (!init) { // if this is the first time rendering, get user contacts from server
-            (async () => setContacts(await ContactsController.getContacts( token )))();
+            const runAsync = async () => {
+                let contacts = await ContactsController.getContacts(token);
+                setContacts(contacts.success ? contacts.contactList : []);
+            };
+            runAsync();
             setInit(true);
         }
     }, [init]);
@@ -49,7 +53,7 @@ const AddConversationDialog = ({open, onClose, token}) => {
 };
 
 
-const Conversations = ({selectConversation}) => {
+const Conversations = ({ selectConversation }) => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [conversations, setConversations] = useState([]);
     const [init, setInit] = useState(false);
@@ -60,7 +64,8 @@ const Conversations = ({selectConversation}) => {
     useEffect(() => {
         // if this is the first time rendering, get user conversations from server
         if (!init) {
-            (async () => setConversations(await ConversationsController.getConversations(token)))();
+            const runAsync = async () => setConversations(await ConversationsController.getConversations(token));
+            runAsync();
             setInit(true);
         }
     }, [init]);
@@ -69,8 +74,8 @@ const Conversations = ({selectConversation}) => {
     const addConversation = (participants) => {
         setDialogOpen(false); // close add dialog
         // ask the server to create a new conversation with the list participants
-        if (participants)
-            (async () => {
+        if (participants) {
+            const runAsync = async () => {
                 let result = ConversationsController.createConversation(token, participants);
                 if (result.success) { // add new conversation to the back of the list
                     let { conversation } = result;
@@ -80,7 +85,9 @@ const Conversations = ({selectConversation}) => {
                 }
                 else // display error message
                     alert(result.msg);
-            })();
+            };
+            runAsync();
+        }
     };
 
     return (

@@ -1,6 +1,6 @@
 import React from "react";
 
-const ConversationItem = ({name, img, lastMsg, lastDate, unread, onClick}) => {
+const ConversationItem = ({ name, img, lastMsg, lastDate, unread, onClick }) => {
 
     return (
         <div className="chat_item" onClick={onClick}>

@@ -1,16 +1,17 @@
-import {useState, useEffect, React} from "react";
+import { useState, useEffect, React } from "react";
 import { useSelector } from "react-redux";
 import { ChatController } from "./controllers/Chat";
 
 
-const Chat = ({conversationId, title}) => {
+const Chat = ({ conversationId, title }) => {
     const [messages, setMessages] = useState([]);
     const { userId } = useSelector((state) => state.user.userInfo);
     // Get the token from the users global state.
     const token = useSelector((state) => state.user.token);
 
     useEffect(() => { // will call this at a defined interval later
-        (async () => setMessages(await ChatController.getMessages(token, conversationId)))();
+        const runAsync = async () => setMessages(await ChatController.getMessages(token, conversationId));
+        runAsync();
     }, []);
 
     return (

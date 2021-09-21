@@ -3,7 +3,7 @@ module.exports = (sequelize, Sequelize) => {
         //attributes
         userId: { primaryKey: true, type: Sequelize.INTEGER, allowNull: false, field: "user_id" },
         conversationId: { primaryKey: true, type: Sequelize.BIGINT, allowNull: false, field: "conversation_id" },
-        isAdmin: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false, field: "is_admin"},
+        isAdmin: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false, field: "is_admin" },
         //timestamps
         createdAt: { type: Sequelize.DATE, field: "created_at", defaultValue: Sequelize.NOW },
         updatedAt: { type: Sequelize.DATE, field: "updated_at", defaultValue: Sequelize.NOW },

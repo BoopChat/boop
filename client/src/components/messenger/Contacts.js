@@ -2,13 +2,13 @@ import plus from "../../assets/plus.svg";
 import ContactItem from "./ContactItem";
 import { ContactsController } from "./controllers/Contacts";
 
-import {React, useState, useEffect} from "react";
+import { React, useState, useEffect } from "react";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
 
 import { useSelector } from "react-redux";
 
-const AddContactDialog = ({open, onClose}) => {
+const AddContactDialog = ({ open, onClose }) => {
     const [email, setEmail] = useState("");
 
     const handleClose = () => onClose(email);
@@ -40,7 +40,11 @@ const Contacts = () => {
 
     useEffect(() => {
         if (!init) { // if this is the first time rendering, get user contacts from server
-            (async () => setContacts(await ContactsController.getContacts( token )))();
+            const runAsync = async () => {
+                let contacts = await ContactsController.getContacts(token);
+                setContacts(contacts.success ? contacts.contactList : []);
+            };
+            runAsync();
             setInit(true);
         }
     }, [init]);
@@ -50,14 +54,16 @@ const Contacts = () => {
     const addContact = (email) => {
         setDialogOpen(false); // close add dialog
         // ask the server to add the user with this email to user's contacts
-        if (email)
-            (async () => {
+        if (email) {
+            const runAsync =async () => {
                 let result = ContactsController.addContact(token, email);
                 if (result.success) // add new contact to the back of the list
                     setContacts(contacts.length > 0 ? [...contacts, result.contact]: [result.contact]);
                 else // display error message
                     alert(result.msg);
-            })();
+            };
+            runAsync();
+        }
     };
 
     return (
