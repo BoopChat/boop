@@ -277,14 +277,23 @@ input.addContact {
     outline: none;
 }
 
-button.addContact {
+input.addConversation {
+    padding: 10px 5px;
+    border: 1px solid #60686d;
+    border-left: none;
+    border-right: none;
+    outline: none;
+    margin-bottom: 8px;
+}
+
+button.addContact, button.addConversation {
     padding: 10px;
     color: white;
     background-color:rgb(64, 108, 255);
     border: none;
 }
 
-button.addContact:hover {
+button.addContact:hover, button.addConversation:hover {
     cursor: pointer;
     background-color:rgb(17, 71, 248);
 }

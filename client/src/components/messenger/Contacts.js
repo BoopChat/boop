@@ -1,6 +1,7 @@
 import plus from "../../assets/plus.svg";
 import ContactItem from "./ContactItem";
 import { ContactsController } from "./controllers/Contacts";
+import AlertDialog from "../AlertDialog";
 
 import { React, useState, useEffect } from "react";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -34,6 +35,11 @@ const Contacts = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [contacts, setContacts] = useState([]);
     const [init, setInit] = useState(false);
+    const [messageDialog, setMessageDialog] = useState({
+        open: false,
+        title: "",
+        message: ""
+    });
 
     // Get the token from the users global state.
     const token = useSelector((state) => state.user.token);
@@ -56,18 +62,36 @@ const Contacts = () => {
         // ask the server to add the user with this email to user's contacts
         if (email) {
             const runAsync =async () => {
-                let result = ContactsController.addContact(token, email);
+                let result = await ContactsController.addContact(token, email);
                 if (result.success) // add new contact to the back of the list
                     setContacts(contacts.length > 0 ? [...contacts, result.contact]: [result.contact]);
                 else // display error message
-                    alert(result.msg);
+                    setMessageDialog({
+                        title: "Error",
+                        message: result.msg,
+                        open: true
+                    });
             };
             runAsync();
         }
     };
 
+    const closeAlert = () => {
+        setMessageDialog({
+            title: "",
+            message: "",
+            open: false
+        });
+    };
+
     return (
         <div id="contact_container">
+            <AlertDialog
+                open={messageDialog.open}
+                handleClose={closeAlert}
+                title={messageDialog.title}
+                message={messageDialog.message}
+            />
             <div className="main_panel_header">
                 <h1>Contacts</h1>
                 <button className="options" title="options" onClick={() => handleClickAdd()}>
