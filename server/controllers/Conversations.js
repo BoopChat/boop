@@ -269,7 +269,9 @@ module.exports.leaveConversation = async (req, res) => {
     });
 
     if (!deletedParticipantRow){
-        return res.status(404).send({ msg: "User couldn't be removed from conversation. Probably wasn't a participant." });
+        return res.status(404).send({
+            msg: "User couldn't be removed from conversation. Probably wasn't a participant."
+        });
     }
 
 
