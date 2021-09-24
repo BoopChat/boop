@@ -61,7 +61,7 @@ const Contacts = () => {
         setDialogOpen(false); // close add dialog
         // ask the server to add the user with this email to user's contacts
         if (email) {
-            const runAsync =async () => {
+            const runAsync = async () => {
                 let result = await ContactsController.addContact(token, email);
                 if (result.success) // add new contact to the back of the list
                     setContacts(contacts.length > 0 ? [...contacts, result.contact]: [result.contact]);
