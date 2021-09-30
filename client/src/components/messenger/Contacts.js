@@ -55,6 +55,14 @@ const Contacts = () => {
         }
     }, [init]);
 
+    const refreshContactList = () => {
+        const runAsync = async () => {
+            let contacts = await ContactsController.getContacts(token);
+            setContacts(contacts.success ? contacts.contactList : []);
+        };
+        runAsync();
+    };
+
     const handleClickAdd = () => setDialogOpen(true);
 
     const addContact = (email) => {
@@ -105,6 +113,8 @@ const Contacts = () => {
                         img={contact.contactInfo.imageUrl}
                         username={contact.contactInfo.displayName}
                         status={ContactsController.evaluateStatus(contact.contactInfo.lastActive)}
+                        id={contact.contactId}
+                        triggerRefresh={refreshContactList}
                         key={i}
                     />
                 ) : <span>You have no contacts :(</span>}

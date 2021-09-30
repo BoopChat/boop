@@ -104,7 +104,7 @@ module.exports.deleteContact = async (req, res) => {
         }
     }).then(affectedRows => {
         if (affectedRows === 1) {
-            res.send({
+            res.status(200).send({
                 msg: "Contact was deleted successfully!"
             });
         } else {

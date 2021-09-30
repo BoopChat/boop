@@ -21,7 +21,7 @@ div.container {
 
 ul.chat_section {
     list-style: none;
-    margin: 50px auto;
+    margin: 20px;
     overflow-y: scroll;
     height: 75%;
 }
@@ -116,28 +116,24 @@ li.message.author_message p {
     order: 1;
 }
 
-li.friend_message p:after {
+li.friend_message p:after, li.author_message p:after {
     content: '';
     position: absolute;
     width: 15px;
     height: 15px;
     border-radius: 50%;
     background-color: #ffffff;
-    border: 2px solid #f3f3f3;
-    left: -8px;
     top: 18px;
 }
 
+li.friend_message p:after {
+    border: 2px solid #f3f3f3;
+    left: -8px;
+}
+
 li.author_message p:after {
-    content: '';
-    position: absolute;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    background-color: #ffffff;
     border: 2px solid #e2f8ff;
     right: -8px;
-    top: 18px;
 }
 
 div.interactions {
@@ -381,4 +377,60 @@ ul.add_participants li {
 div.MuiPaper-root {
     max-width: 600px;
     min-width: 320px;
+}
+
+button.trash_btn {
+    background-color: inherit;
+    outline:none;
+    border:none;
+}
+
+button.trash_btn:hover {
+    cursor: pointer;
+}
+
+button.trash_btn:hover > img {
+    filter: invert(92%) sepia(4%) saturate(1033%) hue-rotate(169deg) brightness(78%) contrast(85%);
+}
+
+div.trash_and_status {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 16%;
+}
+
+.btn_confirm {
+    color: #FFFFFF;
+    background-color: rgb(0, 153, 255);
+    border-radius: 5px;
+    padding: 6px 18px;
+    outline: none;
+    border: 1px solid;
+    width: 77%;
+    height: 55px;
+    margin-top:5%;
+}
+
+.btn_confirm:hover{
+    background-color: rgb(0, 133,233 );
+    cursor: pointer;
+}
+
+.btn_deny {
+    color: #FFFFFF;
+    background-color: rgb(247, 16, 16);
+    border-radius: 5px;
+    padding: 6px 18px;
+    outline: none;
+    border: 1px solid;
+    width: 77%;
+    height: 55px;
+    margin-top:5%;
+}
+
+.btn_deny:hover{
+    background-color: rgb(237, 6, 6);
+    cursor: pointer;
 }

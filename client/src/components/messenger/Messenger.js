@@ -42,7 +42,10 @@ const Messenger = () => {
                 </Switch>
             </div>
             <div id="chat_panel">
-                <Chat conversationId={currentConvo.id} title={currentConvo.title} />
+                {currentConvo.id ?
+                    <Chat conversationId={currentConvo.id} title={currentConvo.title}/>
+                    : <></>
+                }
             </div>
         </div>
     );

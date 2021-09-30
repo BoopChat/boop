@@ -72,6 +72,23 @@ export const ContactsController = {
                 id: result.id,
                 title: result.title
             };
+    },
+    deleteContact: async (token, id) => {
+        const res = await fetch("/api/contacts", {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                contactId: id
+            })
+        });
+
+        const result = await res.json();
+        return { // return msg to display to user (whether success or fail)
+            msg: result.msg,
+            success: result.status === 200
+        };
     }
 };
-

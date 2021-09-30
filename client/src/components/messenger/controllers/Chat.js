@@ -30,5 +30,28 @@ export const ChatController = {
             let days = Math.floor(diff / 24 / 60 / 60 / 1000);
             return days + " day" + (days !== 1 ? "s" : "") + " ago";
         }
+    },
+    sendMessage: async (token, conversationId, message) => {
+        const res = await fetch("/api/messages/" + conversationId, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                content: message
+            })
+        });
+
+        const result = await res.json();
+        if (res.status !== 201)
+            return { // message was not added ... return reason why
+                success: false,
+                msg: result.msg
+            };
+        else
+            return {
+                success: true,
+            };
     }
 };
