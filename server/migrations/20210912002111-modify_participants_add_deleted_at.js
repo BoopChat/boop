@@ -2,7 +2,7 @@
 
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        try{
+        try {
             return Promise.all([
                 queryInterface.addColumn(
                     "Participants", // table name

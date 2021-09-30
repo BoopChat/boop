@@ -1,54 +1,48 @@
-import React from "react";
+import { useState, useEffect, React } from "react";
+import { useSelector } from "react-redux";
+import { ChatController } from "./controllers/Chat";
 
-let messages = [
-    {
-        author: true,
-        username: "John",
-        elapsed: "1 hour ago",
-        content: "Lorem ipsum dolor sit, amet consectetur adipisicing elit?",
-        avatar: "https://picsum.photos/200?random=1"
-    }, {
-        author: false,
-        username: "Jane",
-        elapsed: "1 hour ago",
-        content: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-        avatar: "https://picsum.photos/200?random=2"
-    }, {
-        author: false,
-        username: "Jane",
-        elapsed: "5 mins ago",
-        content: "Lorem ipsum dolor sit amet.",
-        avatar: "https://picsum.photos/200?random=2"
-    }, {
-        author: true,
-        username: "John",
-        elapsed: "4 mins ago",
-        content: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
-        avatar: "https://picsum.photos/200?random=1"
-    }
-];
 
-const Chat = () => {
+const Chat = ({ conversationId, title }) => {
+    const [messages, setMessages] = useState([]);
+    const { userId } = useSelector((state) => state.user.userInfo);
+    // Get the token from the users global state.
+    const token = useSelector((state) => state.user.token);
+
+    useEffect(() => { // will call this at a defined interval later
+        const runAsync = async () => setMessages(await ChatController.getMessages(token, conversationId));
+        runAsync();
+    }, []);
+
     return (
         <div className="chat_container">
-            <ul className="chat_section">
-                {
-                    messages.map((msg, key) => {
-                        return (
-                            <li key={key} className={"message " + (msg.author ? "author_message" : "friend_message")}>
-                                <div className="info">
-                                    <span className="user">{msg.username}</span>
-                                    <span className="time">{msg.elapsed}</span>
-                                </div>
-                                <div className="avatar" href="/">
-                                    <img alt="user avatar" src={msg.avatar} width="35"/>
-                                </div>
-                                <p>{msg.content}</p>
-                            </li>
-                        );
-                    })
-                }
-            </ul>
+            {title ? <header className="chat_title">{title}</header> : <></>}
+            {messages && messages.length > 0 ? (
+                <ul className="chat_section">
+                    {
+                        messages.map((msg, key) => {
+                            return (
+                                <li
+                                    key={key}
+                                    className={"message " + (msg.senderId === userId ? "author": "friend" + "_message")}
+                                >
+                                    <div className="info">
+                                        <span className="user">{msg.displayName}</span>
+                                        <span className="time">
+                                            {() => ChatController.evaluateElapsed(msg.createdAt)}
+                                        </span>
+                                    </div>
+                                    <div className="avatar" href="/">
+                                        <img alt="user avatar" src={msg.imageUrl} width="35"/>
+                                    </div>
+                                    <p>{msg.content}</p>
+                                </li>
+                            );
+                        })
+                    }
+                </ul>
+            ) : <div></div>
+            }
             <div className="interactions">
                 <input type="text" name="chat_box" placeholder="chat" readOnly />
                 <button>Send</button>

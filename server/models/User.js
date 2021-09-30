@@ -3,7 +3,7 @@ module.exports = (sequelize, Sequelize) => {
         //attributes
         id: { primaryKey: true, type: Sequelize.INTEGER, autoIncrement: true, allowNull: false },
         displayName: { type: Sequelize.STRING(50), allowNull: false, field: "display_name" },
-        firstName: { type: Sequelize.STRING(50), allowNull: true , field: "first_name"},
+        firstName: { type: Sequelize.STRING(50), allowNull: true, field: "first_name" },
         lastName: { type: Sequelize.STRING(50), allowNull: true, field: "last_name" },
         imageUrl: { type: Sequelize.STRING(2048), allowNull: true, field: "image_url" },
         // timestamps
@@ -18,7 +18,7 @@ module.exports = (sequelize, Sequelize) => {
         Conversation,
         Participant,
         Message
-    })=>{
+    }) => {
         User.hasMany(SigninOption, {
             as: "signinOptions",
             foreignKey: "userId"

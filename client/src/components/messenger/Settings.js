@@ -2,20 +2,12 @@ import edit_icon from "../../assets/icons8-edit.svg";
 
 import { useState, React } from "react";
 
-// this is just test data
-// this data should really be fetched
-// and then posted when updated and validated
-let user_data = {
-    display_name: "Cassie",
-    first_name: "Cassandra",
-    last_name: "Stevens",
-    image_url: "https://picsum.photos/200"
-};
+const Settings = ({ userInfo, updateUser }) => {
+    // The data is updated locally, but changes are not pushed to the server for now
 
-const Settings = () => {
     const [Name, setName] = useState({
-        firstname: user_data.first_name,
-        lastname: user_data.last_name,
+        firstname: userInfo.firstName,
+        lastname: userInfo.lastName,
         editing: false, // determines whether name is being edited
         editLock: false,
     });
@@ -26,7 +18,7 @@ const Settings = () => {
     };
 
     const [displayName, setDisplayName] = useState({
-        displayname: user_data.display_name,
+        displayname: userInfo.displayName,
         editing: false, // determines whether displayname is being edited
         editLock: false, // locks if user has entered invalid data
     });
@@ -42,8 +34,11 @@ const Settings = () => {
         else {
             if (!Name.editLock) { // ignore validation for now
                 // commit changes
-                user_data.first_name = Name.firstname;
-                user_data.last_name = Name.lastname;
+                updateUser({
+                    ...userInfo,
+                    firstName: Name.firstname,
+                    lastName: Name.lastname,
+                });
                 setName({ ...Name, editing: false });
             }
         }
@@ -55,7 +50,7 @@ const Settings = () => {
         else {
             if (!displayName.editLock) { // ignore validation for now
                 // commit changes
-                user_data.display_name = displayName.displayname;
+                updateUser({ ...userInfo,  displayName: displayName.displayname });
                 setDisplayName({ ...displayName, editing: false });
             }
         }
@@ -85,7 +80,7 @@ const Settings = () => {
                             />
                         </div>
                     ) : <span>
-                        {user_data.first_name + " " + user_data.last_name}
+                        {Name.firstname + " " + Name.lastname}
                     </span>
                     }
                 </div>
@@ -105,7 +100,7 @@ const Settings = () => {
                             type="text"
                             onChange={(e) => handleDNameChange(e)}
                         />
-                        :   <span>{user_data.display_name}</span>
+                        :   <span>{displayName.displayname}</span>
                     }
                 </div>
                 <button title="edit display name" className="edit" onClick={() => handleEditDName()}>
@@ -116,7 +111,7 @@ const Settings = () => {
             <div className="setting_item">
                 <div>
                     <span className="attribute">Profile Image</span>
-                    <img className="profile_img" src={user_data.image_url} alt="profile"/>
+                    <img className="profile_img" src={userInfo.imageUrl} alt="profile"/>
                 </div>
                 <button className="edit">
                     <img src={edit_icon} alt="edit"/>

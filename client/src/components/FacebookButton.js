@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { logIn } from "./login/userSlice";
 import React from "react";
 
-const FacebookButton = ({text="Sign up with Facebook"}) => {
+const FacebookButton = ({ text="Sign up with Facebook" }) => {
     //send action to redux store to change states
     const dispatch = useDispatch();
 

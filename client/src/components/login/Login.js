@@ -32,7 +32,7 @@ const Login = () => {
             if (success) {
                 const { token, userInfo } = data;
                 // Store the user Information and access token in the redux store.
-                dispatch(setUserInfo({...userInfo}));
+                dispatch(setUserInfo({ ...userInfo }));
                 dispatch(setToken(token));
                 // Logs in the user.
                 dispatch(logIn());

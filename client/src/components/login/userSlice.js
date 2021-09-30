@@ -34,5 +34,5 @@ export const loginSlice = createSlice({
     },
 });
 
-export const { logIn, logOut, setToken, setDisplayName, setImageUrl, setUserInfo} = loginSlice.actions;
+export const { logIn, logOut, setToken, setDisplayName, setImageUrl, setUserInfo } = loginSlice.actions;
 export default loginSlice.reducer;

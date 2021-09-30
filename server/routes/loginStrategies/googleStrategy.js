@@ -35,7 +35,7 @@ passport.use(
                     //on the req.user property.
                     done(null, user);
                 }
-                else{
+                else {
                     // Displays a blank page with the error message.
                     done(msg, null);
                 }

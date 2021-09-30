@@ -40,6 +40,18 @@
         "react/prop-types": "off",
         "no-restricted-imports": ["error", {
             "patterns": ["setupProxy"]
-        }]
+        }],
+        "no-empty": "error",
+        "no-unreachable-loop": "error",
+        "no-empty-function": "error",
+        "no-useless-return": "error",
+        "eqeqeq": ["error", "smart"],
+        "array-bracket-spacing": ["error", "never"],
+        "block-spacing": "error",
+        "keyword-spacing": ["error", { "before": true, "after": true }],
+        "key-spacing": ["error", { "beforeColon": false, "afterColon": true }],
+        "arrow-spacing": "error",
+        "comma-spacing": ["error", { "before": false, "after": true }],
+        "object-curly-spacing": ["error", "always"]
     }
 }
