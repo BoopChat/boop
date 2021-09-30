@@ -58,9 +58,8 @@ const ContactItem = ({ img, username, status="offline", id, triggerRefresh }) =>
         if (confirm) { // if user confirmed to delete the contact
             const runAsync = async () => {
                 let result = await ContactsController.deleteContact(token, id);
-                console.log(result);
                 setMessageDialog({
-                    title: result.success ? "Successfully deleted contact" : "Error",
+                    title: result.success ? "Success" : "Error",
                     message: result.msg,
                     open: true
                 });

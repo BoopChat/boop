@@ -413,7 +413,7 @@ div.trash_and_status {
     margin-top:5%;
 }
 
-.btn_confirm:hover{
+.btn_confirm:hover {
     background-color: rgb(0, 133,233 );
     cursor: pointer;
 }
@@ -430,7 +430,7 @@ div.trash_and_status {
     margin-top:5%;
 }
 
-.btn_deny:hover{
+.btn_deny:hover {
     background-color: rgb(237, 6, 6);
     cursor: pointer;
 }
