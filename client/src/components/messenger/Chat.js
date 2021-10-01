@@ -36,7 +36,7 @@ const Chat = ({ conversationId, title }) => {
                 message: result.msg,
                 open: true
             });
-      }
+        }
     };
 
     const refresh = async () => {
