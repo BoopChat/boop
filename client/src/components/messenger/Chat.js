@@ -43,19 +43,12 @@ const Chat = ({ conversationId, title }) => {
     };
 
     useEffect(() => {
-        // refresh every 5 seconds
-        setUpdater(setInterval(() => refresh(), 5000));
-        refresh(); // refresh right away
-        return () => clearInterval(updater); // have component run this after unmounting as cleanup
-    }, []);
-
-    useEffect(() => {
         clearInterval(updater); // clear previous refresher (which was for a diff convo)
         // refresh every 5 seconds
         setUpdater(setInterval(() => refresh(), 5000));
         refresh(); // refresh right away
         return () => clearInterval(updater); // have component run this after unmounting as cleanup
-    }, conversationId);
+    }, [conversationId]);
 
     return (
         <div className="chat_container">
