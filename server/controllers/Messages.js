@@ -1,3 +1,4 @@
+const logger = require("../logger");
 const db = require("../models");
 const Participant = db.Participant;
 const Message = db.Message;
@@ -20,8 +21,11 @@ module.exports.getMessages = async (req, res) => {
             conversationId: conversationId
         }
     });
-    if (!isParticipant)
-        return res.status(404).send({ msg: "User is not a participant of conversation" });
+    if (!isParticipant) {
+        logger.error(`Cant get messages because user [${userId}]
+            is not a participant of the conversation ${conversationId}`);
+        return res.status(404).send({ msg: "You are not a participant in this conversation" });
+    }
 
     //get all messages from the conversation
     let messages = await Message.findAll({
@@ -44,8 +48,14 @@ module.exports.getMessages = async (req, res) => {
         }
     });
 
-    if (!messages) return res.status(404).send({ msg: "Messages not found" });
-    return res.status(200).send({ messages: messages });
+    if (!messages) {
+        let msg = "Messages not found";
+        logger.error(msg + userId + " - " + conversationId);
+        return res.status(404).send({ msg });
+    } else {
+        logger.info("Returned messages " + userId + " - " + conversationId);
+        return res.status(200).send({ messages: messages });
+    }
 };
 
 // Create a new message in the conversation
@@ -57,9 +67,9 @@ module.exports.addMessage = async (req, res) => {
 
     // Validate request
     if (!req.body.content) {
-        res.status(400).send({
-            msg: "Content can not be empty!"
-        });
+        let msg = "Message content cannot be empty";
+        logger.error(msg + userId);
+        res.status(400).send({ msg });
         return;
     }
 
@@ -70,8 +80,12 @@ module.exports.addMessage = async (req, res) => {
             conversationId: conversationId
         }
     });
-    if (!isParticipant)
-        return res.status(404).send({ msg: "User is not a participant of conversation" });
+
+    if (!isParticipant) {
+        logger.error(`User [${userId}] tried adding a message to a conversation
+            they are not a participant of: ${conversationId}`);
+        return res.status(404).send({ msg: "You are not a participant in this conversation" });
+    }
 
     // create the message with the neccessary values
     let newMessage = await Message.create({
@@ -79,13 +93,14 @@ module.exports.addMessage = async (req, res) => {
         conversationId: conversationId,
         content: req.body.content
     }).catch(err => { //catch any errors
-        res.status(500).send({
-            msg:
-            err.message || "Some error occurred while creating the message."
-        });
+        let msg = err.message || "Some error occurred while creating the message.";
+        logger.error(msg + userId + " - " + conversationId);
+        res.status(500).send({ msg });
     });
     //return a success message + the newly created msg;
+    let msg = "Message successfully added to the conversation";
+    logger.info(msg);
     return res.status(201).send({
-        msg: "Message successfully added to the conversation!", newMessage
+        msg: msg, newMessage
     });
 };

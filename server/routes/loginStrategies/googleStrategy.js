@@ -1,5 +1,6 @@
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const passport = require("passport");
+const logger = require("../../logger");
 const loginUtils = require("../loginStrategies/loginUtils");
 
 passport.use(
@@ -29,13 +30,16 @@ passport.use(
                 // if the message contains "success"
                 // (if user exists and was retrieved or new user and signinOption were created)
                 // extract the returned user information
-                if (msg.includes("success")){
+                if (msg.includes("success")) {
                     user = userFromDb["user"];
+                    logger.info(`[${user.userId}] Successfully signed in using ${user.serviceName}`);
                     //this send the google profile to the callback url (/api/login/auth/google/callback)
                     //on the req.user property.
                     done(null, user);
                 }
                 else {
+                    logger.error(user.userId + ":" + msg);
+
                     // Displays a blank page with the error message.
                     done(msg, null);
                 }

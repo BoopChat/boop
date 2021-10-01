@@ -1,3 +1,4 @@
+const logger = require("../logger");
 const db = require("../models");
 const Conversation = db.Conversation;
 const Participant = db.Participant;
@@ -11,7 +12,8 @@ module.exports.addConversation = async (req, res) => {
 
     // Validate request
     if (!participants || !participants.length) {
-        res.status(400).send({ msg: "Participants list can not be empty!" });
+        logger.error(userId + " tried creating a conversation with no participants");
+        res.status(400).send({ msg: "You must add participants to the conversation" });
         return;
     }
 
@@ -72,18 +74,23 @@ module.exports.addConversation = async (req, res) => {
             }
         });
         //return a success message + the newly created conversation
-        return res.status(201).send({ msg: "Conversation successfully created!", conversation });
-    } catch (err){
+        let msg = "Conversation successfully created";
+        logger.info(msg + ":" + conversation.id);
+        return res.status(201).send({ msg, conversation });
+    } catch (err) {
         await t.rollback();
 
-        if (err.message.includes("insert or update on table") ){
-            return res.status(404).send({ msg: "Atleast one of your participants isn't a valid user." });
+        if (err.message.includes("insert or update on table")) {
+            logger.error(`At least one of the participants were invalid when trying to create the
+                conversation: ${userId} - ${participants}`);
+            return res.status(404).send({
+                msg: "At least one of your participants isn't a valid user"
+            });
         }
 
-        return res.status(500).send({
-            msg:
-            err.message || "Some error occurred while creating the Conversation."
-        });
+        let msg = err.message || "Some error occurred while creating the Conversation.";
+        logger.error(msg);
+        return res.status(500).send({ msg });
     }
 };
 
@@ -120,8 +127,14 @@ module.exports.getConversations = async (req, res) => {
         }
     });
 
-    if (!user) return res.status(404).send({ msg: "User not found" });
-    return res.send({ conversationList: user["conversationList"] });
+    if (!user) {
+        let msg = "User not found";
+        logger.error(msg);
+        return res.status(404).send({ msg });
+    } else {
+        logger.info("Returned conversation list");
+        return res.send({ conversationList: user["conversationList"] });
+    }
 };
 
 // remove a user from a conversation
@@ -134,10 +147,9 @@ module.exports.leaveConversation = async (req, res) => {
     // matches the id of the requesting user
 
     // Validate request
-    if (!userId|| !conversationId) {
-        res.status(400).send({
-            msg: "Content can not be empty!"
-        });
+    if (!conversationId) {
+        logger.error(userId + " did not select the conversation they wanted to leave");
+        res.status(400).send({ msg: "No conversation selected" });
         return;
     }
 
@@ -187,32 +199,35 @@ module.exports.leaveConversation = async (req, res) => {
     }
 
     // if the user isn't a participant return an error message
-    if (!userIsParticipant){
-        return res.status(404).send({ msg: "Requesting user is not a participant of the conversation" });
+    if (!userIsParticipant) {
+        let msg = "Requesting user is not a participant of the conversation";
+        logger.error(msg);
+        return res.status(404).send({ msg });
     }
 
     // if this is the only participant delete the conversation, all messages and participants
-    if (participantsCount === 1){
+    if (participantsCount === 1) {
         let deletedConversationRow = await Conversation.destroy({
             where: {
                 id: conversationId
             }
         }).catch(err => { //catch any errors
-            res.status(500).send({
-                msg:
-                err.message || "Some error occurred while deleting the conversation."
-            });
+            let msg = err.message || "Some error occurred while deleting the conversation.";
+            logger.error(msg + `${userId} - ${conversationId}`);
+            res.status(500).send({ msg });
         });
 
-        if (!deletedConversationRow){
-            return res.status(500).send({ msg: "Conversation couldn't be deleted. Probably didn't exist." });
+        if (!deletedConversationRow) {
+            let msg = "Conversation couldn't be deleted. Probably didn't exist.";
+            logger.error(msg + `${userId} - ${conversationId}`);
+            return res.status(500).send({ msg });
         }
 
 
-        //return a success msg
-        return res.send({
-            msg: "Conversation successfully deleted!"
-        });
+        // return a success msg
+        let msg = "Conversation successfully deleted!";
+        logger.info(msg + `${userId} - ${conversationId}`);
+        return res.send({ msg });
     }
 
     if (userIsAdmin === true) {
@@ -222,6 +237,7 @@ module.exports.leaveConversation = async (req, res) => {
         // if this is the last admin and they haven't chosen a successor
         if (adminsCount === 1 && !successorId){
             // return a msg letting the user know they must choose a successor and the list of participants
+            logger.error("No successor was chosen "+ `${userId} - ${conversationId}`);
             return res.status(400).send({
                 msg: "You're the only admin. You must choose a successor.",
                 participants: participants
@@ -232,6 +248,7 @@ module.exports.leaveConversation = async (req, res) => {
         if (adminsCount === 1 && !successorIsParticipant){
             // return a msg letting the user know they must choose a successor that's a participant
             // and the list of participants
+            logger.error("Successor was not a participant "+ `${userId} - ${conversationId} - ${successorId}`);
             return res.status(400).send({
                 msg: "You must choose a successor that's a participant.",
                 participants: participants
@@ -249,9 +266,9 @@ module.exports.leaveConversation = async (req, res) => {
                     userId: successorId
                 }
             }).catch(err => { // catch any errors
-                res.status(500).send({
-                    msg: err.message || "Some error occurred while making successor an admin."
-                });
+                let msg = err.message || "Some error occurred while making successor an admin.";
+                logger.error(msg + `${userId} - ${conversationId} - ${successorId}`);
+                res.status(500).send({ msg });
             });
         }
     }
@@ -262,21 +279,20 @@ module.exports.leaveConversation = async (req, res) => {
             conversationId: conversationId
         }
     }).catch(err => { // catch any errors
-        res.status(500).send({
-            msg:
-            err.message || "Some error occurred while removing the user from the conversation."
-        });
+        let msg = err.message || "Some error occurred while removing the user from the conversation.";
+        logger.error(msg + `${userId} - ${conversationId}`);
+        res.status(500).send({ msg });
     });
 
-    if (!deletedParticipantRow){
-        return res.status(404).send({
-            msg: "User couldn't be removed from conversation. Probably wasn't a participant."
-        });
+    if (!deletedParticipantRow) {
+        let msg = "User couldn't be removed from conversation. Probably wasn't a participant.";
+        logger.error(msg `${userId} - ${conversationId}`);
+        return res.status(404).send({ msg });
     }
 
 
     //return a success msg
-    return res.send({
-        msg: "User successfully removed from the conversation!"
-    });
+    let msg = "User successfully removed from the conversation!";
+    logger.info(msg + `${userId} - ${conversationId}`);
+    return res.send({ msg });
 };
