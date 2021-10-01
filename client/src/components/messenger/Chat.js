@@ -55,7 +55,7 @@ const Chat = ({ conversationId, title }) => {
         setUpdater(setInterval(() => refresh(), 5000));
         refresh(); // refresh right away
         return () => clearInterval(updater); // have component run this after unmounting as cleanup
-    }, [conversationId]);
+    }, conversationId);
 
     return (
         <div className="chat_container">
