@@ -69,7 +69,7 @@ module.exports.addMessage = async (req, res) => {
     if (!req.body.content) {
         let msg = "Message content cannot be empty";
         logger.error(msg + userId);
-        res.status(400).send({msg});
+        res.status(400).send({ msg });
         return;
     }
 
@@ -95,7 +95,7 @@ module.exports.addMessage = async (req, res) => {
     }).catch(err => { //catch any errors
         let msg = err.message || "Some error occurred while creating the message.";
         logger.error(msg + userId + " - " + conversationId);
-        res.status(500).send({msg});
+        res.status(500).send({ msg });
     });
     //return a success message + the newly created msg;
     let msg = "Message successfully added to the conversation";

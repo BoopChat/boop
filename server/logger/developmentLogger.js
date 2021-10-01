@@ -8,7 +8,7 @@ const DevelopmentLogger = () => {
         level: "debug",
         format: combine(
             colorize(),
-            timestamp({format: "HH:mm:ss"}),
+            timestamp({ format: "HH:mm:ss" }),
             devFormat
         ),
         transports: [

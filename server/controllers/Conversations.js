@@ -80,7 +80,7 @@ module.exports.addConversation = async (req, res) => {
     } catch (err) {
         await t.rollback();
 
-        if(err.message.includes("insert or update on table")) {
+        if (err.message.includes("insert or update on table")) {
             logger.error(`At least one of the participants were invalid when trying to create the
                 conversation: ${userId} - ${participants}`);
             return res.status(404).send({
@@ -133,7 +133,7 @@ module.exports.getConversations = async (req, res) => {
         return res.status(404).send({ msg });
     } else {
         logger.info("Returned conversation list");
-        return res.send({ conversationList:user["conversationList"] });
+        return res.send({ conversationList: user["conversationList"] });
     }
 };
 
@@ -149,7 +149,7 @@ module.exports.leaveConversation = async (req, res) => {
     // Validate request
     if (!conversationId) {
         logger.error(userId + " did not select the conversation they wanted to leave");
-        res.status(400).send({msg: "No conversation selected"});
+        res.status(400).send({ msg: "No conversation selected" });
         return;
     }
 
@@ -199,7 +199,7 @@ module.exports.leaveConversation = async (req, res) => {
     }
 
     // if the user isn't a participant return an error message
-    if(!userIsParticipant) {
+    if (!userIsParticipant) {
         let msg = "Requesting user is not a participant of the conversation";
         logger.error(msg);
         return res.status(404).send({ msg });
@@ -217,7 +217,7 @@ module.exports.leaveConversation = async (req, res) => {
             res.status(500).send({ msg });
         });
 
-        if(!deletedConversationRow) {
+        if (!deletedConversationRow) {
             let msg = "Conversation couldn't be deleted. Probably didn't exist.";
             logger.error(msg + `${userId} - ${conversationId}`);
             return res.status(500).send({ msg });
@@ -284,7 +284,7 @@ module.exports.leaveConversation = async (req, res) => {
         res.status(500).send({ msg });
     });
 
-    if(!deletedParticipantRow) {
+    if (!deletedParticipantRow) {
         let msg = "User couldn't be removed from conversation. Probably wasn't a participant.";
         logger.error(msg `${userId} - ${conversationId}`);
         return res.status(404).send({ msg });

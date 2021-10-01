@@ -3,7 +3,7 @@ const devLogger = require("./developmentLogger");
 
 let logger = null;
 
-switch(process.env.NODE_ENV) {
+switch (process.env.NODE_ENV) {
     case "production":
         logger = prodLogger();
         break;
