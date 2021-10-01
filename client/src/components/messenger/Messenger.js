@@ -33,7 +33,7 @@ const Messenger = () => {
                         <Conversations selectConversation={changeConvo}/>
                     </Route>
                     <Route path="/contacts" component={Contacts}/>
-                    <Route path="/settings" component={Settings}>
+                    <Route path="/settings">
                         <Settings userInfo={userInfo} updateUser={updateUser}/>
                     </Route>
                     <Route path="/">

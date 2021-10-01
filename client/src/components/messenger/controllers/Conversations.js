@@ -29,7 +29,7 @@ export const ConversationsController = {
                 return hr + ":" + min + " " + period;
             };
             return diff > (23 * 60 * 60 * 1000) ? getDate() : getTime();
-        } else return "Never";
+        } else return "";
     },
     createConversation: async (token, participants, title) => {
         // make request for the conversations of user and wait for the json response

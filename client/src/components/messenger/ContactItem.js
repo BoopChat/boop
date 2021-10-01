@@ -4,7 +4,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { useSelector } from "react-redux";
 
 import { ContactsController } from "./controllers/Contacts";
-import AlertDialog from "../AlertDialog";
+import { Alert } from "../AlertDialog";
 import trash from "../../assets/trash.svg";
 
 const ContactMenuDialog = ({ open, onClose, img, username }) => {
@@ -43,11 +43,7 @@ const ContactItem = ({ img, username, status="offline", id, triggerRefresh }) =>
     const handleClickContact = () => setImageDialogOpen(true);
     const closeContactImage = () => setImageDialogOpen(false);
 
-    const [messageDialog, setMessageDialog] = useState({
-        open: false,
-        title: "",
-        message: ""
-    });
+    const alertDialog = Alert.useAlertDialog();
 
     const token = useSelector((state) => state.user.token);
 
@@ -58,7 +54,7 @@ const ContactItem = ({ img, username, status="offline", id, triggerRefresh }) =>
         if (confirm) { // if user confirmed to delete the contact
             const runAsync = async () => {
                 let result = await ContactsController.deleteContact(token, id);
-                setMessageDialog({
+                alertDialog.display({
                     title: result.success ? "Success" : "Error",
                     message: result.msg,
                     open: true
@@ -67,14 +63,6 @@ const ContactItem = ({ img, username, status="offline", id, triggerRefresh }) =>
             runAsync();
             triggerRefresh();
         }
-    };
-
-    const closeAlert = () => {
-        setMessageDialog({
-            title: "",
-            message: "",
-            open: false
-        });
     };
 
     return (
@@ -87,11 +75,11 @@ const ContactItem = ({ img, username, status="offline", id, triggerRefresh }) =>
                 <span>{username}</span>
             </div>
 
-            <AlertDialog
-                open={messageDialog.open}
-                handleClose={closeAlert}
-                title={messageDialog.title}
-                message={messageDialog.message}
+            <Alert.AlertDialog
+                open={alertDialog.open}
+                handleClose={alertDialog.close}
+                title={alertDialog.title}
+                message={alertDialog.message}
             />
 
             <div className="trash_and_status">

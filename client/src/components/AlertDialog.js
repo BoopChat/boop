@@ -1,4 +1,4 @@
-import { React } from "react";
+import { React, useState } from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -53,4 +53,27 @@ const AlertDialog = ({ open, handleClose, title, message, closeMessage = "Okay" 
     );
 };
 
-export default AlertDialog;
+const useAlertDialog = () => {
+    const [messageDialog, setMessageDialog] = useState({
+        open: false,
+        title: "",
+        message: ""
+    });
+
+    return {
+        display: args => setMessageDialog(args),
+        ...messageDialog,
+        close: () => {
+            setMessageDialog({
+                title: "",
+                message: "",
+                open: false
+            });
+        }
+    };
+};
+
+export const Alert = {
+    AlertDialog,
+    useAlertDialog
+};

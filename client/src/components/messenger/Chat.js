@@ -1,22 +1,18 @@
 import { useState, useEffect, React } from "react";
 import { useSelector } from "react-redux";
 import { ChatController } from "./controllers/Chat";
-import AlertDialog from "../AlertDialog";
+import { Alert } from "../AlertDialog";
 
 
 const Chat = ({ conversationId, title }) => {
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState("");
     const [updater, setUpdater] = useState(null);
-    const { id } = useSelector((state) => state.user.userInfo);
+    const alertDialog = Alert.useAlertDialog();
+
     // Get the token from the users global state.
     const token = useSelector((state) => state.user.token);
-
-    const [messageDialog, setMessageDialog] = useState({
-        open: false,
-        title: "",
-        message: ""
-    });
+    const { id } = useSelector((state) => state.user.userInfo);
 
     const handleText = (e) => {
         if (conversationId) // if a conversation is not active, disable text box
@@ -35,7 +31,7 @@ const Chat = ({ conversationId, title }) => {
             setText(""); // clear the text box
             refresh(); // refresh the chat immediately to see the newly sent message
         } else // display error message
-            setMessageDialog({
+            alertDialog.display({
                 title: "Error",
                 message: result.msg,
                 open: true
@@ -61,14 +57,6 @@ const Chat = ({ conversationId, title }) => {
         return () => clearInterval(updater); // have component run this after unmounting as cleanup
     }, conversationId);
 
-    const closeAlert = () => {
-        setMessageDialog({
-            title: "",
-            message: "",
-            open: false
-        });
-    };
-
     return (
         <div className="chat_container">
             {title ? <header className="chat_title">{title}</header> : <></>}
@@ -92,11 +80,11 @@ const Chat = ({ conversationId, title }) => {
                 </ul>
             ) : <div></div>
             }
-            <AlertDialog
-                open={messageDialog.open}
-                handleClose={closeAlert}
-                title={messageDialog.title}
-                message={messageDialog.message}
+            <Alert.AlertDialog
+                open={alertDialog.open}
+                handleClose={alertDialog.close}
+                title={alertDialog.title}
+                message={alertDialog.message}
             />
             <div className="interactions">
                 <input type="text" name="chat_box" placeholder="chat" value={text} onChange={handleText} />
