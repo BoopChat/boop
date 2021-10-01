@@ -48,7 +48,7 @@ module.exports.addContact = async (req, res) => {
     let contactInfo = await User.findByPk(contactId, {
         // specify what attributes you want returned
         attributes: ["displayName", "imageUrl", "lastActive"]
-    }).catch(err => {//catch any errors
+    }).catch(err => { //catch any errors
         let msg = err.message || "Some error occurred while retieving the Contact's info";
         logger.error(msg + `${userId} - ${contactId}`);
         res.status(500).send({msg});
@@ -56,14 +56,14 @@ module.exports.addContact = async (req, res) => {
 
     //return a success message + the newly created contact's info
     logger.info(`Contact successfully created for ${userId} - ${contactInfo.displayName}`);
-    return res.status(201).send({msg:"Contact successfully created!", contact:{contactInfo: contactInfo}});
+    return res.status(201).send({ msg: "Contact successfully created!", contact: { contactInfo: contactInfo } });
 };
 
 module.exports.getContacts = async (req, res) => {
     let userId = req.user.id;
 
     //get user and all contacts
-    let user = await User.findByPk(userId,{
+    let user = await User.findByPk(userId, {
         include: {
             model: Contact,
             as: "contactList",
@@ -84,7 +84,7 @@ module.exports.getContacts = async (req, res) => {
         return res.status(404).send("We couldn't get your contacts because you shouldn't be here");
     } else {
         logger.info("Returned contact list for: " + userId);
-        return res.send({"contactList": user.contactList});
+        return res.status(200).send({"contactList": user.contactList});
     }
 };
 
@@ -106,7 +106,7 @@ module.exports.deleteContact = async (req, res) => {
             contactId: contactId
         }
     }).then(affectedRows => {
-        if (affectedRows == 1) {
+        if (affectedRows === 1) {
             logger.info("Contact was deleted successfully: " + contactId + " - " + userId);
             res.send({msg: "Contact deleted successfully"});
         } else {

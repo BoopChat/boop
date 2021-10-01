@@ -11,7 +11,7 @@ module.exports = (sequelize, Sequelize) => {
 
     SigninOption.associate = ({
         User
-    })=>{
+    }) => {
         SigninOption.belongsTo(User, {
             as: "user",
             foreignKey: "userId"

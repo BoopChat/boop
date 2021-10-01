@@ -14,7 +14,7 @@ module.exports = (sequelize, Sequelize) => {
 
     Contact.associate = ({
         User
-    })=>{
+    }) => {
         Contact.belongsTo(User, {
             as: "contactInfo",
             foreignKey: "contactId"

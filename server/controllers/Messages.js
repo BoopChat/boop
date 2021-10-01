@@ -7,7 +7,7 @@ const Conversation = db.Conversation;
 
 // get all messages from a conversation
 module.exports.getMessages = async (req, res) => {
-    let userId = req.params.userId;
+    let userId = req.user.id;
     let conversationId = req.params.conversationId;
 
     // Need to check that userId belongs to a valid user and
@@ -24,7 +24,7 @@ module.exports.getMessages = async (req, res) => {
     if (!isParticipant) {
         logger.error(`Cant get messages because user [${userId}]
             is not a participant of the conversation ${conversationId}`);
-        return res.status(404).send({msg: "You are not a participant in this conversation"});
+        return res.status(404).send({ msg: "You are not a participant in this conversation" });
     }
 
     //get all messages from the conversation
@@ -38,29 +38,29 @@ module.exports.getMessages = async (req, res) => {
             model: User,
             as: "sender",
             // specify what atributes you want returned
-            attributes:["displayName", "imageUrl"],
+            attributes: ["displayName", "imageUrl"],
         },
         include: {
             model: Conversation,
             as: "conversation",
             // specify what atributes you want returned
-            attributes:["id", "title", "imageUrl"],
+            attributes: ["id", "title", "imageUrl"],
         }
     });
 
     if (!messages) {
         let msg = "Messages not found";
         logger.error(msg + userId + " - " + conversationId);
-        return res.status(404).send({msg});
+        return res.status(404).send({ msg });
     } else {
         logger.info("Returned messages " + userId + " - " + conversationId);
-        return res.send({messages: messages});
+        return res.status(200).send({ messages: messages });
     }
 };
 
 // Create a new message in the conversation
 module.exports.addMessage = async (req, res) => {
-    let userId = req.params.userId;
+    let userId = req.user.id;
     let conversationId = req.params.conversationId;
     // Need to check that userId belongs to a valid user and
     // matches the id of the requesting user
@@ -80,15 +80,16 @@ module.exports.addMessage = async (req, res) => {
             conversationId: conversationId
         }
     });
+
     if (!isParticipant) {
         logger.error(`User [${userId}] tried adding a message to a conversation
             they are not a participant of: ${conversationId}`);
-        return res.status(404).send({msg: "You are not a participant in this conversation"});
+        return res.status(404).send({ msg: "You are not a participant in this conversation" });
     }
 
     // create the message with the neccessary values
     let newMessage = await Message.create({
-        senderId : userId,
+        senderId: userId,
         conversationId: conversationId,
         content: req.body.content
     }).catch(err => { //catch any errors

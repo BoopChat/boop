@@ -1,9 +1,9 @@
 import React from "react";
 
-const ContactItem = ({img, username, user_id, status="offline"}) => {
+const ContactItem = ({ img, username, status="offline", onClick }) => {
 
     return (
-        <div className="contact_item" name={user_id}>
+        <div className="contact_item" onClick={onClick}>
             <div className="img_and_name">
                 <img src={img} alt="contact_img"/>
                 <span>{username}</span>

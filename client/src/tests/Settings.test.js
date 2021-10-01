@@ -4,10 +4,22 @@ import React from "react";
 
 import Settings from "../components/messenger/Settings";
 
+
 describe("Settings tab", () => {
 
+    let userData = {
+        displayName: "Cassie",
+        firstName: "Cassandra",
+        lastName: "Stevens",
+        imageUrl: "https://picsum.photos/200"
+    };
+
+    const updateUser = userInfo => userData = userInfo;
+
     test("fails if unable to change first name", async () => {
-        const { getByPlaceholderText, getByTitle, getByText } = render(<Settings />);
+        const { getByPlaceholderText, getByTitle, getByText } = render(
+            <Settings userInfo={userData} updateUser={updateUser}/>
+        );
 
         let editBtn = getByTitle("edit name");
         userEvent.click(editBtn);
@@ -22,7 +34,9 @@ describe("Settings tab", () => {
     });
 
     test("fails if unable to change last name", async () => {
-        const { getByPlaceholderText, getByTitle, getByText } = render(<Settings />);
+        const { getByPlaceholderText, getByTitle, getByText } = render(
+            <Settings userInfo={userData} updateUser={updateUser} />
+        );
 
         let editBtn = getByTitle("edit name");
         userEvent.click(editBtn);
@@ -38,7 +52,9 @@ describe("Settings tab", () => {
     });
 
     test("fails if unable to change both first and last name", async () => {
-        const { getByPlaceholderText, getByTitle, getByText } = render(<Settings />);
+        const { getByPlaceholderText, getByTitle, getByText } = render(
+            <Settings userInfo={userData} updateUser={updateUser} />
+        );
 
         let editBtn = getByTitle("edit name");
         userEvent.click(editBtn);
@@ -59,7 +75,9 @@ describe("Settings tab", () => {
     });
 
     test("fails if unable to change display name", async () => {
-        const { getByPlaceholderText, getByTitle, getByText } = render(<Settings />);
+        const { getByPlaceholderText, getByTitle, getByText } = render(
+            <Settings userInfo={userData} updateUser={updateUser} />
+        );
 
         let editBtn = getByTitle("edit display name");
         userEvent.click(editBtn);

@@ -39,6 +39,7 @@ passport.use(
                 }
                 else {
                     logger.error(user.userId + ":" + msg);
+
                     // Displays a blank page with the error message.
                     done(msg, null);
                 }

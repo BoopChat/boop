@@ -36,7 +36,7 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 
     Run the migrations:
 
-    `npx sequelize-cli db:migrate `
+    `npx sequelize-cli db:migrate`
     
 4. Run the server in development mode using:
     
@@ -102,7 +102,7 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 5. Adding the google callback URL to the config.json file
     
     view the sample_config.json file for the example.
-    add the following url as the googeCallbackUrl under development:
+    add the following url as the googleCallbackUrl under development:
     "http://localhost:5000/api/login/auth/google/callback"
     add the following url as the homeUrl under develoment:
     "http://localhost:3000"

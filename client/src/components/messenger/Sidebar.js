@@ -102,7 +102,7 @@ const Details = styled.div`
     }
 `;
 
-const Sidebar = ({ username, user_pic, user_email }) => {
+const Sidebar = ({ username, userPic, userName }) => {
     const [click, setClick] = useState(false);
     const handleClick = () => setClick(!click);
 
@@ -137,11 +137,11 @@ const Sidebar = ({ username, user_pic, user_email }) => {
             <MenuButton title="Menu" clicked={click} onClick={() => handleClick()}></MenuButton>
             <div id="sidebar_container">
                 <Profile id="profile" clicked={profileClick}>
-                    <img onClick={() => handleProfileClick()} src={user_pic} alt={username + " pic"} />
+                    <img onClick={() => handleProfileClick()} src={userPic} alt={username + " pic"} />
                     <Details clicked={profileClick}>
                         <div>
                             <h4>{username}</h4>
-                            <h5>{user_email}</h5>
+                            <h5>{userName}</h5>
                         </div>
                         <button id="logout" onClick={handleLogOut}>
                             <img src={logout} alt="logout" />

@@ -3,7 +3,7 @@ const db = require("../../models");
 const SigninOption = db.SigninOption;
 const User = db.User;
 
-module.exports.getSigninOption = async function({email, serviceName, firstName, lastName, imageUrl}){
+module.exports.getSigninOption = async function({ email, serviceName, firstName, lastName, imageUrl }){
     // try to find the signinOption
     let signinOption = await SigninOption.findOne({
         where: {
@@ -20,7 +20,7 @@ module.exports.getSigninOption = async function({email, serviceName, firstName, 
                     email: email,
                     serviceName: serviceName
                 },
-                attributes: ["serviceName","email"]
+                attributes: ["serviceName", "email"]
             }
         }
     });
@@ -55,7 +55,7 @@ module.exports.getSigninOption = async function({email, serviceName, firstName, 
             };
         });
 
-        return {"msg": "User and signinOption successfully created!", "user": user};
+        return { "msg": "User and signinOption successfully created!", "user": user };
     }
 
     // store the user info (from the successfully retrieved signinOption)
@@ -63,5 +63,5 @@ module.exports.getSigninOption = async function({email, serviceName, firstName, 
     let user = signinOption.user;
 
     //return the user with the signinOption if the signinOption was found
-    return {"msg": "User successfully retieved!", "user": user};
+    return { "msg": "User successfully retieved!", "user": user };
 };
