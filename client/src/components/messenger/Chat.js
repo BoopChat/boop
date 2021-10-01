@@ -30,12 +30,13 @@ const Chat = ({ conversationId, title }) => {
         if (result.success) {
             setText(""); // clear the text box
             refresh(); // refresh the chat immediately to see the newly sent message
-        } else // display error message
+        } else { // display error message
             alertDialog.display({
                 title: "Error",
                 message: result.msg,
                 open: true
             });
+      }
     };
 
     const refresh = async () => {
