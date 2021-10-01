@@ -2,6 +2,7 @@ const router = require("express").Router();
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const dayjs = require("dayjs");
+const logger = require("../logger");
 
 require("./loginStrategies/googleStrategy");
 require("./loginStrategies/facebookStrategy");
@@ -18,6 +19,7 @@ router.get("/google/callback", passport.authenticate("google", { session: false 
     });
 
     // Redirects to the login page and stores the login cookie in the users browser.
+    logger.info("Redirected to login: " + req.user);
     res.status(200).redirect(global.gConfig.homeUrl);
 });
 
@@ -48,6 +50,7 @@ router.get("/cookie", (req, res) => {
         const token = jwt.sign({ ...userInfo }, process.env.TOKEN_SECRET);
 
         // Returns the jwt access token and user information.
+        logger.info("User [" + userInfo.id + "] Authenticated");
         return res.status(200).json({
             success: true,
             msg: "User Authenticated",
@@ -68,6 +71,7 @@ router.get("/cookie", (req, res) => {
 router.get("/logout", (req, res) => {
     // Deletes the cookie containing the users login information.
     res.clearCookie("loginCookie");
+    logger.info("Logged out user "+req.user);
     res.status(200).json({
         success: true,
         msg: "Logged Out",
