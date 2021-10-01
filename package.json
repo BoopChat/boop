@@ -1,0 +1,11 @@
+
+{
+  "scripts": {
+    "client": "cd client && npm start",
+    "server": "cd server && npm run dev",
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
+},
+  "dependencies": {
+    "concurrently": "^6.2.2"
+  }
+}
