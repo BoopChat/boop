@@ -108,8 +108,7 @@ const Conversations = ({ selectConversation }) => {
                 else // display error message
                     alertDialog.display({
                         title: "Error",
-                        message: result.msg,
-                        open: true
+                        message: result.msg
                     });
             };
             runAsync();
@@ -117,7 +116,7 @@ const Conversations = ({ selectConversation }) => {
     };
 
     return (
-        <div id="chat_container">
+        <div id="conversations_container">
             <Alert.AlertDialog
                 open={alertDialog.open}
                 handleClose={alertDialog.close}
@@ -131,7 +130,7 @@ const Conversations = ({ selectConversation }) => {
                 </button>
                 <AddConversationDialog open={dialogOpen} onClose={addConversation} token={token} />
             </div>
-            <div id="chats">
+            <div id="conversations">
                 {conversations.map((chat, i) =>
                     <ConversationItem
                         name={chat.title}

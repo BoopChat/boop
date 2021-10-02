@@ -9,7 +9,7 @@ import Settings from "./Settings";
 import Sidebar from "./Sidebar";
 import Chat from "./Chat";
 
-import "../../styles/messenger.css";
+import "../../styles/main_panel.css";
 
 const Messenger = () => {
     const location = useLocation();

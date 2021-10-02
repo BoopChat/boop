@@ -7,7 +7,7 @@ import { ContactsController } from "./controllers/Contacts";
 import { Alert } from "../AlertDialog";
 import trash from "../../assets/trash.svg";
 
-const ContactMenuDialog = ({ open, onClose, img, username }) => {
+const ViewContactDialog = ({ open, onClose, img, username }) => {
 
     const handleClose = () => onClose();
 
@@ -56,8 +56,7 @@ const ContactItem = ({ img, username, status="offline", id, triggerRefresh }) =>
                 let result = await ContactsController.deleteContact(token, id);
                 alertDialog.display({
                     title: result.success ? "Success" : "Error",
-                    message: result.msg,
-                    open: true
+                    message: result.msg
                 });
             };
             runAsync();
@@ -68,7 +67,7 @@ const ContactItem = ({ img, username, status="offline", id, triggerRefresh }) =>
     return (
         <div className="contact_item">
 
-            <ContactMenuDialog open={imageDialogOpen} onClose={closeContactImage} img={img} username={username}/>
+            <ViewContactDialog open={imageDialogOpen} onClose={closeContactImage} img={img} username={username}/>
             <ConfirmDialog open={confirmDialogOpen} onClose={deleteContact} username={username}/>
             <div className="img_and_name">
                 <img onClick={handleClickContact} src={img} alt="contact_img"/>

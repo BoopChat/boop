@@ -72,8 +72,7 @@ const Contacts = () => {
                 else // display error message
                     alertDialog.display({
                         title: "Error",
-                        message: result.msg,
-                        open: true
+                        message: result.msg
                     });
             };
             runAsync();
@@ -90,7 +89,7 @@ const Contacts = () => {
             />
             <div className="main_panel_header">
                 <h1>Contacts</h1>
-                <button className="options" title="options" onClick={() => handleClickAdd()}>
+                <button className="options" title="add contact" onClick={() => handleClickAdd()}>
                     <img src={plus} alt="options"/>
                 </button>
                 <AddContactDialog open={dialogOpen} onClose={addContact} />

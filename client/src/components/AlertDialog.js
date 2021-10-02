@@ -61,7 +61,7 @@ const useAlertDialog = () => {
     });
 
     return {
-        display: args => setMessageDialog(args),
+        display: args => setMessageDialog({ ...args, open: true }),
         ...messageDialog,
         close: () => {
             setMessageDialog({

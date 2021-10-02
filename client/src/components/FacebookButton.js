@@ -1,4 +1,4 @@
-import "../styles/buttons.css";
+import "../styles/login_buttons.css";
 import { useDispatch } from "react-redux";
 import { logIn } from "./login/userSlice";
 import React from "react";

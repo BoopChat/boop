@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { ChatController } from "./controllers/Chat";
 import { Alert } from "../AlertDialog";
 
+import "../../styles/chat.css";
 
 const Chat = ({ conversationId, title }) => {
     const [messages, setMessages] = useState([]);
@@ -33,8 +34,7 @@ const Chat = ({ conversationId, title }) => {
         } else { // display error message
             alertDialog.display({
                 title: "Error",
-                message: result.msg,
-                open: true
+                message: result.msg
             });
         }
     };
