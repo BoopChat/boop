@@ -9,7 +9,7 @@ import Settings from "./Settings";
 import Sidebar from "./Sidebar";
 import Chat from "./Chat";
 
-import "../../styles/messenger.css";
+import "../../styles/main_panel.css";
 
 const Messenger = () => {
     const location = useLocation();
@@ -33,7 +33,7 @@ const Messenger = () => {
                         <Conversations selectConversation={changeConvo}/>
                     </Route>
                     <Route path="/contacts" component={Contacts}/>
-                    <Route path="/settings" component={Settings}>
+                    <Route path="/settings">
                         <Settings userInfo={userInfo} updateUser={updateUser}/>
                     </Route>
                     <Route path="/">
@@ -42,7 +42,10 @@ const Messenger = () => {
                 </Switch>
             </div>
             <div id="chat_panel">
-                <Chat conversationId={currentConvo.id} title={currentConvo.title} />
+                {currentConvo.id ?
+                    <Chat conversationId={currentConvo.id} title={currentConvo.title}/>
+                    : <></>
+                }
             </div>
         </div>
     );

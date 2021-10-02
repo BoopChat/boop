@@ -2,7 +2,7 @@ import { useEffect, useState, React } from "react";
 import { useSelector } from "react-redux";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
-import AlertDialog from "../AlertDialog";
+import { Alert } from "../AlertDialog";
 
 import plus from "../../assets/plus.svg";
 import ConversationItem from "./ConversationItem";
@@ -77,11 +77,7 @@ const Conversations = ({ selectConversation }) => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [conversations, setConversations] = useState([]);
     const [init, setInit] = useState(false);
-    const [messageDialog, setMessageDialog] = useState({
-        open: false,
-        title: "",
-        message: ""
-    });
+    const alertDialog = Alert.useAlertDialog();
 
     // Get the token from the users global state.
     const token = useSelector((state) => state.user.token);
@@ -110,31 +106,22 @@ const Conversations = ({ selectConversation }) => {
                     selectConversation(conversation.id, conversation.title);
                 }
                 else // display error message
-                    setMessageDialog({
+                    alertDialog.display({
                         title: "Error",
-                        message: result.msg,
-                        open: true
+                        message: result.msg
                     });
             };
             runAsync();
         }
     };
 
-    const closeAlert = () => {
-        setMessageDialog({
-            title: "",
-            message: "",
-            open: false
-        });
-    };
-
     return (
-        <div id="chat_container">
-            <AlertDialog
-                open={messageDialog.open}
-                handleClose={closeAlert}
-                title={messageDialog.title}
-                message={messageDialog.message}
+        <div id="conversations_container">
+            <Alert.AlertDialog
+                open={alertDialog.open}
+                handleClose={alertDialog.close}
+                title={alertDialog.title}
+                message={alertDialog.message}
             />
             <div className="main_panel_header">
                 <h1>Conversations</h1>
@@ -143,7 +130,7 @@ const Conversations = ({ selectConversation }) => {
                 </button>
                 <AddConversationDialog open={dialogOpen} onClose={addConversation} token={token} />
             </div>
-            <div id="chats">
+            <div id="conversations">
                 {conversations.map((chat, i) =>
                     <ConversationItem
                         name={chat.title}

@@ -1,7 +1,7 @@
 import plus from "../../assets/plus.svg";
 import ContactItem from "./ContactItem";
 import { ContactsController } from "./controllers/Contacts";
-import AlertDialog from "../AlertDialog";
+import { Alert } from "../AlertDialog";
 
 import { React, useState, useEffect } from "react";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -35,11 +35,7 @@ const Contacts = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [contacts, setContacts] = useState([]);
     const [init, setInit] = useState(false);
-    const [messageDialog, setMessageDialog] = useState({
-        open: false,
-        title: "",
-        message: ""
-    });
+    const alertDialog = Alert.useAlertDialog();
 
     // Get the token from the users global state.
     const token = useSelector((state) => state.user.token);
@@ -55,6 +51,14 @@ const Contacts = () => {
         }
     }, [init]);
 
+    const refreshContactList = () => {
+        const runAsync = async () => {
+            let contacts = await ContactsController.getContacts(token);
+            setContacts(contacts.success ? contacts.contactList : []);
+        };
+        runAsync();
+    };
+
     const handleClickAdd = () => setDialogOpen(true);
 
     const addContact = (email) => {
@@ -66,35 +70,26 @@ const Contacts = () => {
                 if (result.success) // add new contact to the back of the list
                     setContacts(contacts.length > 0 ? [...contacts, result.contact]: [result.contact]);
                 else // display error message
-                    setMessageDialog({
+                    alertDialog.display({
                         title: "Error",
-                        message: result.msg,
-                        open: true
+                        message: result.msg
                     });
             };
             runAsync();
         }
     };
 
-    const closeAlert = () => {
-        setMessageDialog({
-            title: "",
-            message: "",
-            open: false
-        });
-    };
-
     return (
         <div id="contact_container">
-            <AlertDialog
-                open={messageDialog.open}
-                handleClose={closeAlert}
-                title={messageDialog.title}
-                message={messageDialog.message}
+            <Alert.AlertDialog
+                open={alertDialog.open}
+                handleClose={alertDialog.close}
+                title={alertDialog.title}
+                message={alertDialog.message}
             />
             <div className="main_panel_header">
                 <h1>Contacts</h1>
-                <button className="options" title="options" onClick={() => handleClickAdd()}>
+                <button className="options" title="add contact" onClick={() => handleClickAdd()}>
                     <img src={plus} alt="options"/>
                 </button>
                 <AddContactDialog open={dialogOpen} onClose={addContact} />
@@ -105,6 +100,8 @@ const Contacts = () => {
                         img={contact.contactInfo.imageUrl}
                         username={contact.contactInfo.displayName}
                         status={ContactsController.evaluateStatus(contact.contactInfo.lastActive)}
+                        id={contact.contactId}
+                        triggerRefresh={refreshContactList}
                         key={i}
                     />
                 ) : <span>You have no contacts :(</span>}

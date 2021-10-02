@@ -108,7 +108,7 @@ module.exports.deleteContact = async (req, res) => {
     }).then(affectedRows => {
         if (affectedRows === 1) {
             logger.info("Contact was deleted successfully: " + contactId + " - " + userId);
-            res.send({ msg: "Contact deleted successfully" });
+            res.status(200).send({ msg: "Contact deleted successfully" });
         } else {
             let msg = `Cannot delete Contact association with userId=${userId} and
             contactId=${contactId}. Maybe Contact association was not found!`;

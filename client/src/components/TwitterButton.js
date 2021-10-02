@@ -1,4 +1,4 @@
-import "../styles/buttons.css";
+import "../styles/login_buttons.css";
 
 import React from "react";
 
