@@ -19,6 +19,8 @@ header.chat_title {
     color: white;
     background-color: rgb(64, 108, 255);
     text-align: center;
+    display: flex;
+    justify-content: space-between;
 }
 
 ul.chat_section {
@@ -163,4 +165,56 @@ div.interactions button {
 
 div.interactions button:hover {
     cursor: pointer;
+}
+
+header img {
+    border-radius: 50%;
+    height: 30px;
+    width: auto;
+}
+
+header img.chat_options:hover {
+    cursor: pointer;
+}
+
+img.chat_image_options {
+    height: 275px;
+    width: 100%;
+    object-fit: contain;
+    margin-top: 10px;
+}
+
+button.btn_leave, button.btn_positive {
+    color: #FFFFFF;
+    border-radius: 5px;
+    padding: 15px 18px;
+    outline: none;
+    border: none;
+    width: 99%;
+    height: 55px;
+    margin: 2px auto;
+}
+
+button.btn_leave {
+    background-color: rgb(255, 37, 37);
+}
+
+.btn_leave:hover {
+    background-color: rgb(224, 4, 4);
+}
+
+button.btn_positive {
+    background-color: rgb(0, 153, 255);
+}
+
+button.btn_positive:hover {
+    background-color: rgb(0, 133,233 );
+}
+
+button.btn_leave, button.btn_positive {
+    cursor: pointer;
+}
+
+span.participant_label {
+    padding: 5px 8px;
 }

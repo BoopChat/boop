@@ -27,8 +27,8 @@ const AddConversationDialog = ({ open, onClose, token }) => {
     const handleListChange = (e) => {
         // if checkbox is checked then add it to the list else remove it from the list
         let newList = e.target.checked ?
-            [...details.list, e.target.value] :
-            details.list.filter(item => item !== e.target.value);
+            [...details.list, { id: e.target.value, displayName: e.target.name }] :
+            details.list.filter(item => item.id !== e.target.value);
         setDetails({ ...details, list: newList });
     };
     const handleTitleChange = (e) => setDetails({ ...details, title: e.target.value });
@@ -60,7 +60,7 @@ const AddConversationDialog = ({ open, onClose, token }) => {
                         <span>{contact.contactInfo.displayName}</span>
                         <input
                             type="checkbox"
-                            name="participant"
+                            name={contact.contactInfo.displayName}
                             value={contact.contactId}
                             onChange={handleListChange}
                         />
@@ -98,12 +98,20 @@ const Conversations = ({ selectConversation }) => {
         if (conversationDetails) {
             const runAsync = async () => {
                 let { title, list } = conversationDetails;
-                let result = await ConversationsController.createConversation(token, list, title);
+                if (title.length < 1) {
+                    // create a title from the chosen participants' names
+                    let chop = list.length < 2 ? 20 : (list.length < 3 ? 9 : 5);
+                    title = list
+                        .map(i => i.displayName)
+                        .reduce((prevValue, curValue) => prevValue + curValue.substring(0, chop) + ", ", "You, ")
+                        .substring(0, 25);
+                }
+                let result = await ConversationsController.createConversation(token, list.map(i => i.id), title);
                 if (result.success) { // add new conversation to the back of the list
                     let { conversation } = result;
                     setConversations(conversations.length > 0 ? [...conversations, conversation]: [conversation]);
                     // auto open chat after creation
-                    selectConversation(conversation.id, conversation.title);
+                    selectConversation(conversation.id, conversation.title, conversation.participants);
                 }
                 else // display error message
                     alertDialog.display({
@@ -139,7 +147,7 @@ const Conversations = ({ selectConversation }) => {
                         lastDate={ConversationsController.evaluateDate(chat.lastDate)}
                         unread={chat.unread}
                         key={i}
-                        onClick={() => selectConversation(chat.id, chat.title)}
+                        onClick={() => selectConversation(chat.id, chat.title, chat.participants)}
                     />
                 )}
             </div>

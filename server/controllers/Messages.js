@@ -34,18 +34,17 @@ module.exports.getMessages = async (req, res) => {
         },
         attributes: ["id", "content", "senderId", "createdAt", "updatedAt"],
         order: [["createdAt", "DESC"]],
-        include: {
+        include: [{
             model: User,
             as: "sender",
             // specify what atributes you want returned
             attributes: ["displayName", "imageUrl"],
-        },
-        include: {
+        }, {
             model: Conversation,
             as: "conversation",
             // specify what atributes you want returned
             attributes: ["id", "title", "imageUrl"],
-        }
+        }]
     });
 
     if (!messages) {

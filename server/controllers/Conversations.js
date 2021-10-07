@@ -67,7 +67,7 @@ module.exports.addConversation = async (req, res) => {
                     ]
                 },
                 // specify what atributes you want returned
-                attributes: ["displayName"],
+                attributes: ["displayName", "imageUrl"],
                 // Prevents the entire belongs-to-many mapping object (Participant)
                 // from being returned
                 through: { attributes: [] }
@@ -119,7 +119,7 @@ module.exports.getConversations = async (req, res) => {
                     ]
                 },
                 // specify what atributes you want returned
-                attributes: ["displayName"],
+                attributes: ["displayName", "imageUrl"],
                 // Prevents the entire belongs-to-many mapping object (Participant)
                 // from being returned
                 through: { attributes: [] }
@@ -294,5 +294,5 @@ module.exports.leaveConversation = async (req, res) => {
     //return a success msg
     let msg = "User successfully removed from the conversation!";
     logger.info(msg + `${userId} - ${conversationId}`);
-    return res.send({ msg });
+    return res.status(200).send({ msg });
 };

@@ -1,19 +1,88 @@
 import { useState, useEffect, React } from "react";
 import { useSelector } from "react-redux";
+import Dialog from "@material-ui/core/Dialog";
+import Button from "@mui/material/Button";
+import AppBar from "@mui/material/AppBar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import CloseIcon from "@mui/icons-material/Close";
+import Toolbar from "@mui/material/Toolbar";
+
 import { ChatController } from "./controllers/Chat";
+import { ConversationsController } from "./controllers/Conversations";
 import { Alert } from "../AlertDialog";
 
 import "../../styles/chat.css";
+import options from "../../assets/options.svg";
 
-const Chat = ({ conversationId, title }) => {
+const optionsEnum = {
+    noAction: 0,
+    successor: 1,
+    leave: 2
+};
+
+const OptionsDialog = ({ open, onClose, img, title, participants }) => {
+
+    const handleClose = value => onClose(value);
+
+    return (
+        <div>
+            <Dialog fullScreen open={open} onClose={() => handleClose(optionsEnum.noAction)}>
+                <AppBar sx={{ position: "relative" }}>
+                    <Toolbar>
+                        <IconButton
+                            edge="start"
+                            color="inherit"
+                            onClick={() => handleClose(optionsEnum.noAction)}
+                            aria-label="close"
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                        <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+                            {title}
+                        </Typography>
+                        <Button autoFocus color="inherit" onClick={() => handleClose(optionsEnum.noAction)}>
+                            save
+                        </Button>
+                    </Toolbar>
+                </AppBar>
+                <img src={img} alt="chat image" className="chat_image_options"/>
+                <p></p>
+                <hr/>
+                <span className="participant_label">{participants.length} participants</span>
+                {
+                    participants.map((participant, key) =>
+                        <div className="contact_item" key={key}>
+                            <div className="img_and_name">
+                                <img src={participant.imageUrl} alt="participant_img"/>
+                                <span>{participant.displayName}</span>
+                            </div>
+                        </div>
+                    )
+                }
+                <hr/>
+                <p></p>
+                <button
+                    className="btn_positive"
+                    onClick={() => handleClose(optionsEnum.successor)}
+                >Set Successor</button>
+                <button className="btn_leave" onClick={() => handleClose(optionsEnum.leave)}>Leave Conversation</button>
+            </Dialog>
+        </div>
+    );
+};
+
+const Chat = ({ conversationId, title, participants }) => {
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState("");
     const [updater, setUpdater] = useState(null);
+
+    const [optionsDialog, setOptionsDialog] = useState(false);
     const alertDialog = Alert.useAlertDialog();
 
     // Get the token from the users global state.
     const token = useSelector((state) => state.user.token);
-    const { id } = useSelector((state) => state.user.userInfo);
+    const { id, displayName, imageUrl } = useSelector((state) => state.user.userInfo);
 
     const handleText = (e) => {
         if (conversationId) // if a conversation is not active, disable text box
@@ -40,7 +109,7 @@ const Chat = ({ conversationId, title }) => {
     };
 
     const refresh = async () => {
-        setMessages((await ChatController.getMessages(token, conversationId)).reverse());
+        setMessages((await ChatController.getMessages(token, conversationId))?.reverse());
     };
 
     useEffect(() => {
@@ -51,9 +120,44 @@ const Chat = ({ conversationId, title }) => {
         return () => clearInterval(updater); // have component run this after unmounting as cleanup
     }, [conversationId]);
 
+    const showChatOptions = () => setOptionsDialog(true);
+
+    const onDialogClose = async action => {
+        setOptionsDialog(false);
+        let result;
+        switch (action) {
+            case optionsEnum.leave:
+                if (participants.length === 1) // if 1 on 1 conversation, simply leave
+                    result = await ConversationsController.leaveConversation(token, conversationId);
+                else {
+                    // check if user is admin
+                    // currently cant check so try to leave and fail if admin
+                    result = await ConversationsController.leaveConversation(token, conversationId);
+                }
+                break;
+        }
+        if (result) {
+            alertDialog.display({
+                title: result.success ? "Success" : "Error",
+                message: result.msg
+            });
+        }
+    };
+
     return (
         <div className="chat_container">
-            {title ? <header className="chat_title">{title}</header> : <></>}
+            <header className="chat_title">
+                <img src="https://picsum.photos/400" alt="chat icon"/>
+                <span>{title || "Untitled Chat"}</span>
+                <img src={options} alt="options" onClick={showChatOptions} className="chat_options"/>
+            </header>
+            <OptionsDialog
+                open={optionsDialog}
+                onClose={onDialogClose}
+                img="https://picsum.photos/400"
+                title={title}
+                participants={[{ displayName, imageUrl }, ...participants]}
+            />
             {messages && messages.length > 0 ? (
                 <ul className="chat_section">
                     {messages.map((msg, key) =>
@@ -62,11 +166,16 @@ const Chat = ({ conversationId, title }) => {
                             className={"message " + (msg.senderId === id ? "author": "friend") + "_message"}
                         >
                             <div className="info">
-                                <span className="user">{msg.displayName}</span>
+                                <span className="user" title={msg.sender?.displayName}>{msg.sender?.displayName}</span>
                                 <span className="time">{ChatController.evaluateElapsed(msg.createdAt)}</span>
                             </div>
                             <div className="avatar" href="/">
-                                <img alt="user avatar" src={msg.imageUrl} width="35"/>
+                                <img
+                                    alt="user avatar"
+                                    src={msg.sender?.imageUrl}
+                                    title={msg.sender?.displayName}
+                                    width="35"
+                                />
                             </div>
                             <p>{msg.content}</p>
                         </li>

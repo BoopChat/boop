@@ -16,8 +16,8 @@ const Messenger = () => {
     const dispatch = useDispatch();
 
     const [currentConvo, setCurrentConvo] = useState({});
-    const changeConvo = (id, title) => {
-        setCurrentConvo({ id, title });
+    const changeConvo = (id, title, participants) => {
+        setCurrentConvo({ id, title, participants });
     };
 
     const userInfo = useSelector((state) => state.user.userInfo);
@@ -43,7 +43,11 @@ const Messenger = () => {
             </div>
             <div id="chat_panel">
                 {currentConvo.id ?
-                    <Chat conversationId={currentConvo.id} title={currentConvo.title}/>
+                    <Chat
+                        conversationId={currentConvo.id}
+                        title={currentConvo.title}
+                        participants={currentConvo.participants}
+                    />
                     : <></>
                 }
             </div>

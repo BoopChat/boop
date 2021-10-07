@@ -32,7 +32,7 @@ export const ConversationsController = {
         } else return "";
     },
     createConversation: async (token, participants, title) => {
-        // make request for the conversations of user and wait for the json response
+        // make request to create a conversation with participants and title
         const res = await fetch("/api/conversations", {
             method: "POST",
             headers: {
@@ -56,5 +56,25 @@ export const ConversationsController = {
                 success: true,
                 conversation: result.conversation
             };
+    },
+    leaveConversation: async (token, conversationId, successorId) => {
+        // make request to leave conversation
+        const res = await fetch("/api/conversations", {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                conversationId,
+                successorId
+            })
+        });
+
+        const result = await res.json();
+        return { // return msg to display to user (whether success or fail)
+            msg: result.msg,
+            success: result.status === 200
+        };
     }
 };
