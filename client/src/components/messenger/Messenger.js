@@ -27,29 +27,31 @@ const Messenger = () => {
     return (
         <div className="container">
             <Sidebar username={userInfo.displayName} userPic={userInfo.imageUrl} userName={userInfo.firstName} />
-            <div id="main_panel">
-                <Switch location={location} key={location.pathname}>
-                    <Route path="/conversations">
-                        <Conversations selectConversation={changeConvo}/>
-                    </Route>
-                    <Route path="/contacts" component={Contacts}/>
-                    <Route path="/settings">
-                        <Settings userInfo={userInfo} updateUser={updateUser}/>
-                    </Route>
-                    <Route path="/">
-                        <Conversations selectConversation={changeConvo}/>
-                    </Route>
-                </Switch>
-            </div>
-            <div id="chat_panel">
-                {currentConvo.id ?
-                    <Chat
-                        conversationId={currentConvo.id}
-                        title={currentConvo.title}
-                        participants={currentConvo.participants}
-                    />
-                    : <></>
-                }
+            <div id="panels">
+                <div id="main_panel">
+                    <Switch location={location} key={location.pathname}>
+                        <Route path="/conversations">
+                            <Conversations selectConversation={changeConvo}/>
+                        </Route>
+                        <Route path="/contacts" component={Contacts}/>
+                        <Route path="/settings">
+                            <Settings userInfo={userInfo} updateUser={updateUser}/>
+                        </Route>
+                        <Route path="/">
+                            <Conversations selectConversation={changeConvo}/>
+                        </Route>
+                    </Switch>
+                </div>
+                <div id="chat_panel">
+                    {currentConvo.id ?
+                        <Chat
+                            conversationId={currentConvo.id}
+                            title={currentConvo.title}
+                            participants={currentConvo.participants}
+                        />
+                        : <></>
+                    }
+                </div>
             </div>
         </div>
     );

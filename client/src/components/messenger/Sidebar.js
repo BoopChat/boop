@@ -59,6 +59,7 @@ const SideItems = styled.ul`
     transition: all 0.3s ease;
     border-radius: 0 30px 30px 0;
     padding: 16px 0;
+    z-index: 1;
 `;
 
 const Text = styled.span`

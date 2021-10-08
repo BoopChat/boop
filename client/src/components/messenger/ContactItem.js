@@ -14,7 +14,7 @@ const ViewContactDialog = ({ open, onClose, img, username }) => {
     return (
         <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
             <DialogTitle style={ { textAlign: "center" } } id="simple-dialog-title">{username}</DialogTitle>
-            <img src={img} alt="user image"/>
+            <img src={img} alt="user"/>
         </Dialog>
     );
 };
@@ -70,7 +70,7 @@ const ContactItem = ({ img, username, status="offline", id, triggerRefresh }) =>
             <ViewContactDialog open={imageDialogOpen} onClose={closeContactImage} img={img} username={username}/>
             <ConfirmDialog open={confirmDialogOpen} onClose={deleteContact} username={username}/>
             <div className="img_and_name">
-                <img onClick={handleClickContact} src={img} alt="contact_img"/>
+                <img onClick={handleClickContact} src={img} className="skeleton" alt=""/>
                 <span>{username}</span>
             </div>
 

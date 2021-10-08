@@ -111,7 +111,7 @@ const Settings = ({ userInfo, updateUser }) => {
             <div className="setting_item">
                 <div>
                     <span className="attribute">Profile Image</span>
-                    <img className="profile_img" src={userInfo.imageUrl} alt="profile"/>
+                    <img className="profile_img skeleton" src={userInfo.imageUrl} alt=""/>
                 </div>
                 <button className="edit">
                     <img src={edit_icon} alt="edit"/>

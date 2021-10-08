@@ -5,7 +5,7 @@ const ConversationItem = ({ name, img, lastMsg, lastDate, unread, onClick }) => 
     return (
         <div className="chat_item" onClick={onClick}>
             <div className="img_and_name">
-                <img src={img} alt="chat_img"/>
+                <img src={img} className="skeleton" alt=""/>
                 <div className="name_and_msg">
                     <span className="chat_name">{name}</span>
                     <span className="chat_msg">{lastMsg ? lastMsg : ""}</span>

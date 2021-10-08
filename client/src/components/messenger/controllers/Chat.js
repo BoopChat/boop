@@ -1,3 +1,7 @@
+import { io } from "socket.io-client";
+
+const socket = io("/api/messages");
+
 export const ChatController = {
     getMessages: async (token, conversationId) => {
         if (conversationId) {
@@ -14,6 +18,7 @@ export const ChatController = {
         } else
             return [];
     },
+    listen: updateMessages => socket.on("newMessage", (msg) => updateMessages(msg)),
     evaluateElapsed: sent => {
         // convert timestamp into an elapsed message
         let diff = Date.now() - (new Date(sent)).getTime();
@@ -31,8 +36,9 @@ export const ChatController = {
             return days + " day" + (days !== 1 ? "s" : "") + " ago";
         }
     },
-    sendMessage: async (token, conversationId, message) => {
-        const res = await fetch("/api/messages/" + conversationId, {
+    sendMessage: (token, conversationId, message) => {
+        socket.emit("newMessage", message);
+        /*const res = await fetch("/api/messages/" + conversationId, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -52,6 +58,6 @@ export const ChatController = {
         else
             return {
                 success: true,
-            };
+            };*/
     }
 };

@@ -1,4 +1,4 @@
-import { useState, useEffect, React } from "react";
+import { useState, useEffect, useRef, React } from "react";
 import { useSelector } from "react-redux";
 import Dialog from "@material-ui/core/Dialog";
 import Button from "@mui/material/Button";
@@ -46,7 +46,7 @@ const OptionsDialog = ({ open, onClose, img, title, participants }) => {
                         </Button>
                     </Toolbar>
                 </AppBar>
-                <img src={img} alt="chat image" className="chat_image_options"/>
+                <img src={img} alt="chat" className="chat_image_options"/>
                 <p></p>
                 <hr/>
                 <span className="participant_label">{participants.length} participants</span>
@@ -75,7 +75,7 @@ const OptionsDialog = ({ open, onClose, img, title, participants }) => {
 const Chat = ({ conversationId, title, participants }) => {
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState("");
-    const [updater, setUpdater] = useState(null);
+    const chatbox = useRef();
 
     const [optionsDialog, setOptionsDialog] = useState(false);
     const alertDialog = Alert.useAlertDialog();
@@ -89,36 +89,28 @@ const Chat = ({ conversationId, title, participants }) => {
             setText(e.target.value);
     };
 
-    const handleSend = async () => {
+    const handleSend = async (e) => {
+        e.preventDefault();
         // if a conversation is not active, disable send button
         if (!conversationId)
             return;
         // if text box is empty dont bother trying to send message
         if (text?.length < 1)
             return;
-        let result = await ChatController.sendMessage(token, conversationId, text);
-        if (result.success) {
-            setText(""); // clear the text box
-            refresh(); // refresh the chat immediately to see the newly sent message
-        } else { // display error message
-            alertDialog.display({
-                title: "Error",
-                message: result.msg
-            });
-        }
-    };
-
-    const refresh = async () => {
-        setMessages((await ChatController.getMessages(token, conversationId))?.reverse());
+        // this may no longer be returning a status this way
+        ChatController.sendMessage(token, conversationId, text);
+        setText(""); // clear the text box
+        // scroll to the bottom of the chat where new message has been rendered
+        chatbox.current.scrollTop = chatbox.current.scrollHeight;
     };
 
     useEffect(() => {
-        clearInterval(updater); // clear previous refresher (which was for a diff convo)
-        // refresh every 5 seconds
-        setUpdater(setInterval(() => refresh(), 5000));
-        refresh(); // refresh right away
-        return () => clearInterval(updater); // have component run this after unmounting as cleanup
-    }, [conversationId]);
+        // initially get all messages from the server
+        const runAsync = async () => setMessages((await ChatController.getMessages(token, conversationId))?.reverse());
+        runAsync();
+        // as new messages come in from the server add them to messages list
+        ChatController.listen(message => setMessages([...messages, message]));
+    }, []);
 
     const showChatOptions = () => setOptionsDialog(true);
 
@@ -147,7 +139,7 @@ const Chat = ({ conversationId, title, participants }) => {
     return (
         <div className="chat_container">
             <header className="chat_title">
-                <img src="https://picsum.photos/400" alt="chat icon"/>
+                <img src="https://picsum.photos/400" className="skeleton" alt="chat"/>
                 <span>{title || "Untitled Chat"}</span>
                 <img src={options} alt="options" onClick={showChatOptions} className="chat_options"/>
             </header>
@@ -159,7 +151,7 @@ const Chat = ({ conversationId, title, participants }) => {
                 participants={[{ displayName, imageUrl }, ...participants]}
             />
             {messages && messages.length > 0 ? (
-                <ul className="chat_section">
+                <ul className="chat_section" ref={chatbox}>
                     {messages.map((msg, key) =>
                         <li
                             key={key}
@@ -189,10 +181,10 @@ const Chat = ({ conversationId, title, participants }) => {
                 title={alertDialog.title}
                 message={alertDialog.message}
             />
-            <div className="interactions">
+            <form className="interactions" onSubmit={handleSend}>
                 <input type="text" name="chat_box" placeholder="chat" value={text} onChange={handleText} />
                 <button onClick={handleSend}>Send</button>
-            </div>
+            </form>
         </div>
     );
 };
