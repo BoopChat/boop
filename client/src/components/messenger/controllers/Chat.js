@@ -1,6 +1,8 @@
 import { io } from "socket.io-client";
 
-const socket = io("/api/messages");
+// const socket = io("/api/messages");
+// const token = useSelector((state) => state.user.token);
+let socket;
 
 export const ChatController = {
     getMessages: async (token, conversationId) => {
@@ -19,6 +21,10 @@ export const ChatController = {
             return [];
     },
     listen: updateMessages => socket.on("newMessage", (msg) => updateMessages(msg)),
+    init: () => {
+        socket = io("http://localhost:5000");
+        socket.on("connection", () => console.log("connected"));
+    },
     evaluateElapsed: sent => {
         // convert timestamp into an elapsed message
         let diff = Date.now() - (new Date(sent)).getTime();

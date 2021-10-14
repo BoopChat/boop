@@ -109,6 +109,7 @@ const Chat = ({ conversationId, title, participants }) => {
         const runAsync = async () => setMessages((await ChatController.getMessages(token, conversationId))?.reverse());
         runAsync();
         // as new messages come in from the server add them to messages list
+        ChatController.init();
         ChatController.listen(message => setMessages([...messages, message]));
     }, []);
 
@@ -169,7 +170,7 @@ const Chat = ({ conversationId, title, participants }) => {
                                     width="35"
                                 />
                             </div>
-                            <p>{msg.content}</p>
+                            <p>{msg}</p>
                         </li>
                     )}
                 </ul>
