@@ -18,12 +18,11 @@ import options from "../../assets/options.svg";
 const optionsEnum = {
     noAction: 0,
     successor: 1,
-    leave: 2
+    leave: 2,
 };
 
 const OptionsDialog = ({ open, onClose, img, title, participants }) => {
-
-    const handleClose = value => onClose(value);
+    const handleClose = (value) => onClose(value);
 
     return (
         <div>
@@ -46,33 +45,32 @@ const OptionsDialog = ({ open, onClose, img, title, participants }) => {
                         </Button>
                     </Toolbar>
                 </AppBar>
-                <img src={img} alt="chat" className="chat_image_options"/>
+                <img src={img} alt="chat" className="chat_image_options" />
                 <p></p>
-                <hr/>
+                <hr />
                 <span className="participant_label">{participants.length} participants</span>
-                {
-                    participants.map((participant, key) =>
-                        <div className="contact_item" key={key}>
-                            <div className="img_and_name">
-                                <img src={participant.imageUrl} alt="participant_img"/>
-                                <span>{participant.displayName}</span>
-                            </div>
+                {participants.map((participant, key) => (
+                    <div className="contact_item" key={key}>
+                        <div className="img_and_name">
+                            <img src={participant.imageUrl} alt="participant_img" />
+                            <span>{participant.displayName}</span>
                         </div>
-                    )
-                }
-                <hr/>
+                    </div>
+                ))}
+                <hr />
                 <p></p>
-                <button
-                    className="btn_positive"
-                    onClick={() => handleClose(optionsEnum.successor)}
-                >Set Successor</button>
-                <button className="btn_leave" onClick={() => handleClose(optionsEnum.leave)}>Leave Conversation</button>
+                <button className="btn_positive" onClick={() => handleClose(optionsEnum.successor)}>
+                    Set Successor
+                </button>
+                <button className="btn_leave" onClick={() => handleClose(optionsEnum.leave)}>
+                    Leave Conversation
+                </button>
             </Dialog>
         </div>
     );
 };
 
-const Chat = ({ conversationId, title, participants }) => {
+const Chat = ({ conversationId, title, participants, socket }) => {
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState("");
     const chatbox = useRef();
@@ -85,21 +83,27 @@ const Chat = ({ conversationId, title, participants }) => {
     const { id, displayName, imageUrl } = useSelector((state) => state.user.userInfo);
 
     const handleText = (e) => {
-        if (conversationId) // if a conversation is not active, disable text box
+        if (conversationId)
+            // if a conversation is not active, disable text box
             setText(e.target.value);
     };
 
     const handleSend = async (e) => {
         e.preventDefault();
         // if a conversation is not active, disable send button
-        if (!conversationId)
-            return;
+        if (!conversationId) return;
         // if text box is empty dont bother trying to send message
-        if (text?.length < 1)
-            return;
-        // this may no longer be returning a status this way
-        ChatController.sendMessage(token, conversationId, text);
-        setText(""); // clear the text box
+        if (text?.length < 1) return;
+        let result = await ChatController.sendMessage(token, conversationId, text);
+        if (result.success) setText("");
+        // clear the text box
+        else {
+            // display error message
+            alertDialog.display({
+                title: "Error",
+                message: result.msg,
+            });
+        }
         // scroll to the bottom of the chat where new message has been rendered
         chatbox.current.scrollTop = chatbox.current.scrollHeight;
     };
@@ -109,18 +113,20 @@ const Chat = ({ conversationId, title, participants }) => {
         const runAsync = async () => setMessages((await ChatController.getMessages(token, conversationId))?.reverse());
         runAsync();
         // as new messages come in from the server add them to messages list
-        ChatController.init();
-        ChatController.listen(message => setMessages([...messages, message]));
+        console.log(socket);
+        ChatController.init(socket);
+        ChatController.listen((message) => setMessages((prevMessages) => [...prevMessages, message]));
     }, []);
 
     const showChatOptions = () => setOptionsDialog(true);
 
-    const onDialogClose = async action => {
+    const onDialogClose = async (action) => {
         setOptionsDialog(false);
         let result;
         switch (action) {
             case optionsEnum.leave:
-                if (participants.length === 1) // if 1 on 1 conversation, simply leave
+                if (participants.length === 1)
+                    // if 1 on 1 conversation, simply leave
                     result = await ConversationsController.leaveConversation(token, conversationId);
                 else {
                     // check if user is admin
@@ -132,7 +138,7 @@ const Chat = ({ conversationId, title, participants }) => {
         if (result) {
             alertDialog.display({
                 title: result.success ? "Success" : "Error",
-                message: result.msg
+                message: result.msg,
             });
         }
     };
@@ -140,9 +146,9 @@ const Chat = ({ conversationId, title, participants }) => {
     return (
         <div className="chat_container">
             <header className="chat_title">
-                <img src="https://picsum.photos/400" className="skeleton" alt="chat"/>
+                <img src="https://picsum.photos/400" className="skeleton" alt="chat" />
                 <span>{title || "Untitled Chat"}</span>
-                <img src={options} alt="options" onClick={showChatOptions} className="chat_options"/>
+                <img src={options} alt="options" onClick={showChatOptions} className="chat_options" />
             </header>
             <OptionsDialog
                 open={optionsDialog}
@@ -153,13 +159,12 @@ const Chat = ({ conversationId, title, participants }) => {
             />
             {messages && messages.length > 0 ? (
                 <ul className="chat_section" ref={chatbox}>
-                    {messages.map((msg, key) =>
-                        <li
-                            key={key}
-                            className={"message " + (msg.senderId === id ? "author": "friend") + "_message"}
-                        >
+                    {messages.map((msg, key) => (
+                        <li key={key} className={"message " + (msg.senderId === id ? "author" : "friend") + "_message"}>
                             <div className="info">
-                                <span className="user" title={msg.sender?.displayName}>{msg.sender?.displayName}</span>
+                                <span className="user" title={msg.sender?.displayName}>
+                                    {msg.sender?.displayName}
+                                </span>
                                 <span className="time">{ChatController.evaluateElapsed(msg.createdAt)}</span>
                             </div>
                             <div className="avatar" href="/">
@@ -172,10 +177,11 @@ const Chat = ({ conversationId, title, participants }) => {
                             </div>
                             <p>{msg}</p>
                         </li>
-                    )}
+                    ))}
                 </ul>
-            ) : <div></div>
-            }
+            ) : (
+                <div></div>
+            )}
             <Alert.AlertDialog
                 open={alertDialog.open}
                 handleClose={alertDialog.close}

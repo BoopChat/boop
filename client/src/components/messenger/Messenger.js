@@ -2,6 +2,7 @@ import { Route, Switch, useLocation } from "react-router";
 import { useState, React } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setUserInfo } from "../login/userSlice";
+import { io } from "socket.io-client";
 
 import Conversations from "./Conversations";
 import Contacts from "./Contacts";
@@ -21,8 +22,21 @@ const Messenger = () => {
     };
 
     const userInfo = useSelector((state) => state.user.userInfo);
+    const token = useSelector((state) => state.user.token);
 
     const updateUser = (userInfo) => dispatch(setUserInfo(userInfo));
+
+    const [socket] = useState(() => {
+        let soc = io("http://localhost:5000", {
+            auth: {
+                token,
+            },
+        });
+        soc.on("connect", () => console.log("connect: ", soc.id));
+        soc.on("test", (message) => console.log(message));
+        soc.on("connect_error", (error) => console.log(error));
+        return soc;
+    });
 
     return (
         <div className="container">
@@ -31,26 +45,28 @@ const Messenger = () => {
                 <div id="main_panel">
                     <Switch location={location} key={location.pathname}>
                         <Route path="/conversations">
-                            <Conversations selectConversation={changeConvo}/>
+                            <Conversations selectConversation={changeConvo} socket={socket} />
                         </Route>
-                        <Route path="/contacts" component={Contacts}/>
+                        <Route path="/contacts" component={Contacts} />
                         <Route path="/settings">
-                            <Settings userInfo={userInfo} updateUser={updateUser}/>
+                            <Settings userInfo={userInfo} updateUser={updateUser} />
                         </Route>
                         <Route path="/">
-                            <Conversations selectConversation={changeConvo}/>
+                            <Conversations selectConversation={changeConvo} socket={socket} />
                         </Route>
                     </Switch>
                 </div>
                 <div id="chat_panel">
-                    {currentConvo.id ?
+                    {currentConvo.id ? (
                         <Chat
                             conversationId={currentConvo.id}
                             title={currentConvo.title}
                             participants={currentConvo.participants}
+                            socket={socket}
                         />
-                        : <></>
-                    }
+                    ) : (
+                        <></>
+                    )}
                 </div>
             </div>
         </div>

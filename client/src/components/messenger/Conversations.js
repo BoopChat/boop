@@ -12,29 +12,31 @@ import { ContactsController } from "./controllers/Contacts";
 const AddConversationDialog = ({ open, onClose, token }) => {
     const [details, setDetails] = useState({
         list: [],
-        title: ""
+        title: "",
     });
     const [contacts, setContacts] = useState([]);
     const [init, setInit] = useState(false);
 
     const handleClose = () => {
         onClose(details);
-        setDetails({ // reset details
+        setDetails({
+            // reset details
             list: [],
-            title: ""
+            title: "",
         });
     };
     const handleListChange = (e) => {
         // if checkbox is checked then add it to the list else remove it from the list
-        let newList = e.target.checked ?
-            [...details.list, { id: e.target.value, displayName: e.target.name }] :
-            details.list.filter(item => item.id !== e.target.value);
+        let newList = e.target.checked
+            ? [...details.list, { id: e.target.value, displayName: e.target.name }]
+            : details.list.filter((item) => item.id !== e.target.value);
         setDetails({ ...details, list: newList });
     };
     const handleTitleChange = (e) => setDetails({ ...details, title: e.target.value });
 
     useEffect(() => {
-        if (!init) { // if this is the first time rendering, get user contacts from server
+        if (!init) {
+            // if this is the first time rendering, get user contacts from server
             const runAsync = async () => {
                 let contacts = await ContactsController.getContacts(token);
                 setContacts(contacts.success ? contacts.contactList : []);
@@ -50,13 +52,14 @@ const AddConversationDialog = ({ open, onClose, token }) => {
             <input
                 type="text"
                 placeholder="Conversation Title"
-                value={details.title} onChange={handleTitleChange}
+                value={details.title}
+                onChange={handleTitleChange}
                 className="addConversation"
             />
             <ul className="add_participants">
-                {contacts.map(contact =>
+                {contacts.map((contact) => (
                     <li key={contact.contactId}>
-                        <img src={contact.contactInfo.imageUrl} alt="contact_img"/>
+                        <img src={contact.contactInfo.imageUrl} alt="contact_img" />
                         <span>{contact.contactInfo.displayName}</span>
                         <input
                             type="checkbox"
@@ -65,15 +68,16 @@ const AddConversationDialog = ({ open, onClose, token }) => {
                             onChange={handleListChange}
                         />
                     </li>
-                )}
+                ))}
             </ul>
-            <button onClick={() => handleClose()} name="create" className="addConversation">Create</button>
+            <button onClick={() => handleClose()} name="create" className="addConversation">
+                Create
+            </button>
         </Dialog>
     );
 };
 
-
-const Conversations = ({ selectConversation }) => {
+const Conversations = ({ selectConversation, socket }) => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [conversations, setConversations] = useState([]);
     const [init, setInit] = useState(false);
@@ -81,18 +85,26 @@ const Conversations = ({ selectConversation }) => {
 
     // Get the token from the users global state.
     const token = useSelector((state) => state.user.token);
+    //const { id } = useSelector((state) => state.user.userInfo);
+
+    const updateConversations = (newConversations) => {
+        setConversations(conversations.length > 0 ? [...conversations, ...newConversations] : newConversations);
+    };
 
     useEffect(() => {
         // if this is the first time rendering, get user conversations from server
         if (!init) {
-            const runAsync = async () => setConversations(await ConversationsController.getConversations(token));
+            // send a request to the server to get conversations and setup socket to listen
+            // for conversations changes
+            ConversationsController.init(socket);
+            const runAsync = async () => await ConversationsController.getConversations(token, updateConversations);
             runAsync();
             setInit(true);
         }
     }, [init]);
 
     const handleClickAdd = () => setDialogOpen(true);
-    const addConversation = conversationDetails => {
+    const addConversation = (conversationDetails) => {
         setDialogOpen(false); // close add dialog
         // ask the server to create a new conversation with the list participants (and title)
         if (conversationDetails) {
@@ -100,23 +112,29 @@ const Conversations = ({ selectConversation }) => {
                 let { title, list } = conversationDetails;
                 if (title.length < 1) {
                     // create a title from the chosen participants' names
-                    let chop = list.length < 2 ? 20 : (list.length < 3 ? 9 : 5);
+                    let chop = list.length < 2 ? 20 : list.length < 3 ? 9 : 5;
                     title = list
-                        .map(i => i.displayName)
+                        .map((i) => i.displayName)
                         .reduce((prevValue, curValue) => prevValue + curValue.substring(0, chop) + ", ", "You, ")
                         .substring(0, 25);
                 }
-                let result = await ConversationsController.createConversation(token, list.map(i => i.id), title);
-                if (result.success) { // add new conversation to the back of the list
+                let result = await ConversationsController.createConversation(
+                    token,
+                    list.map((i) => i.id),
+                    title,
+                    updateConversations
+                );
+                if (result.success) {
+                    // add new conversation to the back of the list
                     let { conversation } = result;
-                    setConversations(conversations.length > 0 ? [...conversations, conversation]: [conversation]);
+                    setConversations(conversations.length > 0 ? [...conversations, conversation] : [conversation]);
                     // auto open chat after creation
                     selectConversation(conversation.id, conversation.title, conversation.participants);
-                }
-                else // display error message
+                } // display error message
+                else
                     alertDialog.display({
                         title: "Error",
-                        message: result.msg
+                        message: result.msg,
                     });
             };
             runAsync();
@@ -134,12 +152,12 @@ const Conversations = ({ selectConversation }) => {
             <div className="main_panel_header">
                 <h1>Conversations</h1>
                 <button className="options" title="options" onClick={() => handleClickAdd()}>
-                    <img src={plus} alt="options"/>
+                    <img src={plus} alt="options" />
                 </button>
                 <AddConversationDialog open={dialogOpen} onClose={addConversation} token={token} />
             </div>
             <div id="conversations">
-                {conversations.map((chat, i) =>
+                {conversations?.map((chat, i) => (
                     <ConversationItem
                         name={chat.title}
                         img={chat.imgUrl}
@@ -149,7 +167,7 @@ const Conversations = ({ selectConversation }) => {
                         key={i}
                         onClick={() => selectConversation(chat.id, chat.title, chat.participants)}
                     />
-                )}
+                ))}
             </div>
         </div>
     );

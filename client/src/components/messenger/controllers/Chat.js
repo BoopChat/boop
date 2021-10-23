@@ -1,40 +1,33 @@
-import { io } from "socket.io-client";
-
-// const socket = io("/api/messages");
-// const token = useSelector((state) => state.user.token);
 let socket;
 
 export const ChatController = {
+    init: (soc) => (socket = soc), // set the socket the controller should use
     getMessages: async (token, conversationId) => {
         if (conversationId) {
             // make request for the messages of conversationid and wait for the json response
-            const data = await (await fetch("/api/messages/" + conversationId, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
-                },
-            })).json();
+            const data = await (
+                await fetch("/api/messages/" + conversationId, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+            ).json();
             // get the list of messages if successful
             return data ? data.messages : [];
-        } else
-            return [];
+        } else return [];
     },
-    listen: updateMessages => socket.on("newMessage", (msg) => updateMessages(msg)),
-    init: () => {
-        socket = io("http://localhost:5000");
-        socket.on("connection", () => console.log("connected"));
-    },
-    evaluateElapsed: sent => {
+    listen: (updateMessages) => socket.on("newMessage", (msg) => updateMessages(msg)),
+    evaluateElapsed: (sent) => {
         // convert timestamp into an elapsed message
-        let diff = Date.now() - (new Date(sent)).getTime();
+        let diff = Date.now() - new Date(sent).getTime();
         let min = 60 * 1000;
-        if (diff < min)
-            return "Less than a min ago";
+        if (diff < min) return "Less than a min ago";
         else if (diff < 60 * min) {
             let mins = Math.floor(diff / 60 / 1000);
             return mins + " min" + (mins !== 1 ? "s" : "") + " ago";
-        } else if (diff <  60 * min * 24) {
+        } else if (diff < 60 * min * 24) {
             let hrs = Math.floor(diff / 60 / 60 / 1000);
             return hrs + " hr" + (hrs !== 1 ? "s" : "") + " ago";
         } else {
@@ -42,28 +35,28 @@ export const ChatController = {
             return days + " day" + (days !== 1 ? "s" : "") + " ago";
         }
     },
-    sendMessage: (token, conversationId, message) => {
-        socket.emit("newMessage", message);
-        /*const res = await fetch("/api/messages/" + conversationId, {
+    sendMessage: async (token, conversationId, message) => {
+        const res = await fetch("/api/messages/" + conversationId, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
-                content: message
-            })
+                content: message,
+            }),
         });
 
         const result = await res.json();
         if (res.status !== 201)
-            return { // message was not added ... return reason why
+            return {
+                // message was not added ... return reason why
                 success: false,
-                msg: result.msg
+                msg: result.msg,
             };
         else
             return {
                 success: true,
-            };*/
-    }
+            };
+    },
 };

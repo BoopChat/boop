@@ -13,13 +13,12 @@ module.exports.getMessages = async (req, res) => {
     // Need to check that userId belongs to a valid user and
     // matches the id of the requesting user
 
-
     //check if the user is a participant of the conversation
     let isParticipant = await Participant.findOne({
         where: {
             userId: userId,
-            conversationId: conversationId
-        }
+            conversationId: conversationId,
+        },
     });
     if (!isParticipant) {
         logger.error(`Cant get messages because user [${userId}]
@@ -30,21 +29,24 @@ module.exports.getMessages = async (req, res) => {
     //get all messages from the conversation
     let messages = await Message.findAll({
         where: {
-            conversationId: conversationId
+            conversationId: conversationId,
         },
         attributes: ["id", "content", "senderId", "createdAt", "updatedAt"],
         order: [["createdAt", "DESC"]],
-        include: [{
-            model: User,
-            as: "sender",
-            // specify what atributes you want returned
-            attributes: ["displayName", "imageUrl"],
-        }, {
-            model: Conversation,
-            as: "conversation",
-            // specify what atributes you want returned
-            attributes: ["id", "title", "imageUrl"],
-        }]
+        include: [
+            {
+                model: User,
+                as: "sender",
+                // specify what atributes you want returned
+                attributes: ["displayName", "imageUrl"],
+            },
+            {
+                model: Conversation,
+                as: "conversation",
+                // specify what atributes you want returned
+                attributes: ["id", "title", "imageUrl"],
+            },
+        ],
     });
 
     if (!messages) {
@@ -53,7 +55,10 @@ module.exports.getMessages = async (req, res) => {
         return res.status(404).send({ msg });
     } else {
         logger.info("Returned messages " + userId + " - " + conversationId);
-        return res.status(200).send({ messages: messages });
+        global.io.emit("test", "the end is coming...");
+        // Emit all messages to conversation
+        global.io.emit("allMessages", { messages });
+        return res.status(200).send();
     }
 };
 
@@ -76,8 +81,8 @@ module.exports.addMessage = async (req, res) => {
     let isParticipant = await Participant.findOne({
         where: {
             userId: userId,
-            conversationId: conversationId
-        }
+            conversationId: conversationId,
+        },
     });
 
     if (!isParticipant) {
@@ -90,8 +95,9 @@ module.exports.addMessage = async (req, res) => {
     let newMessage = await Message.create({
         senderId: userId,
         conversationId: conversationId,
-        content: req.body.content
-    }).catch(err => { //catch any errors
+        content: req.body.content,
+    }).catch((err) => {
+        //catch any errors
         let msg = err.message || "Some error occurred while creating the message.";
         logger.error(msg + userId + " - " + conversationId);
         res.status(500).send({ msg });
@@ -99,7 +105,9 @@ module.exports.addMessage = async (req, res) => {
     //return a success message + the newly created msg;
     let msg = "Message successfully added to the conversation";
     logger.info(msg);
+    // Emit message to specific conversationId
+    global.io.to(conversationId).emit("newMessage", { newMessage });
     return res.status(201).send({
-        msg: msg, newMessage
+        msg,
     });
 };
