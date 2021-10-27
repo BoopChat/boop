@@ -8,10 +8,78 @@
 
 body {
   font-family: "Open Sans", sans-serif;
-  background: #fff;
-  color: #363636;
+  background: var(--bg);
+  color: var(--text);
   line-height: 1.5;
   font-size: 0.875rem;
+  transition: background 500ms ease-in-out, color 1000ms ease-in-out;
+}
+
+.light {
+  --bg: var(--gray0);
+  --bg-2: var(--gray1);
+  --bg-3: var(--white);
+  --panel: var(--gray5);
+  --white: var(--blank);
+  --text: var(--gray4);
+  --text-fade: var(--gray2);
+  --prim-blue: var(--brandeis-blue);
+  --sec-blue: var(--sky-of-magritte);
+  --text-hover: var(--blank);
+  --light-text: var(--blank);
+  --light-text-hover: var(--gray1);
+  --filter: invert(0%) sepia(100%) saturate(7500%) hue-rotate(257deg) brightness(82%) contrast(115%);
+  --border: var(--gray1);
+  --border-hover: var(--gray2);
+  --prim-red: var(--red);
+  --sec-red: var(--fire-opal);
+  --input: var(--blank);
+  --shadow: rgba(218, 216, 216, 0.25);
+  --author-border: var(--brandeis-blue);
+  --action-button-hover: var(--offline);
+}
+
+.dark {
+  --bg: var(--gray2);
+  --bg-2: var(--gray4);
+  --bg-3: var(--gray4);
+  --panel: var(--gray5);
+  --white: var(--blank);
+  --text: var(--blank);
+  --text-fade: var(--gray1);
+  --prim-blue: var(--brandeis-blue);
+  --sec-blue: var(--pacific-bridge);
+  --text-hover: var(--blank);
+  --light-text: var(--blank);
+  --light-text-hover: var(--gray1);
+  --filter: invert(100%) sepia(96%) saturate(15%) hue-rotate(212deg) brightness(104%) contrast(104%);
+  --border: var(--gray5);
+  --border-hover: var(--gray2);
+  --prim-red: var(--red);
+  --sec-red: var(--albanian-red);
+  --input: var(--gray5);
+  --shadow: rgba(0, 0, 0, 0.25);
+  --author-border: var(--gray5);
+  --action-button-hover: var(--gray2);
+}
+
+:root {
+  --gray0: #f7f7f7;
+  --gray1: #b2becd;
+  --gray2: #4d4d4e;
+  --gray4: #303030; 
+  --gray5: #050505;
+  --sky-of-magritte: #0099ff;
+  --brandeis-blue: #0066ec;
+  --pacific-bridge: #0052ce;
+  --online: #62b93c;
+  --away: #f7e01b;
+  --dnd: #f71a30;
+  --red: rgb(255, 0, 0);
+  --albanian-red: rgb(204, 1, 1);
+  --fire-opal: rgb(255, 62, 4);
+  --offline: #dfdfdf;
+  --blank:#fff;
 }
 
 ul {

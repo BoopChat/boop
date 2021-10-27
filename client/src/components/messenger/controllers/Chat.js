@@ -36,9 +36,8 @@ export const ChatController = {
             return days + " day" + (days !== 1 ? "s" : "") + " ago";
         }
     },
-    sendMessage: (token, conversationId, message) => {
-        socket.emit("newMessage", message);
-        /*const res = await fetch("/api/messages/" + conversationId, {
+    sendMessage: async (token, conversationId, message) => {
+        const res = await fetch("/api/messages/" + conversationId, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -58,6 +57,6 @@ export const ChatController = {
         else
             return {
                 success: true,
-            };*/
+            };
     }
 };

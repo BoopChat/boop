@@ -27,7 +27,7 @@ const OptionsDialog = ({ open, onClose, img, title, participants }) => {
 
     return (
         <div>
-            <Dialog fullScreen open={open} onClose={() => handleClose(optionsEnum.noAction)}>
+            <Dialog id="chat_options_dialog" fullScreen open={open} onClose={() => handleClose(optionsEnum.noAction)}>
                 <AppBar sx={{ position: "relative" }}>
                     <Toolbar>
                         <IconButton
@@ -97,11 +97,10 @@ const Chat = ({ conversationId, title, participants }) => {
         // if text box is empty dont bother trying to send message
         if (text?.length < 1)
             return;
-        // this may no longer be returning a status this way
-        ChatController.sendMessage(token, conversationId, text);
+        await ChatController.sendMessage(token, conversationId, text);
         setText(""); // clear the text box
         // scroll to the bottom of the chat where new message has been rendered
-        chatbox.current.scrollTop = chatbox.current.scrollHeight;
+        chatbox.current.scrollTop = chatbox?.current?.scrollHeight;
     };
 
     useEffect(() => {
@@ -166,7 +165,6 @@ const Chat = ({ conversationId, title, participants }) => {
                                     alt="user avatar"
                                     src={msg.sender?.imageUrl}
                                     title={msg.sender?.displayName}
-                                    width="35"
                                 />
                             </div>
                             <p>{msg.content}</p>

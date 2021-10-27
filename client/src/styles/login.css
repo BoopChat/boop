@@ -1,11 +1,11 @@
 h1 {
     font-family: 'Monserrat', sans-serif;
     font-size: 24px;
-    color: rgb(44, 44, 44);
+    color: var(--text);
 }
 
 div.sign-in-container {
-    background: white;
+    background: var(--bg);
     display: flex;
     flex-direction: column;
     padding: 30px 10px;
@@ -36,12 +36,12 @@ div.sign-in-container span.switch {
 }
 
 a {
-    color: #0d5ef3;
+    color: var(--link);
     text-decoration: none;
 }
 
 hr {
-    background-color: #dadde1;
+    background-color: var(--bg);
     border: none;
     height: 1px;
     width: 100%;

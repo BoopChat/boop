@@ -26,7 +26,7 @@ const BootstrapDialogTitle = (props) => {
                 >
                     <CloseIcon />
                 </IconButton>
-            ) : null}
+            ) : <></>}
         </DialogTitle>
     );
 };
@@ -34,7 +34,7 @@ const BootstrapDialogTitle = (props) => {
 const AlertDialog = ({ open, handleClose, title, message, closeMessage = "Okay" }) => {
     return (
         <div>
-            <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+            <Dialog id="alert-dialog" onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
                 <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
                     {title}
                 </BootstrapDialogTitle>

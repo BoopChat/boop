@@ -17,8 +17,8 @@ const AddConversationDialog = ({ open, onClose, token }) => {
     const [contacts, setContacts] = useState([]);
     const [init, setInit] = useState(false);
 
-    const handleClose = () => {
-        onClose(details);
+    const handleClose = btnClicked => {
+        onClose({ ...details, btnClicked });
         setDetails({ // reset details
             list: [],
             title: ""
@@ -45,7 +45,12 @@ const AddConversationDialog = ({ open, onClose, token }) => {
     }, [init]);
 
     return (
-        <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
+        <Dialog
+            id="add-convo-dialog"
+            onClose={() => handleClose(false)}
+            aria-labelledby="simple-dialog-title"
+            open={open}
+        >
             <DialogTitle id="simple-dialog-title">Create a conversation</DialogTitle>
             <input
                 type="text"
@@ -67,7 +72,7 @@ const AddConversationDialog = ({ open, onClose, token }) => {
                     </li>
                 )}
             </ul>
-            <button onClick={() => handleClose()} name="create" className="addConversation">Create</button>
+            <button onClick={() => handleClose(true)} name="create" className="addConversation">Create</button>
         </Dialog>
     );
 };
@@ -96,6 +101,11 @@ const Conversations = ({ selectConversation }) => {
         setDialogOpen(false); // close add dialog
         // ask the server to create a new conversation with the list participants (and title)
         if (conversationDetails) {
+            // if user simply clicked outside of the dialog ie.
+            // didn't really want to create a conversation, or simply
+            // wanted to cancel then dont make a request to the server
+            if (!conversationDetails.btnClicked)
+                return;
             const runAsync = async () => {
                 let { title, list } = conversationDetails;
                 if (title.length < 1) {
@@ -105,6 +115,7 @@ const Conversations = ({ selectConversation }) => {
                         .map(i => i.displayName)
                         .reduce((prevValue, curValue) => prevValue + curValue.substring(0, chop) + ", ", "You, ")
                         .substring(0, 25);
+                    title = title.slice(-1) === "," ? title.substring(0, title.length-1) : title;
                 }
                 let result = await ConversationsController.createConversation(token, list.map(i => i.id), title);
                 if (result.success) { // add new conversation to the back of the list
