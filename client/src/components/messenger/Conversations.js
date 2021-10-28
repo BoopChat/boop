@@ -80,28 +80,26 @@ const AddConversationDialog = ({ open, onClose, token }) => {
 const Conversations = ({ selectConversation, socket }) => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [conversations, setConversations] = useState([]);
-    const [init, setInit] = useState(false);
     const alertDialog = Alert.useAlertDialog();
 
     // Get the token from the users global state.
     const token = useSelector((state) => state.user.token);
     //const { id } = useSelector((state) => state.user.userInfo);
 
-    const updateConversations = (newConversations) => {
-        setConversations(conversations.length > 0 ? [...conversations, ...newConversations] : newConversations);
+    const updateConversations = (newConversation) => {
+        setConversations((conversations) => {
+            return newConversation.length > 0 ? [...newConversation, ...conversations] : [...newConversation];
+        });
     };
 
     useEffect(() => {
-        // if this is the first time rendering, get user conversations from server
-        if (!init) {
-            // send a request to the server to get conversations and setup socket to listen
-            // for conversations changes
-            ConversationsController.init(socket);
-            const runAsync = async () => await ConversationsController.getConversations(token, updateConversations);
-            runAsync();
-            setInit(true);
-        }
-    }, [init]);
+        // send a request to the server to get conversations and setup socket to listen
+        // for conversations changes
+        ConversationsController.init(socket);
+        const runAsync = async () =>
+            setConversations(await ConversationsController.getConversations(token, updateConversations));
+        runAsync();
+    }, []);
 
     const handleClickAdd = () => setDialogOpen(true);
     const addConversation = (conversationDetails) => {
@@ -118,24 +116,12 @@ const Conversations = ({ selectConversation, socket }) => {
                         .reduce((prevValue, curValue) => prevValue + curValue.substring(0, chop) + ", ", "You, ")
                         .substring(0, 25);
                 }
-                let result = await ConversationsController.createConversation(
+                await ConversationsController.createConversation(
                     token,
                     list.map((i) => i.id),
                     title,
                     updateConversations
                 );
-                if (result.success) {
-                    // add new conversation to the back of the list
-                    let { conversation } = result;
-                    setConversations(conversations.length > 0 ? [...conversations, conversation] : [conversation]);
-                    // auto open chat after creation
-                    selectConversation(conversation.id, conversation.title, conversation.participants);
-                } // display error message
-                else
-                    alertDialog.display({
-                        title: "Error",
-                        message: result.msg,
-                    });
             };
             runAsync();
         }

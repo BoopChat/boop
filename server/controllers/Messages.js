@@ -55,10 +55,7 @@ module.exports.getMessages = async (req, res) => {
         return res.status(404).send({ msg });
     } else {
         logger.info("Returned messages " + userId + " - " + conversationId);
-        global.io.emit("test", "the end is coming...");
-        // Emit all messages to conversation
-        global.io.emit("allMessages", { messages });
-        return res.status(200).send();
+        return res.status(200).send({ messages: messages });
     }
 };
 

@@ -110,13 +110,24 @@ const Chat = ({ conversationId, title, participants, socket }) => {
 
     useEffect(() => {
         // initially get all messages from the server
-        const runAsync = async () => setMessages((await ChatController.getMessages(token, conversationId))?.reverse());
+        const runAsync = async () => {
+            setMessages((await ChatController.getMessages(token, conversationId))?.reverse());
+        };
         runAsync();
-        // as new messages come in from the server add them to messages list
-        console.log(socket);
+
         ChatController.init(socket);
-        ChatController.listen((message) => setMessages((prevMessages) => [...prevMessages, message]));
-    }, []);
+        ChatController.clear(); // clear previous listener if exist
+        // as new messages come in from the server add them to messages list
+        ChatController.listen((message) =>
+            setMessages((prevMessages) => {
+                // if the new message is a message for the currently opened chat
+                if (message.newMessage.conversationId === conversationId.toString())
+                    return [...prevMessages, message.newMessage];
+                // if not simply ignore it in the UI
+                else return prevMessages;
+            })
+        );
+    }, [conversationId]);
 
     const showChatOptions = () => setOptionsDialog(true);
 
@@ -175,7 +186,7 @@ const Chat = ({ conversationId, title, participants, socket }) => {
                                     width="35"
                                 />
                             </div>
-                            <p>{msg}</p>
+                            <p>{msg.content}</p>
                         </li>
                     ))}
                 </ul>

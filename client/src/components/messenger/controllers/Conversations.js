@@ -14,9 +14,19 @@ export const ConversationsController = {
             },
         });
 
-        // const result = await res.json();
-        socket.on("conversationList", (list) => updateConversation(list));
-        return res.status !== 200;
+        const result = await res.json();
+        socket.on("newConversation", (convoObject) => {
+            updateConversation([convoObject.conversation]);
+            // send back the conversation to the server to join client to that socket rooms
+            socket.emit("joinConversations", [convoObject.conversation.id]);
+        });
+
+        // send back the conversations to the server to join client to the appropriate socket rooms
+        socket.emit(
+            "joinConversations",
+            result.conversationList.map((item) => item.id)
+        );
+        return res.status !== 200 ? [] : result && result.conversationList ? result.conversationList : [];
     },
     evaluateDate: (lastDate) => {
         // decide whether to return the date as (d/mm/yy) or as time(\d{2}:\d{2} (A|P)M)
@@ -37,7 +47,7 @@ export const ConversationsController = {
             return diff > 23 * 60 * 60 * 1000 ? getDate() : getTime();
         } else return "";
     },
-    createConversation: async (token, participants, title, updateConversation) => {
+    createConversation: async (token, participants, title) => {
         // make request to create a conversation with participants and title
         const res = await fetch("/api/conversations", {
             method: "POST",
@@ -50,8 +60,6 @@ export const ConversationsController = {
                 title,
             }),
         });
-
-        socket.on("newConversation", (list) => updateConversation([list]));
         return res.status !== 201;
     },
     leaveConversation: async (token, conversationId, successorId) => {
@@ -72,7 +80,7 @@ export const ConversationsController = {
         return {
             // return msg to display to user (whether success or fail)
             msg: result.msg,
-            success: result.status === 200,
+            success: res.status === 200,
         };
     },
 };

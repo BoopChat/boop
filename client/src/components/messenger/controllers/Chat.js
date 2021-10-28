@@ -19,6 +19,9 @@ export const ChatController = {
         } else return [];
     },
     listen: (updateMessages) => socket.on("newMessage", (msg) => updateMessages(msg)),
+    clear: () => {
+        socket?.off("newMessage");
+    },
     evaluateElapsed: (sent) => {
         // convert timestamp into an elapsed message
         let diff = Date.now() - new Date(sent).getTime();

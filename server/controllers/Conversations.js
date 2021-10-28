@@ -82,15 +82,10 @@ module.exports.addConversation = async (req, res) => {
         //return a success message + the newly created conversation
         let msg = "Conversation successfully created";
         logger.info(msg + ":" + conversation.id);
-        // // Join on conversation id and emit success message and conversation
-        // global.io.join(conversation.id);
-
-        // for (const participant of participants) {
-        //     global.io.to(participants.userId); //May have to query the database to get participant's userId
-        // }
-
-        global.io.emit({ msg, conversation });
-
+        // convert array of participants string ids to numbers
+        const participantIds = participants.map((id) => Number(id));
+        // Emit the new conversation to all participants and the sender
+        global.io.to([...participantIds, userId]).emit("newConversation", { conversation });
         return res.status(201).send();
     } catch (err) {
         await t.rollback();
@@ -146,12 +141,6 @@ module.exports.getConversations = async (req, res) => {
         return res.status(404).send({ msg });
     } else {
         logger.info("Returned conversation list");
-        // for (const conversation of user["conversationList"]) {
-        //     global.io.join(conversation.id);
-        // }
-        // create a function which has access to different sockets from users
-        // which would then send off the conversation list for that user
-        global.io.emit("conversationList", { conversationList: user["conversationList"] });
         return res.status(200).send({ conversationList: user["conversationList"] });
     }
 };

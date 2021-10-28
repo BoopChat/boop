@@ -1,7 +1,7 @@
+const logger = require("../logger");
 const jwt = require("jsonwebtoken");
 
-module.exports = (socket, io) => {
-    console.log("web socket connected", socket.id);
+global.io.on("connection", (socket) => {
     // Authentication middle was for socket io connection
     io.use((socket, next) => {
         // extracts authentication token from the socket connection
@@ -14,20 +14,18 @@ module.exports = (socket, io) => {
             if (!user) {
                 next(new Error("No user information stored in JWT"));
             } else {
-                socket.user = user;
+                socket.join(user.id);
                 next();
             }
         } catch (e) {
-            console.log(e);
+            logger.error(e);
             next(new Error("Invalid jwt token"));
         }
     });
 
-    socket.on("joinConversations", () => {
-        const conversations = []; // Query database, add conversations to array
-        for (const id of conversations) {
-            // Add ids to conversations array
-            socket.join(id);
+    socket.on("joinConversations", (conversationIds) => {
+        for (const conversationId of conversationIds) {
+            socket.join(conversationId);
         }
     });
-};
+});

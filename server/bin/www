@@ -8,8 +8,6 @@ var app = require("../app");
 var debug = require("debug")("server:server");
 var http = require("http");
 const socketio = require("socket.io");
-const verifyJWT = require("../socketio/jwtMiddleware");
-const chatMessages = require("../socketio/jwtMiddleware");
 
 /**
  * Get port from environment and store in Express.
@@ -33,10 +31,7 @@ global.io = socketio(server, {
   },
 });
 
-global.io.on("connection", (socket) => {
-  verifyJWT(socket, global.io);
-});
-
+require("../socketio/connection");
 /**
  * Listen on provided port, on all network interfaces.
  */
