@@ -21,6 +21,8 @@ export const ContactsController = {
             };
     },
     evaluateStatus: lastActive => {
+        if (!lastActive)
+            return "offline";
         // for now status is either online or offline
         // if user not active within the last 5mins - offline
         let diff = Date.now() - (new Date(lastActive)).getTime();
