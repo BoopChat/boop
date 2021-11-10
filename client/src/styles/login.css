@@ -60,3 +60,51 @@ hr {
         font-size: 16px;
     }
 }
+
+span.dot {
+    height: 20px;
+    width: 20px;
+    margin: 0 10px;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 1.6s ease;
+    animation: bubble 1.5s ease-in-out infinite;
+}
+
+@keyframes bubble {
+    0%, 100% {
+        transform: scale(0.7);
+        background-color: var(--sec-blue);
+    }
+    40% {
+        transform: scale(1);
+        transform: translateY(-10px);
+    }
+    50% {
+        background-color: var(--prim-blue);
+    }
+}
+
+div.dots {
+    margin: 0 auto;
+    width: min-content;
+    display: flex;
+}
+
+div.slides {
+    display: none;
+    width: 100%;
+    height: 500px;
+}
+
+div.loader {
+    margin: auto;
+}
+
+span.loader-text {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 30px;
+    display: inline-block;
+}
