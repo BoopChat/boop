@@ -181,7 +181,10 @@ const Chat = ({ conversationId, title, participants, socket }) => {
             {messages && messages.length > 0 ? (
                 <ul className="chat_section" ref={chatbox}>
                     {messages.map((msg) => (
-                        <li key={msg.id} className={"message " + (msg.senderId === id ? "author" : "friend") + "_message"}>
+                        <li
+                            key={msg.id}
+                            className={"message " + (msg.senderId === id ? "author" : "friend") + "_message"}
+                        >
                             <div className="info">
                                 <span className="user" title={msg.sender?.displayName}>
                                     {msg.sender?.displayName}
