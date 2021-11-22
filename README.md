@@ -16,8 +16,8 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 ### Getting the server to work
 
 1. Docker
-    1. If you don't have docker desktop download it [here](https://www.docker.com/products/docker-desktop)
-    2. Create your container and database by either:
+    1. If you don't have docker desktop download it [here](https://www.docker.com/products/docker-desktop). Make sure it's running.
+    1. Create your container and database by either:
         1. Using the following command in the terminal:
     
             `docker run -d -p 5432:5432 --name boop_db -e POSTGRES_PASSWORD=database-password -e POSTGRES_DB=database-name -e POSTGRES_USER=database-user postgres`
@@ -27,8 +27,6 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
         1. Navigating to the server sub directory and using the docker compose file:
 
             `docker-compose up -d`
-            
-            `docker run -dp 5432:5432 boop_db`
 
 2. Database settings in server files:
     1. In VSCode or whatever code editor you're using open server/config and create a new file called config.json. 

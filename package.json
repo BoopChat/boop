@@ -5,7 +5,7 @@
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
     "server-dependencies": "npm i",
     "client-dependencies": "cd client && npm i",
-    "install-all-deps": "concurrently \"npm run server-dependencies\" \"npm run client-dependencies\""
+    "install-all-deps": "\"npm i concurrently\"  concurrently \"npm run server-dependencies\" \"npm run client-dependencies\""
   },
   "dependencies": {
     "concurrently": "^6.2.2"
