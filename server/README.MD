@@ -10,14 +10,14 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 
 1. Docker
     1. If you don't have docker desktop download it [here](https://www.docker.com/products/docker-desktop). Make sure it's running.
-    2. Create your container and database by either:
-        1. Using the following command in the terminal:
+    2. Create your container and database:
+        1. From the root:
     
-            `docker run -d -p 5432:5432 --name boop_db -e POSTGRES_PASSWORD=database-password -e POSTGRES_DB=database-name -e POSTGRES_USER=database-user postgres`
+            `npm run server-docker-compose`
 
         OR
 
-        2. Navigating to the server sub directory and using the docker compose file:
+        2. From the server sub directory:
 
             `docker-compose up -d`
 

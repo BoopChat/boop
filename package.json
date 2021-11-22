@@ -5,7 +5,10 @@
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
     "server-dependencies": "cd server && npm i",
     "client-dependencies": "cd client && npm i",
-    "install-all-deps": "npm i &&  concurrently \"npm run server-dependencies\" \"npm run client-dependencies\""
+    "install-all-deps": "npm i &&  npm run server-dependencies && npm run client-dependencies",
+    "server-migration": "cd server && npx sequelize-cli db:migrate",
+    "server-docker-compose": "cd server && docker-compose up -d",
+    "dev-quick-setup": "npm run install-all-deps && npm run server-docker-compose"
   },
   "dependencies": {
     "concurrently": "^6.2.2"

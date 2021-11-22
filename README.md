@@ -7,6 +7,23 @@ along with their mentor David Fowler (Partner Software Architect at Microsoft).
 ## Downloading the project
 [This](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository#cloning-a-repository) GitHub guide can walk you through cloning the repo. 
 
+## Quick Start 
+ 1. Duplicate the sample_config.json file into a new file server/config/config.json.
+ 2. Make a .env file at the root of the server directory, with your values for the variables in server/env.sample
+ 3. Start docket desktop. Let it run in the background.
+ 4. From the root directory run:
+    
+    `npm run dev-quick-setup` 
+
+ 5. After it is complete wait a few seconds for your database container to start running
+ 6. From the root run:
+   
+    `npm run server-migration`
+
+ 7. Run the application in development mode:
+  
+    `npm run dev`
+
 ## Setting up the server
 
 ### Database structure
@@ -17,34 +34,42 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 
 1. Docker
     1. If you don't have docker desktop download it [here](https://www.docker.com/products/docker-desktop). Make sure it's running.
-    1. Create your container and database by either:
-        1. Using the following command in the terminal:
+    2. Create your container and database:
+        1. From the root:
     
-            `docker run -d -p 5432:5432 --name boop_db -e POSTGRES_PASSWORD=database-password -e POSTGRES_DB=database-name -e POSTGRES_USER=database-user postgres`
+            `npm run server-docker-compose`
 
         OR
 
-        1. Navigating to the server sub directory and using the docker compose file:
+        2. From the server sub directory:
 
             `docker-compose up -d`
 
 2. Database settings in server files:
     1. In VSCode or whatever code editor you're using open server/config and create a new file called config.json. 
-    2. Use the sample_config.json file as a guide for the structure of the contents of config.json and fill in the information used in the command from step 1 or the server/docker-compose.yml file.
+    2. Copy the contents of the sample_config.json file into your config.json file.
 
 3. Run database migrations to create your tables in the database in docker (container MUST be running) using:
 
-    Make sure you have all needed dependencies:
+    1. Make sure you have all needed dependencies:
     
     In the project root run:
 
     `npm run install-all-deps`
 
-    Run the migrations:
+    2. Run the migrations:
 
-    `npx sequelize-cli db:migrate `
+       1. from root:
+       
+           `npm run server-migration`
+
+           OR
+
+       2. from server sub-dir 
+        
+           `npx sequelize-cli db:migrate `
     
-4. Run the application in development mode using:
+4. Run the application in development mode using (in the root):
     
     `npm run dev`
 
@@ -142,15 +167,18 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
         Copy the app secret into the .env file in the FACEBOOK_CLIENT_SECRET variable.
 
 ## Using the client
-1. Ensure your server and database container are running:
-    1. Start your container in the docker desktop app
-    2. Navigate to the server directory and make sure you have all dependencies:
-        `npm i`
-    3. Run the server in development mode:
-        `npm run dev`
-2. Run the client:
-    1. Open a second terminal 
-    2. Navigate to the client directory and make sure you have all the dependencies:
-        `npm i`
-    3. Run the client:
-        `npm run`
+1. Ensure you've followed all previous setup instructions.
+2. Ensure the database container is running:
+   1. Start your container in the docker desktop app
+   
+        OR
+
+   2. In the project root run:
+   
+        `docker run -dp 5432:5432 boop_db`
+
+3. Run the server and client in development mode:
+  
+    In the project root run:
+
+    `npm run dev`
