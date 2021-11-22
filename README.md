@@ -20,7 +20,7 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
     2. Create your container and database by either:
         1. Using the following command in the terminal (change the variables in quotes + remove quotes):
     
-            `docker run -d -p 5432:5432 --name "container-name" -e POSTGRES_PASSWORD="database-password" -e POSTGRES_DB="database-name" -e POSTGRES_USER="database-user" postgres`
+            `docker run -d -p 5432:5432 --name "database-container" -e POSTGRES_PASSWORD="database-password" -e POSTGRES_DB="database-name" -e POSTGRES_USER="database-user" postgres`
 
         OR
 
@@ -34,18 +34,17 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 
 3. Run database migrations to create your tables in the database in docker (container MUST be running) using:
 
-    Change to the server dir in the project:
+    Make sure you have all needed dependencies:
+    
+    In the project root run:
 
-    `cd server`
-
-    Install dependencies:
-    `npm i`
+    `npm run install-all-deps`
 
     Run the migrations:
 
     `npx sequelize-cli db:migrate `
     
-4. Run the server in development mode using:
+4. Run the application in development mode using:
     
     `npm run dev`
 
@@ -55,11 +54,9 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 
 1. Installing Dependencies
 
-    Navigate to the Client directory and Run the command:
-        `npm i`
+    In the project root run:
 
-    Navigate to the Server directory and run the command:
-        `npm i`
+    `npm run install-all-deps`
 
 2. Setting up Enviroment Variables
 
@@ -105,6 +102,44 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 
         replace < Google client secret goes here > with the acquired Goolge client sercret.
             e.g GOOGLE_CLIENT_SECRET = ajhasjdhjh48978387jkhfjkhzx
+
+# Getting Facebook Login to Work
+
+1. Setting up Enviroment Variables
+
+    Add the following variables to the .env file:
+
+        FACEBOOK_CLIENT_ID = < Facebook client Id goes here >
+        FACEBOOK_CLIENT_SECRET = < Facebook client secret goes here >
+
+2. Getting Facebook app credentials
+
+    1. While logged into facebook, navigate to the [Facebook for developers](https://developers.facebook.com/) website.
+
+    2. Click "Get Started" in the top right corner of the webage OR MyApps and skip to step 3.
+
+        "Register" by clicking Continue.
+        "Verify account" by adding a cell phone number (e.g 2468435599) and entering the verfication number sent via sms. 
+        Confirm email address.
+        Select an option which decribes you and complete registration. 
+
+    3. Click Create App.
+        Select Consumer.
+        Enter the App display name and create the app.
+
+    4. On the left, next to the App display name you chose, click the down arrow.
+        create test app.
+        click create test app again.
+    
+    5. Under the "Facebook Login" card option, click setup.
+        Select "www".
+        Under site URL enter "http://localhost:3000" and click save.
+        No need to click continue.
+    
+    6. Go to settings on the left and select basic.
+        Copy the app ID into the .env file in the FACEBOOK_CLIENT_ID variable.
+        Click show next to the App secret.
+        Copy the app secret into the .env file in the FACEBOOK_CLIENT_SECRET variable.
 
 ## Using the client
 1. Ensure your server and database container are running:

@@ -11,15 +11,17 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 1. Docker
     1. If you don't have docker desktop download it [here](https://www.docker.com/products/docker-desktop)
     2. Create your container and database by either:
-        1. Using the following command in the terminal (change the variables in quotes + remove quotes):
+        1. Using the following command in the terminal:
     
-            `docker run -d -p 5432:5432 --name "container-name" -e POSTGRES_PASSWORD="database-password" -e POSTGRES_DB="database-name" -e POSTGRES_USER="database-user" postgres`
+            `docker run -d -p 5432:5432 --name boop_db -e POSTGRES_PASSWORD=database-password -e POSTGRES_DB=database-name -e POSTGRES_USER=database-user postgres`
 
         OR
 
-        2. Navigating to the server sub directory and using the docker compose file:
+        1. Navigating to the server sub directory and using the docker compose file:
 
             `docker-compose up -d`
+            
+            `docker run -dp 5432:5432 boop_db`
 
 2. Database settings in server files:
     1. In VSCode or whatever code editor you're using open server/config and create a new file called config.json. 
@@ -48,11 +50,9 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 
 1. Installing Dependencies
 
-    Navigate to the Client directory and Run the command:
-        `npm i`
+    In the project root run:
 
-    Navigate to the Server directory and run the command:
-        `npm i`
+    `npm run install-all-deps`
 
 2. Setting up Enviroment Variables
 
@@ -99,14 +99,6 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
         replace < Google client secret goes here > with the acquired Goolge client sercret.
             e.g GOOGLE_CLIENT_SECRET = ajhasjdhjh48978387jkhfjkhzx
 
-5. Adding the google callback URL to the config.json file
-    
-    view the sample_config.json file for the example.
-    add the following url as the googleCallbackUrl under development:
-    "http://localhost:5000/api/login/auth/google/callback"
-    add the following url as the homeUrl under develoment:
-    "http://localhost:3000"
-
 You are Finished. Login using Google.
 
 
@@ -147,13 +139,5 @@ You are Finished. Login using Google.
         Copy the app ID into the .env file in the FACEBOOK_CLIENT_ID variable.
         Click show next to the App secret.
         Copy the app secret into the .env file in the FACEBOOK_CLIENT_SECRET variable.
-
-3. Adding the faceboook callback URL to the config.json file.
-    
-    view the sample_config.json file for the example.
-    add the following url as the facebookCallbackUrl under development:
-    "http://localhost:5000/api/login/auth/facebook/callback"
-    add the following url as the homeUrl under develoment:
-    "http://localhost:3000"
 
 You are Finished. Login using Facebook.

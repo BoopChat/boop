@@ -1,8 +1,8 @@
 {
     "development": {
-        "username": "root",
-        "password": null,
-        "database": "database_development",
+        "username": "database-user",
+        "password": "database-password",
+        "database": "database-name",
         "host": "127.0.0.1",
         "dialect": "postgres",
         "dialectOptions": {
@@ -12,14 +12,14 @@
         "define": {
             "timestamps": true
         },
-        "homeUrl": "http://www.example.com",
-        "facebookCallbackUrl": "http://www.example.com",
-        "googleCallbackUrl": "http://www.example.com"
+        "homeUrl": "http://localhost:3000",
+        "facebookCallbackUrl": "http://localhost:5000/api/login/auth/facebook/callback",
+        "googleCallbackUrl": "http://localhost:5000/api/login/auth/google/callback"
     },
     "test": {
-        "username": "root",
-        "password": null,
-        "database": "database_test",
+        "username": "database-user",
+        "password": "database-password",
+        "database": "database-name",
         "host": "127.0.0.1",
         "dialect": "postgres",
         "dialectOptions": {
@@ -29,14 +29,14 @@
         "define": {
             "timestamps": true
         },
-        "homeUrl": "http://www.example.com",
-        "facebookCallbackUrl": "http://www.example.com",
-        "googleCallbackUrl": "http://www.example.com"
+        "homeUrl": "http://localhost:3000",
+        "facebookCallbackUrl": "http://localhost:5000/api/login/auth/facebook/callback",
+        "googleCallbackUrl": "http://localhost:5000/api/login/auth/google/callback"
     },
     "production": {
-        "username": "root",
-        "password": null,
-        "database": "database_production",
+        "username": "database-user",
+        "password": "database-password",
+        "database": "database-name",
         "host": "127.0.0.1",
         "dialect": "postgres",
         "dialectOptions": {
@@ -46,8 +46,8 @@
         "define": {
             "timestamps": true
         },
-        "homeUrl": "http://wwww.example.com",
-        "facebookCallbackUrl": "http://www.example.com",
-        "googleCallbackUrl": "http://www.example.com"
+        "homeUrl": "http://localhost:3000",
+        "facebookCallbackUrl": "http://localhost:5000/api/login/auth/facebook/callback",
+        "googleCallbackUrl": "http://localhost:5000/api/login/auth/google/callback"
     }
 }
