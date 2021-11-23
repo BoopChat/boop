@@ -17,7 +17,7 @@ along with their mentor David Fowler (Partner Software Architect at Microsoft).
 
    2. In the project root run:
    
-        `docker run -dp 5432:5432 boop_db`
+        `npm run docker-start`
 
 4. Run the server and client in development mode:
   

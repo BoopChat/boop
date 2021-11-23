@@ -14,7 +14,12 @@
         },
         "homeUrl": "http://localhost:3000",
         "facebookCallbackUrl": "http://localhost:5000/api/login/auth/facebook/callback",
-        "googleCallbackUrl": "http://localhost:5000/api/login/auth/google/callback"
+        "googleCallbackUrl": "http://localhost:5000/api/login/auth/google/callback",
+        "userInfo": {
+            "email": "<your-email-before-@gmail.com>",
+            "firstName": "<you-first-name>",
+            "lastName": "<you-last-name>"
+        }
     },
     "test": {
         "username": "database-user",

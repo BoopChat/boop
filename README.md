@@ -8,21 +8,36 @@ along with their mentor David Fowler (Partner Software Architect at Microsoft).
 [This](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository#cloning-a-repository) GitHub guide can walk you through cloning the repo. 
 
 ## Quick Start 
- 1. Duplicate the sample_config.json file into a new file server/config/config.json.
+ 1. Duplicate the sample_config.json file into a new file server/config/config.json. Fill in development.userInfo with your email, first name and last name.
  2. Make a .env file at the root of the server directory, with your values for the variables in server/env.sample
- 3. Start docket desktop. Let it run in the background.
- 4. From the root directory run:
+ 3. Start [docker desktop](https://www.docker.com/products/docker-desktop). Let it run in the background.
+ 4. From the root directory run the following to install all dependencies and create the database:
     
     `npm run dev-quick-setup` 
 
  5. After it is complete wait a few seconds for your database container to start running
- 6. From the root run:
+ 6. From the root run the following to run the migrations and seed the database:
    
-    `npm run server-migration`
+    `npm run dev-quick-server`
 
  7. Run the application in development mode:
   
     `npm run dev`
+
+## Quick resume
+Assuming you've already installed all dependencies, created the database, run all migrations and seeded the database:
+1. Start the database container and run the app in development mode:
+   
+   `npm run dev-quick-resume`
+   
+   OR
+
+2. If the database container is already running, start the app in development mode:
+   
+   `npm run dev`
+
+<br>
+<br>
 
 ## Setting up the server
 
@@ -47,15 +62,16 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 
 2. Database settings in server files:
     1. In VSCode or whatever code editor you're using open server/config and create a new file called config.json. 
-    2. Copy the contents of the sample_config.json file into your config.json file.
+    2. Copy the contents of the sample_config.json file into your config.json file. 
+   (Note the content must match the docker compose file, so if you made changes there reflect them in this file)
 
 3. Run database migrations to create your tables in the database in docker (container MUST be running) using:
 
     1. Make sure you have all needed dependencies:
     
-    In the project root run:
+        In the project root run:
 
-    `npm run install-all-deps`
+        `npm run install-all-deps`
 
     2. Run the migrations:
 
@@ -175,7 +191,7 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 
    2. In the project root run:
    
-        `docker run -dp 5432:5432 boop_db`
+        `npm run docker-start`
 
 3. Run the server and client in development mode:
   
