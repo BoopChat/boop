@@ -13,10 +13,6 @@ global.io.use((socket, next) => {
         if (!user) {
             next(new Error("No user information stored in JWT"));
         } else {
-<<<<<<< HEAD
-=======
-            logger.info("joining " + user.id);
->>>>>>> ba8141d3a7be2f72253b6015b45dd30152c7d911
             socket.join(user.id);
             next();
         }
