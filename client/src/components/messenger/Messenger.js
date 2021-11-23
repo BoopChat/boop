@@ -27,7 +27,7 @@ const Messenger = () => {
     const updateUser = (userInfo) => dispatch(setUserInfo(userInfo));
 
     const [socket] = useState(() => {
-        let soc = io("http://localhost:5000", {
+        let soc = io({
             auth: {
                 token,
             },
