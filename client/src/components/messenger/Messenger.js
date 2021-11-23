@@ -32,9 +32,6 @@ const Messenger = () => {
                 token,
             },
         });
-        soc.on("connect", () => console.log("connect: ", soc.id));
-        soc.on("test", (message) => console.log(message));
-        soc.on("connect_error", (error) => console.log(error));
         return soc;
     });
 

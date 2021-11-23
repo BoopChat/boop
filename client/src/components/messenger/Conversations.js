@@ -110,10 +110,9 @@ const Conversations = ({ selectConversation, socket }) => {
                 let { title, list } = conversationDetails;
                 if (title.length < 1) {
                     // create a title from the chosen participants' names
-                    let chop = list.length < 2 ? 20 : list.length < 3 ? 9 : 5;
                     title = list
                         .map((i) => i.displayName)
-                        .reduce((prevValue, curValue) => prevValue + curValue.substring(0, chop) + ", ", "You, ")
+                        .reduce((prevValue, curValue) => prevValue + curValue + ", ", "You, ")
                         .substring(0, 25);
                 }
                 await ConversationsController.createConversation(

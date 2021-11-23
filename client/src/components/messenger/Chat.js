@@ -108,25 +108,35 @@ const Chat = ({ conversationId, title, participants, socket }) => {
         chatbox.current.scrollTop = chatbox.current.scrollHeight;
     };
 
-    useEffect(() => {
-        // initially get all messages from the server
-        const runAsync = async () => {
-            setMessages((await ChatController.getMessages(token, conversationId))?.reverse());
-        };
-        runAsync();
+    const addNewMessages = (messageList) => {
+        // instead of repeatly calling setMessages, add valid messages to list and then call setMessages once
+        let add = [];
+        messageList.forEach(msg => {
+            // if message is not already in the list, mark it for adding
+            // reduce the search space by only search the last messageList.length - 1 messages
+            if (!messages.slice(-messageList.length-1).find(({ id }) => id === msg.id))
+                add.push(msg);
+        });
+        setMessages(prevMessages => prevMessages.length > 1 ? [...prevMessages, ...add] : add);
+    };
 
+    useEffect(() => {
+        setMessages([]); // if switching conversations, clear the ui from previous messages
         ChatController.init(socket);
         ChatController.clear(); // clear previous listener if exist
         // as new messages come in from the server add them to messages list
-        ChatController.listen((message) =>
-            setMessages((prevMessages) => {
-                // if the new message is a message for the currently opened chat
-                if (message.newMessage.conversationId === conversationId.toString())
-                    return [...prevMessages, message.newMessage];
-                // if not simply ignore it in the UI
-                else return prevMessages;
-            })
-        );
+        ChatController.listen((message) => {
+            // if the new message is a message for the currently opened chat
+            // if not simply ignore it in the ui
+            if (message.newMessage.conversationId === conversationId.toString())
+                addNewMessages([message.newMessage]);
+        });
+
+        // get all messages (this will include any live messages caught by above code)
+        const runAsync = async () => {
+            addNewMessages((await ChatController.getMessages(token, conversationId))?.reverse());
+        };
+        runAsync();
     }, [conversationId]);
 
     const showChatOptions = () => setOptionsDialog(true);
@@ -170,8 +180,11 @@ const Chat = ({ conversationId, title, participants, socket }) => {
             />
             {messages && messages.length > 0 ? (
                 <ul className="chat_section" ref={chatbox}>
-                    {messages.map((msg, key) => (
-                        <li key={key} className={"message " + (msg.senderId === id ? "author" : "friend") + "_message"}>
+                    {messages.map((msg) => (
+                        <li
+                            key={msg.id}
+                            className={"message " + (msg.senderId === id ? "author" : "friend") + "_message"}
+                        >
                             <div className="info">
                                 <span className="user" title={msg.sender?.displayName}>
                                     {msg.sender?.displayName}
