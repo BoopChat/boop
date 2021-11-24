@@ -2,6 +2,8 @@ import chats from "../../assets/chats.svg";
 import contacts from "../../assets/contacts.svg";
 import logout from "../../assets/logout.svg";
 import settings from "../../assets/settings.svg";
+import sun from "../../assets/sun.svg";
+import moon from "../../assets/moon.svg";
 import "../../styles/sidebar.css";
 
 import styled from "styled-components";
@@ -12,7 +14,7 @@ import { useDispatch } from "react-redux";
 import { logOut } from "../login/userSlice";
 
 const MenuButton = styled.button`
-    background-color: black;
+    background-color: var(--panel);
     border: none;
     width: 40px;
     height: 40px;
@@ -27,7 +29,7 @@ const MenuButton = styled.button`
     &::before,
     &::after {
         content: "";
-        background-color: white;
+        background-color: var(--white);
         height: 2px;
         width: 16px;
         position: absolute;
@@ -46,14 +48,14 @@ const MenuButton = styled.button`
 `;
 
 const SideItems = styled.ul`
-    color: white;
-    background-color: black;
+    color: var(--white);
+    background-color: inherit;
     list-style: none;
     display: flex;
     flex-direction: column;
     align-items: center;
     position: absolute;
-    top: 120px;
+    top: 90px;
     left: 0;
     width: ${(props) => (props.clicked ? "170px" : "56px")};
     transition: all 0.3s ease;
@@ -70,20 +72,20 @@ const Text = styled.span`
 `;
 
 const Profile = styled.div`
-    color: white;
-    background-color: black;
+    color: var(--white);
+    background-color: var(--panel);
     list-style: none;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: left;
     position: absolute;
-    top: 10px;
+    top: 0;
     left: 0;
     max-width: ${(props) => (props.clicked ? "440px" : "56px")};
     transition: all 0.3s ease;
-    border-radius: 0 30px 30px 0;
-    padding: 12px 4px;
+    border-radius: 0 26px ${(props) => (props.clicked ? "26px" : "0px")} 0;
+    padding: 14px 5px;
 `;
 
 const Details = styled.div`
@@ -110,6 +112,10 @@ const Sidebar = ({ username, userPic, userName }) => {
     const [profileClick, setProfileClick] = useState(false);
     const handleProfileClick = () => setProfileClick(!profileClick);
 
+    const [themeIcon, setThemeIcon] = useState(() => {
+        return document.getElementsByTagName("body")[0].classList[0] === "dark" ? sun : moon;
+    });
+
     // Used to send actions to the redux store to change its state
     const dispatch = useDispatch();
 
@@ -130,6 +136,19 @@ const Sidebar = ({ username, userPic, userName }) => {
         if (success) {
             // Logs the user out.
             dispatch(logOut());
+        }
+    };
+
+    const toggleTheme = () => {
+        let body = document.getElementsByTagName("body")[0];
+        if (body.classList[0] === "light") {
+            body.classList.replace("light", "dark");
+            localStorage.setItem("theme", "dark");
+            setThemeIcon(sun);
+        } else {
+            body.classList.replace("dark", "light");
+            localStorage.setItem("theme", "light");
+            setThemeIcon(moon);
         }
     };
 
@@ -163,6 +182,9 @@ const Sidebar = ({ username, userPic, userName }) => {
                         <Text clicked={click}>Settings</Text>
                     </NavLink>
                 </SideItems>
+                <button id="toggleTheme" onClick={toggleTheme}>
+                    <img src={themeIcon} alt="toggle theme" />
+                </button>
             </div>
         </div>
     );

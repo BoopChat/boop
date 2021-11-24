@@ -1,5 +1,5 @@
 #sidebar_container {
-    background-color: black;
+    background-color: var(--panel);
     width: 56px;
     height: 60vh;
     margin-top: 16px;
@@ -23,17 +23,17 @@ a {
 }
 
 a > span {
-    color: white;
+    color: var(--white);
 }
 
 a:hover, a.active {
-    border-right: 4px solid white;
+    border-right: 4px solid var(--white);
 }
 
 a > img {
     width: 20px;
     height: auto;
-    filter: invert(92%) sepia(4%) saturate(1033%) hue-rotate(169deg) brightness(78%) contrast(85%);
+    filter: invert(100%) sepia(96%) saturate(15%) hue-rotate(212deg) brightness(104%) contrast(104%);
 }
 
 a:hover > img {
@@ -47,7 +47,7 @@ a:hover > img {
 }
 
 #profile:hover > img {
-    border: 2px solid grey;
+    border: 2px solid var(--bg-2);
     padding: 2px;
     border-radius: 50%;
     cursor: pointer;
@@ -74,4 +74,21 @@ a:hover > img {
     padding: 0;
     opacity: .5;
     cursor: pointer;
+}
+
+#toggleTheme {
+    position: absolute;
+    top: 335px;
+    right: 16px;
+    z-index: 2;
+    background-color: inherit;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+#toggleTheme img {
+    filter: invert(100%) sepia(96%) saturate(15%) hue-rotate(212deg) brightness(104%) contrast(104%);
 }

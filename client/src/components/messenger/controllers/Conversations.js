@@ -77,10 +77,9 @@ export const ConversationsController = {
         });
 
         const result = await res.json();
-        return {
-            // return msg to display to user (whether success or fail)
+        return { // return msg to display to user (whether success or fail)
             msg: result.msg,
-            success: res.status === 200,
+            success: result.status === 200
         };
-    },
+    }
 };

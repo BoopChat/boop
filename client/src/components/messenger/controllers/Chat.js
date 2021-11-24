@@ -22,7 +22,7 @@ export const ChatController = {
     clear: () => {
         socket?.off("newMessage");
     },
-    evaluateElapsed: (sent) => {
+    evaluateElapsed: sent => {
         // convert timestamp into an elapsed message
         let diff = Date.now() - new Date(sent).getTime();
         let min = 60 * 1000;

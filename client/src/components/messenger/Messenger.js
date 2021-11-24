@@ -54,16 +54,16 @@ const Messenger = () => {
                     </Switch>
                 </div>
                 <div id="chat_panel">
-                    {currentConvo.id ? (
+                    {currentConvo.id ?
                         <Chat
                             conversationId={currentConvo.id}
                             title={currentConvo.title}
                             participants={currentConvo.participants}
                             socket={socket}
                         />
-                    ) : (
-                        <></>
-                    )}
+                        : <></>
+                    }
+
                 </div>
             </div>
         </div>

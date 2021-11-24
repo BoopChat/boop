@@ -18,15 +18,16 @@ import options from "../../assets/options.svg";
 const optionsEnum = {
     noAction: 0,
     successor: 1,
-    leave: 2,
+    leave: 2
 };
 
 const OptionsDialog = ({ open, onClose, img, title, participants }) => {
-    const handleClose = (value) => onClose(value);
+
+    const handleClose = value => onClose(value);
 
     return (
         <div>
-            <Dialog fullScreen open={open} onClose={() => handleClose(optionsEnum.noAction)}>
+            <Dialog id="chat_options_dialog" fullScreen open={open} onClose={() => handleClose(optionsEnum.noAction)}>
                 <AppBar sx={{ position: "relative" }}>
                     <Toolbar>
                         <IconButton
@@ -45,26 +46,27 @@ const OptionsDialog = ({ open, onClose, img, title, participants }) => {
                         </Button>
                     </Toolbar>
                 </AppBar>
-                <img src={img} alt="chat" className="chat_image_options" />
+                <img src={img} alt="chat" className="chat_image_options"/>
                 <p></p>
-                <hr />
+                <hr/>
                 <span className="participant_label">{participants.length} participants</span>
-                {participants.map((participant, key) => (
-                    <div className="contact_item" key={key}>
-                        <div className="img_and_name">
-                            <img src={participant.imageUrl} alt="participant_img" />
-                            <span>{participant.displayName}</span>
+                {
+                    participants.map((participant, key) =>
+                        <div className="contact_item" key={key}>
+                            <div className="img_and_name">
+                                <img src={participant.imageUrl} alt="participant_img"/>
+                                <span>{participant.displayName}</span>
+                            </div>
                         </div>
-                    </div>
-                ))}
-                <hr />
+                    )
+                }
+                <hr/>
                 <p></p>
-                <button className="btn_positive" onClick={() => handleClose(optionsEnum.successor)}>
-                    Set Successor
-                </button>
-                <button className="btn_leave" onClick={() => handleClose(optionsEnum.leave)}>
-                    Leave Conversation
-                </button>
+                <button
+                    className="btn_positive"
+                    onClick={() => handleClose(optionsEnum.successor)}
+                >Set Successor</button>
+                <button className="btn_leave" onClick={() => handleClose(optionsEnum.leave)}>Leave Conversation</button>
             </Dialog>
         </div>
     );
@@ -95,8 +97,8 @@ const Chat = ({ conversationId, title, participants, socket }) => {
         // if text box is empty dont bother trying to send message
         if (text?.length < 1) return;
         let result = await ChatController.sendMessage(token, conversationId, text);
-        if (result.success) setText("");
-        // clear the text box
+        if (result.success)
+            setText(""); // clear the text box
         else {
             // display error message
             alertDialog.display({
@@ -105,7 +107,29 @@ const Chat = ({ conversationId, title, participants, socket }) => {
             });
         }
         // scroll to the bottom of the chat where new message has been rendered
-        chatbox.current.scrollTop = chatbox.current.scrollHeight;
+        chatbox.current.scrollTop = chatbox?.current?.scrollHeight;
+    };
+
+    const onDialogClose = async action => {
+        setOptionsDialog(false);
+        let result;
+        switch (action) {
+            case optionsEnum.leave:
+                if (participants.length === 1) // if 1 on 1 conversation, simply leave
+                    result = await ConversationsController.leaveConversation(token, conversationId);
+                else {
+                    // check if user is admin
+                    // currently cant check so try to leave and fail if admin
+                    result = await ConversationsController.leaveConversation(token, conversationId);
+                }
+                break;
+        }
+        if (result) {
+            alertDialog.display({
+                title: result.success ? "Success" : "Error",
+                message: result.msg
+            });
+        }
     };
 
     const addNewMessages = (messageList) => {
@@ -141,29 +165,6 @@ const Chat = ({ conversationId, title, participants, socket }) => {
 
     const showChatOptions = () => setOptionsDialog(true);
 
-    const onDialogClose = async (action) => {
-        setOptionsDialog(false);
-        let result;
-        switch (action) {
-            case optionsEnum.leave:
-                if (participants.length === 1)
-                    // if 1 on 1 conversation, simply leave
-                    result = await ConversationsController.leaveConversation(token, conversationId);
-                else {
-                    // check if user is admin
-                    // currently cant check so try to leave and fail if admin
-                    result = await ConversationsController.leaveConversation(token, conversationId);
-                }
-                break;
-        }
-        if (result) {
-            alertDialog.display({
-                title: result.success ? "Success" : "Error",
-                message: result.msg,
-            });
-        }
-    };
-
     return (
         <div className="chat_container">
             <header className="chat_title">
@@ -180,15 +181,13 @@ const Chat = ({ conversationId, title, participants, socket }) => {
             />
             {messages && messages.length > 0 ? (
                 <ul className="chat_section" ref={chatbox}>
-                    {messages.map((msg) => (
+                    {messages.map(msg =>
                         <li
                             key={msg.id}
                             className={"message " + (msg.senderId === id ? "author" : "friend") + "_message"}
                         >
                             <div className="info">
-                                <span className="user" title={msg.sender?.displayName}>
-                                    {msg.sender?.displayName}
-                                </span>
+                                <span className="user" title={msg.sender?.displayName}>{msg.sender?.displayName}</span>
                                 <span className="time">{ChatController.evaluateElapsed(msg.createdAt)}</span>
                             </div>
                             <div className="avatar" href="/">
@@ -196,12 +195,11 @@ const Chat = ({ conversationId, title, participants, socket }) => {
                                     alt="user avatar"
                                     src={msg.sender?.imageUrl}
                                     title={msg.sender?.displayName}
-                                    width="35"
                                 />
                             </div>
                             <p>{msg.content}</p>
                         </li>
-                    ))}
+                    )}
                 </ul>
             ) : (
                 <div></div>

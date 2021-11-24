@@ -3,7 +3,8 @@
     margin: auto 0 auto 10px;
     width: 40%;
     height: 95%;
-    background-color: white;
+    background-color: var(--bg);
+    border-radius: 15px 0px 0px 15px;
 }
 
 #panels {
@@ -38,8 +39,8 @@ div.contact_item, div.chat_item {
 
 div.contact_item:hover, div.chat_item:hover {
     cursor: pointer;
-    background-color: rgb(169, 216, 255);
-    color: white;
+    background-color: var(--sec-blue);
+    color: var(--text-hover);
 }
 
 div.chat_item {
@@ -62,7 +63,7 @@ img.skeleton {
     }
 
     100% {
-        background-color: #ffffff;
+        background-color: var(--bg);
     }
 }
 
@@ -90,19 +91,19 @@ div.img_and_name {
 }
 
 div.status_online {
-    background-color: #62b93c;
+    background-color: var(--online);
 }
 
 div.status_away {
-    background-color: #f7e01b;
+    background-color: var(--away);
 }
 
 div.status_dnd {
-    background-color: #f71a30;
+    background-color: var(--dnd);
 }
 
 div.status_offline {
-    border: #dfdfdf solid 2px;
+    border: var(--offline) solid 2px;
 }
 
 div#contacts, div#conversations {
@@ -132,6 +133,7 @@ button.options:hover {
 
 button.options > img {
     width: 20px;
+    filter: var(--filter);
 }
 
 @media screen and (min-width: 768px) {
@@ -143,13 +145,13 @@ button.options > img {
 input.addContact {
     padding: 10px 5px;
     border: none;
-    border-top: 1px solid #60686d;
+    border-top: 1px solid var(--border);
     outline: none;
 }
 
 input.addConversation {
     padding: 10px 5px;
-    border: 1px solid #60686d;
+    border: 1px solid var(--border);
     border-left: none;
     border-right: none;
     outline: none;
@@ -158,14 +160,14 @@ input.addConversation {
 
 button.addContact, button.addConversation {
     padding: 10px;
-    color: white;
-    background-color:rgb(64, 108, 255);
+    color: var(--light-text);
+    background-color: var(--prim-blue);
     border: none;
 }
 
 button.addContact:hover, button.addConversation:hover {
     cursor: pointer;
-    background-color:rgb(17, 71, 248);
+    background-color: var(--sec-blue);
 }
 
 div.name_and_msg, div.time_and_badge {
@@ -187,13 +189,13 @@ span.chat_name {
 }
 
 span.chat_msg {
-    color:#808080;
+    color:var(--text-fade);
     font-size: 12px;
 }
 
 div.unread {
-    background-color: #62b93c;
-    color: white;
+    background-color: var(--online);
+    color: var(--light-text);
     font-size: 12px;
     text-align: center;
     border-radius: 50%;
@@ -205,7 +207,7 @@ div.unread {
 div.setting_item {
     display: flex;
     justify-content: space-between;
-    color: rgb(20, 20, 20);
+    color: var(--text);
     margin-top: 40px;
 }
 
@@ -224,6 +226,10 @@ button.edit:hover {
     cursor: pointer;
 }
 
+button.edit img {
+    filter: var(--filter);
+}
+
 div.setting_item input {
     padding: 5px;
     margin-top: 5px;
@@ -231,7 +237,7 @@ div.setting_item input {
 }
 
 div.setting_item input:focus {
-    outline:rgb(19, 119, 233) 2px solid;
+    outline: var(--sec-blue) 2px solid;
     border:none;
 }
 
@@ -276,8 +282,8 @@ div.trash_and_status {
 }
 
 .btn_confirm {
-    color: #FFFFFF;
-    background-color: rgb(0, 153, 255);
+    color: var(--light-text);
+    background-color: var(--prim-blue);
     border-radius: 5px;
     padding: 6px 18px;
     outline: none;
@@ -288,13 +294,13 @@ div.trash_and_status {
 }
 
 .btn_confirm:hover {
-    background-color: rgb(0, 133,233 );
+    background-color: var(--sec-blue);
     cursor: pointer;
 }
 
 .btn_deny {
-    color: #FFFFFF;
-    background-color: rgb(247, 16, 16);
+    color: var(--light-text);
+    background-color: var(--prim-red);
     border-radius: 5px;
     padding: 6px 18px;
     outline: none;
@@ -305,6 +311,6 @@ div.trash_and_status {
 }
 
 .btn_deny:hover {
-    background-color: rgb(237, 6, 6);
+    background-color: var(--sec-red);
     cursor: pointer;
 }
