@@ -2,7 +2,17 @@
   "scripts": {
     "client": "cd client && npm start",
     "server": "cd server && npm run dev",
-    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "server-dependencies": "cd server && npm i",
+    "client-dependencies": "cd client && npm i",
+    "install-all-deps": "npm i &&  npm run server-dependencies && npm run client-dependencies",
+    "server-migration": "cd server && npx sequelize-cli db:migrate",
+    "server-seed": "cd server && npx sequelize-cli db:seed --seed 20211122205724-dev_seeder.js",
+    "server-docker-compose": "cd server && docker-compose up -d",
+    "docker-start": "docker start /server_boop_db_1",
+    "dev-quick-setup": "npm run install-all-deps && npm run server-docker-compose",
+    "dev-quick-server": "npm run server-migration && npm run server-seed",
+    "dev-quick-resume": "npm run docker-start && npm run dev"
   },
   "dependencies": {
     "concurrently": "^6.2.2"
