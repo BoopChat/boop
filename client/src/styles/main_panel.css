@@ -2,9 +2,24 @@
     padding: 10px;
     margin: auto 0 auto 10px;
     width: 40%;
-    height: 90vh;
+    height: 95%;
     background-color: white;
-    border-right: #60686d 2px solid;
+}
+
+#panels {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+h1 {
+    font-size: 16px;
+}
+
+@media screen and (min-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
 }
 
 div.container {
@@ -13,7 +28,7 @@ div.container {
 }
 
 div.contact_item, div.chat_item {
-    background-color: white;
+    background-color: inherit;
     padding: 30px 15px;
     height: 50px;
     display: flex;
@@ -31,10 +46,30 @@ div.chat_item {
     padding: 34px 18px;
 }
 
+div.skeleton-text {
+    width: 75%;
+    height: 4px;
+    border-radius: 2px;
+}
+
+img.skeleton {
+    animation: skeleton-loading 1s linear infinite alternate;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-color: #d6d5d5;
+    }
+
+    100% {
+        background-color: #ffffff;
+    }
+}
+
 div.contact_item img, div.chat_item img, ul.add_participants img {
     border-radius: 50%;
     height: 35px;
-    width: auto;
+    width: 35px;
 }
 
 div.contact_item span {
@@ -96,7 +131,13 @@ button.options:hover {
 }
 
 button.options > img {
-    width: 35px;
+    width: 20px;
+}
+
+@media screen and (min-width: 768px) {
+    button.options > img {
+        width: 35px;
+    }
 }
 
 input.addContact {

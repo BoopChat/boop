@@ -1,8 +1,8 @@
 #chat_panel {
-    height: 90vh;
-    width: 54%;
+    height: 95%;
+    width: 58%;
     margin: auto 0px;
-    background-color: white;
+    background-color: #dadada;
 }
 
 div.chat_container {
@@ -19,13 +19,17 @@ header.chat_title {
     color: white;
     background-color: rgb(64, 108, 255);
     text-align: center;
+    display: flex;
+    justify-content: space-between;
 }
 
 ul.chat_section {
     list-style: none;
-    margin: 20px;
+    padding: 20px;
     overflow-y: scroll;
-    height: 75%;
+    min-height: 79%;
+    padding-bottom: 0;
+    background-color: inherit;
 }
 
 li.message {
@@ -36,7 +40,7 @@ li.message {
 }
 
 li.message.friend_message {
-    color: #808080;
+    color: #999797;
 }
 
 li.message.author_message {
@@ -106,16 +110,18 @@ li.message p {
     width: 50%;
     position: relative;
     word-wrap: break-word;
-    background-color: #76fdf5;
+    background-color: #0061f9d6;
     font-size: 12px;
 }
 
 li.message.friend_message p {
     background-color: #f3f3f3;
+    color: #242323f0;
 }
 
 li.message.author_message p {
     order: 1;
+    color: #f3f3f3;;
 }
 
 li.friend_message p:after, li.author_message p:after {
@@ -138,22 +144,30 @@ li.author_message p:after {
     right: -8px;
 }
 
-div.interactions {
+form.interactions {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-content: flex-end;
+    padding: 20px;
+    background-color: rgb(64, 108, 255);
 }
 
-div.interactions input {
+form.interactions input {
     padding: 8px;
     width: 85%;
     outline: none;
+    margin-right: 2px;
 }
 
-div.interactions button {
+form.interactions input:focus {
+    outline: 2px solid rgb(96, 132, 255);
+}
+
+form.interactions button {
     border: none;
-    color: white;
-    background-color:rgb(64, 108, 255);
+    color: rgb(64, 108, 255);
+    background-color: white;
     padding: 6px;
     width: 15%;
     border-radius: 2px;
@@ -161,6 +175,58 @@ div.interactions button {
     font-size: 14px;
 }
 
-div.interactions button:hover {
+form.interactions button:hover {
     cursor: pointer;
+}
+
+header img {
+    border-radius: 50%;
+    height: 30px;
+    width: auto;
+}
+
+header img.chat_options:hover {
+    cursor: pointer;
+}
+
+img.chat_image_options {
+    height: 275px;
+    width: 100%;
+    object-fit: contain;
+    margin-top: 10px;
+}
+
+button.btn_leave, button.btn_positive {
+    color: #FFFFFF;
+    border-radius: 5px;
+    padding: 15px 18px;
+    outline: none;
+    border: none;
+    width: 99%;
+    height: 55px;
+    margin: 2px auto;
+}
+
+button.btn_leave {
+    background-color: rgb(255, 37, 37);
+}
+
+.btn_leave:hover {
+    background-color: rgb(224, 4, 4);
+}
+
+button.btn_positive {
+    background-color: rgb(0, 153, 255);
+}
+
+button.btn_positive:hover {
+    background-color: rgb(0, 133,233 );
+}
+
+button.btn_leave, button.btn_positive {
+    cursor: pointer;
+}
+
+span.participant_label {
+    padding: 5px 8px;
 }
