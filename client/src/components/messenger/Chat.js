@@ -97,7 +97,7 @@ const Chat = ({ conversationId, title, participants, socket }) => {
         // if text box is empty dont bother trying to send message
         if (text?.length < 1) return;
         let result = await ChatController.sendMessage(token, conversationId, text);
-        if (result.success) 
+        if (result.success)
             setText(""); // clear the text box
         else {
             // display error message
@@ -109,14 +109,6 @@ const Chat = ({ conversationId, title, participants, socket }) => {
         // scroll to the bottom of the chat where new message has been rendered
         chatbox.current.scrollTop = chatbox?.current?.scrollHeight;
     };
-
-    useEffect(() => {
-        // initially get all messages from the server
-        const runAsync = async () => setMessages((await ChatController.getMessages(token, conversationId))?.reverse());
-        runAsync();
-        // as new messages come in from the server add them to messages list
-        ChatController.listen(message => setMessages([...messages, message]));
-    }, []);
 
     const onDialogClose = async action => {
         setOptionsDialog(false);
@@ -207,7 +199,7 @@ const Chat = ({ conversationId, title, participants, socket }) => {
                             </div>
                             <p>{msg.content}</p>
                         </li>
-                    ))}
+                    )}
                 </ul>
             ) : (
                 <div></div>

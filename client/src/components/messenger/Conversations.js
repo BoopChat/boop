@@ -122,7 +122,8 @@ const Conversations = ({ selectConversation, socket }) => {
                         .reduce((prevValue, curValue) => prevValue + curValue + ", ", "You, ")
                         .substring(0, 25);
                 }
-                await ConversationsController.createConversation(token, list.map(i => i.id), title, updateConversations);
+                await ConversationsController.createConversation(
+                    token, list.map(i => i.id), title, updateConversations);
             };
             runAsync();
         }

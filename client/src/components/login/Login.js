@@ -5,12 +5,12 @@ import { logIn, setToken, setUserInfo } from "./userSlice";
 import { useSelector } from "react-redux";
 import React from "react";
 
+import Messenger from "../messenger/Messenger";
+import Loader from "./Loader";
+
 import GoogleButton from "../GoogleButton.js";
 import FacebookButton from "../FacebookButton.js";
 import TwitterButton from "../TwitterButton.js";
-import Messenger from "../messenger/Messenger";
-
-import Loader from "./Loader";
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -59,20 +59,24 @@ const Login = () => {
         return !(loading.animated && loading.fetched);
     };
 
+    const LoginForm = () => {
+        return (
+            <div className="sign-in-container">
+                <h1>Boop Chat</h1>
+                <div className="sign_btns">
+                    <GoogleButton text="Continue with Google" />
+                    <FacebookButton text="Continue with facebook" />
+                    <TwitterButton text="Continue with twitter" />
+                </div>
+            </div>
+        );
+    };
+
     return (
         isLoading() ?
             <Loader text="Getting everything set for you"/> :
             (
-                isLoggedIn ? <Messenger/> : (
-                    <div className="sign-in-container">
-                        <h1>Boop Chat</h1>
-                        <div className="sign_btns">
-                            <GoogleButton text="Continue with Google" />
-                            <FacebookButton text="Continue with facebook" />
-                            <TwitterButton text="Continue with twitter" />
-                        </div>
-                    </div>
-                )
+                isLoggedIn ? <Messenger/> : <LoginForm/>
             )
     );
 };
