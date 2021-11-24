@@ -36,7 +36,7 @@ const ConfirmDialog = ({ open, onClose, username }) => {
     );
 };
 
-const ContactItem = ({ img, username, status="offline", id, triggerRefresh }) => {
+const ContactItem = ({ img, username, status, id, triggerRefresh }) => {
 
     const [imageDialogOpen, setImageDialogOpen] = useState(false);
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);

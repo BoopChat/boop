@@ -22,31 +22,39 @@ module.exports.addConversation = async (req, res) => {
 
     try {
         //create the conversation with the input attributes
-        let conversationInfo = await Conversation.create({
-            title: req.body.title,
-            imageUrl: req.body.imageUrl,
-            // if the options were null set their values to false else use the input values
-            userEditableImage: req.body.userEditableImage==null ? false :  req.body.userEditableImage,
-            userEditableTitle: req.body.userEditableTitle==null ? false :  req.body.userEditableTitle,
-        }, { transaction: t });
+        let conversationInfo = await Conversation.create(
+            {
+                title: req.body.title,
+                imageUrl: req.body.imageUrl,
+                // if the options were null set their values to false else use the input values
+                userEditableImage: req.body.userEditableImage == null ? false : req.body.userEditableImage,
+                userEditableTitle: req.body.userEditableTitle == null ? false : req.body.userEditableTitle,
+            },
+            { transaction: t }
+        );
 
         // add user creating convo as admin
-        await Participant.create({
-            userId: userId,
-            conversationId: conversationInfo.id,
-            isAdmin: true
-        }, { transaction: t });
+        await Participant.create(
+            {
+                userId: userId,
+                conversationId: conversationInfo.id,
+                isAdmin: true,
+            },
+            { transaction: t }
+        );
 
         // add all other users in the participants array as participants in the conversation
         let isAdmin = participants.length === 1;
 
-        const promises = participants.map(async participant => {
-            await Participant.create({
-                userId: participant,
-                conversationId: conversationInfo.id,
-                isAdmin: isAdmin
-            },
-            { transaction: t });
+        const promises = participants.map(async (participant) => {
+            await Participant.create(
+                {
+                    userId: participant,
+                    conversationId: conversationInfo.id,
+                    isAdmin: isAdmin,
+                },
+                { transaction: t }
+            );
         });
 
         await Promise.all(promises);
@@ -62,21 +70,23 @@ module.exports.addConversation = async (req, res) => {
                 as: "participants",
                 // exclude the requesting user's info from the participants list
                 where: {
-                    [db.Sequelize.Op.not]: [
-                        { id: userId }
-                    ]
+                    [db.Sequelize.Op.not]: [{ id: userId }],
                 },
                 // specify what atributes you want returned
                 attributes: ["displayName", "imageUrl"],
                 // Prevents the entire belongs-to-many mapping object (Participant)
                 // from being returned
-                through: { attributes: [] }
-            }
+                through: { attributes: [] },
+            },
         });
         //return a success message + the newly created conversation
         let msg = "Conversation successfully created";
         logger.info(msg + ":" + conversation.id);
-        return res.status(201).send({ msg, conversation });
+        // convert array of participants string ids to numbers
+        const participantIds = participants.map((id) => Number(id));
+        // Emit the new conversation to all participants and the sender
+        global.io.to([...participantIds, userId]).emit("newConversation", { conversation });
+        return res.status(201).send();
     } catch (err) {
         await t.rollback();
 
@@ -84,7 +94,7 @@ module.exports.addConversation = async (req, res) => {
             logger.error(`At least one of the participants were invalid when trying to create the
                 conversation: ${userId} - ${participants}`);
             return res.status(404).send({
-                msg: "At least one of your participants isn't a valid user"
+                msg: "At least one of your participants isn't a valid user",
             });
         }
 
@@ -114,17 +124,15 @@ module.exports.getConversations = async (req, res) => {
                 as: "participants",
                 // exclude the requesting user's info from the participants list
                 where: {
-                    [db.Sequelize.Op.not]: [
-                        { id: userId }
-                    ]
+                    [db.Sequelize.Op.not]: [{ id: userId }],
                 },
                 // specify what atributes you want returned
                 attributes: ["displayName", "imageUrl"],
                 // Prevents the entire belongs-to-many mapping object (Participant)
                 // from being returned
-                through: { attributes: [] }
-            }
-        }
+                through: { attributes: [] },
+            },
+        },
     });
 
     if (!user) {
@@ -133,7 +141,7 @@ module.exports.getConversations = async (req, res) => {
         return res.status(404).send({ msg });
     } else {
         logger.info("Returned conversation list");
-        return res.send({ conversationList: user["conversationList"] });
+        return res.status(200).send({ conversationList: user["conversationList"] });
     }
 };
 
@@ -156,14 +164,14 @@ module.exports.leaveConversation = async (req, res) => {
     // Get the participants' user ids and isAdmin values, along with the number of participants
     let participantsInfo = await Participant.findAndCountAll({
         where: {
-            conversationId: conversationId
+            conversationId: conversationId,
         },
         attributes: ["userId", "isAdmin"],
         include: {
             model: User,
             as: "participantInfo",
-            attributes: ["displayName"]
-        }
+            attributes: ["displayName"],
+        },
     });
 
     // The number of participants
@@ -181,19 +189,19 @@ module.exports.leaveConversation = async (req, res) => {
 
     // Get the number of admins (count how many participants have isAdmin set to true)
     for (let participant of participants) {
-        if (participant.isAdmin === true){
+        if (participant.isAdmin === true) {
             adminsCount += 1;
         }
         // check if user is a participant
-        if (participant.userId === userId){
+        if (participant.userId === userId) {
             userIsParticipant = true;
             //if the user's an admin set userIsAdmin to true
-            if (participant.isAdmin === true){
-                userIsAdmin =true;
+            if (participant.isAdmin === true) {
+                userIsAdmin = true;
             }
         }
         // check if successor is a participant
-        if (participant.userId === successorId){
+        if (participant.userId === successorId) {
             successorIsParticipant = true;
         }
     }
@@ -209,9 +217,10 @@ module.exports.leaveConversation = async (req, res) => {
     if (participantsCount === 1) {
         let deletedConversationRow = await Conversation.destroy({
             where: {
-                id: conversationId
-            }
-        }).catch(err => { //catch any errors
+                id: conversationId,
+            },
+        }).catch((err) => {
+            //catch any errors
             let msg = err.message || "Some error occurred while deleting the conversation.";
             logger.error(msg + `${userId} - ${conversationId}`);
             res.status(500).send({ msg });
@@ -223,7 +232,6 @@ module.exports.leaveConversation = async (req, res) => {
             return res.status(500).send({ msg });
         }
 
-
         // return a success msg
         let msg = "Conversation successfully deleted!";
         logger.info(msg + `${userId} - ${conversationId}`);
@@ -232,40 +240,43 @@ module.exports.leaveConversation = async (req, res) => {
 
     if (userIsAdmin === true) {
         // Remove the user's info from the list of participants
-        participants = participants.filter(participant => participant.id !== userId);
+        participants = participants.filter((participant) => participant.id !== userId);
 
         // if this is the last admin and they haven't chosen a successor
-        if (adminsCount === 1 && !successorId){
+        if (adminsCount === 1 && !successorId) {
             // return a msg letting the user know they must choose a successor and the list of participants
-            logger.error("No successor was chosen "+ `${userId} - ${conversationId}`);
+            logger.error("No successor was chosen " + `${userId} - ${conversationId}`);
             return res.status(400).send({
                 msg: "You're the only admin. You must choose a successor.",
-                participants: participants
+                participants: participants,
             });
         }
 
         // if this is the last admin and they chose a successor that's not a participant
-        if (adminsCount === 1 && !successorIsParticipant){
+        if (adminsCount === 1 && !successorIsParticipant) {
             // return a msg letting the user know they must choose a successor that's a participant
             // and the list of participants
-            logger.error("Successor was not a participant "+ `${userId} - ${conversationId} - ${successorId}`);
+            logger.error("Successor was not a participant " + `${userId} - ${conversationId} - ${successorId}`);
             return res.status(400).send({
                 msg: "You must choose a successor that's a participant.",
-                participants: participants
+                participants: participants,
             });
         }
 
         // if a successor was chosen
-        if (successorId){
+        if (successorId) {
             // set successor's isAdmin value to true
-            Participant.update({
-                isAdmin: true
-            },
-            {
-                where: {
-                    userId: successorId
+            Participant.update(
+                {
+                    isAdmin: true,
+                },
+                {
+                    where: {
+                        userId: successorId,
+                    },
                 }
-            }).catch(err => { // catch any errors
+            ).catch((err) => {
+                // catch any errors
                 let msg = err.message || "Some error occurred while making successor an admin.";
                 logger.error(msg + `${userId} - ${conversationId} - ${successorId}`);
                 res.status(500).send({ msg });
@@ -276,9 +287,10 @@ module.exports.leaveConversation = async (req, res) => {
     let deletedParticipantRow = await Participant.destroy({
         where: {
             userId: userId,
-            conversationId: conversationId
-        }
-    }).catch(err => { // catch any errors
+            conversationId: conversationId,
+        },
+    }).catch((err) => {
+        // catch any errors
         let msg = err.message || "Some error occurred while removing the user from the conversation.";
         logger.error(msg + `${userId} - ${conversationId}`);
         res.status(500).send({ msg });
@@ -286,10 +298,9 @@ module.exports.leaveConversation = async (req, res) => {
 
     if (!deletedParticipantRow) {
         let msg = "User couldn't be removed from conversation. Probably wasn't a participant.";
-        logger.error(msg `${userId} - ${conversationId}`);
+        logger.error(msg`${userId} - ${conversationId}`);
         return res.status(404).send({ msg });
     }
-
 
     //return a success msg
     let msg = "User successfully removed from the conversation!";

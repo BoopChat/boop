@@ -72,7 +72,7 @@ const OptionsDialog = ({ open, onClose, img, title, participants }) => {
     );
 };
 
-const Chat = ({ conversationId, title, participants }) => {
+const Chat = ({ conversationId, title, participants, socket }) => {
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState("");
     const chatbox = useRef();
@@ -85,20 +85,27 @@ const Chat = ({ conversationId, title, participants }) => {
     const { id, displayName, imageUrl } = useSelector((state) => state.user.userInfo);
 
     const handleText = (e) => {
-        if (conversationId) // if a conversation is not active, disable text box
+        if (conversationId)
+            // if a conversation is not active, disable text box
             setText(e.target.value);
     };
 
     const handleSend = async (e) => {
         e.preventDefault();
         // if a conversation is not active, disable send button
-        if (!conversationId)
-            return;
+        if (!conversationId) return;
         // if text box is empty dont bother trying to send message
-        if (text?.length < 1)
-            return;
-        await ChatController.sendMessage(token, conversationId, text);
-        setText(""); // clear the text box
+        if (text?.length < 1) return;
+        let result = await ChatController.sendMessage(token, conversationId, text);
+        if (result.success) 
+            setText(""); // clear the text box
+        else {
+            // display error message
+            alertDialog.display({
+                title: "Error",
+                message: result.msg,
+            });
+        }
         // scroll to the bottom of the chat where new message has been rendered
         chatbox.current.scrollTop = chatbox?.current?.scrollHeight;
     };
@@ -110,8 +117,6 @@ const Chat = ({ conversationId, title, participants }) => {
         // as new messages come in from the server add them to messages list
         ChatController.listen(message => setMessages([...messages, message]));
     }, []);
-
-    const showChatOptions = () => setOptionsDialog(true);
 
     const onDialogClose = async action => {
         setOptionsDialog(false);
@@ -135,12 +140,45 @@ const Chat = ({ conversationId, title, participants }) => {
         }
     };
 
+    const addNewMessages = (messageList) => {
+        // instead of repeatly calling setMessages, add valid messages to list and then call setMessages once
+        let add = [];
+        messageList.forEach(msg => {
+            // if message is not already in the list, mark it for adding
+            // reduce the search space by only search the last messageList.length - 1 messages
+            if (!messages.slice(-messageList.length-1).find(({ id }) => id === msg.id))
+                add.push(msg);
+        });
+        setMessages(prevMessages => prevMessages.length > 1 ? [...prevMessages, ...add] : add);
+    };
+
+    useEffect(() => {
+        setMessages([]); // if switching conversations, clear the ui from previous messages
+        ChatController.init(socket);
+        ChatController.clear(); // clear previous listener if exist
+        // as new messages come in from the server add them to messages list
+        ChatController.listen((message) => {
+            // if the new message is a message for the currently opened chat
+            // if not simply ignore it in the ui
+            if (message.newMessage.conversationId === conversationId.toString())
+                addNewMessages([message.newMessage]);
+        });
+
+        // get all messages (this will include any live messages caught by above code)
+        const runAsync = async () => {
+            addNewMessages((await ChatController.getMessages(token, conversationId))?.reverse());
+        };
+        runAsync();
+    }, [conversationId]);
+
+    const showChatOptions = () => setOptionsDialog(true);
+
     return (
         <div className="chat_container">
             <header className="chat_title">
-                <img src="https://picsum.photos/400" className="skeleton" alt="chat"/>
+                <img src="https://picsum.photos/400" className="skeleton" alt="chat" />
                 <span>{title || "Untitled Chat"}</span>
-                <img src={options} alt="options" onClick={showChatOptions} className="chat_options"/>
+                <img src={options} alt="options" onClick={showChatOptions} className="chat_options" />
             </header>
             <OptionsDialog
                 open={optionsDialog}
@@ -151,10 +189,10 @@ const Chat = ({ conversationId, title, participants }) => {
             />
             {messages && messages.length > 0 ? (
                 <ul className="chat_section" ref={chatbox}>
-                    {messages.map((msg, key) =>
+                    {messages.map(msg =>
                         <li
-                            key={key}
-                            className={"message " + (msg.senderId === id ? "author": "friend") + "_message"}
+                            key={msg.id}
+                            className={"message " + (msg.senderId === id ? "author" : "friend") + "_message"}
                         >
                             <div className="info">
                                 <span className="user" title={msg.sender?.displayName}>{msg.sender?.displayName}</span>
@@ -169,10 +207,11 @@ const Chat = ({ conversationId, title, participants }) => {
                             </div>
                             <p>{msg.content}</p>
                         </li>
-                    )}
+                    ))}
                 </ul>
-            ) : <div></div>
-            }
+            ) : (
+                <div></div>
+            )}
             <Alert.AlertDialog
                 open={alertDialog.open}
                 handleClose={alertDialog.close}
