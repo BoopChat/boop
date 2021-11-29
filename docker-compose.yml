@@ -1,0 +1,27 @@
+version: '3.1'
+services:
+  db:
+    image: 'postgres'
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: "database-password"
+      POSTGRES_DB: "database-name"
+      POSTGRES_USER: "database-user"
+    networks:
+      - boop
+    volumes:
+      - ./data:/var/lib/postgresql/data
+  app:
+    networks:
+      - boop
+    image: 'boop:0.1.0'
+    restart: unless-stopped
+    ports:
+      - 8080:5000
+    depends_on:
+      - db
+
+networks:
+  boop:

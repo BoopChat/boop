@@ -1,0 +1,37 @@
+# Ignore the logs directory
+logs/
+*.log
+
+# Ignoring git and cache folders
+.git
+.cache
+
+#I gnoring all the markdown and docker files
+*.md
+*yml
+Dockerfile
+
+# dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# testing
+coverage/
+
+# production
+build/
+server/data/
+
+# misc
+.env
+.scss
+.css
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+package-lock.json
+yarn.lock
