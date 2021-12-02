@@ -6,9 +6,9 @@ services:
     ports:
       - 5432:5432
     environment:
-      POSTGRES_PASSWORD: "database-password"
-      POSTGRES_DB: "database-name"
-      POSTGRES_USER: "database-user"
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: $POSTGRES_DB
+      POSTGRES_USER: $POSTGRES_USER
     networks:
       - boop
     volumes:
@@ -20,6 +20,12 @@ services:
     restart: unless-stopped
     ports:
       - 8080:5000
+    environment:
+      GOOGLE_CLIENT_ID: $GOOGLE_CLIENT_ID
+      GOOGLE_CLIENT_SECRET: $GOOGLE_CLIENT_SECRET
+      FACEBOOK_CLIENT_ID: $FACEBOOK_CLIENT_ID
+      FACEBOOK_CLIENT_SECRET: $FACEBOOK_CLIENT_SECRET
+      TOKEN_SECRET: $TOKEN_SECRET
     depends_on:
       - db
 

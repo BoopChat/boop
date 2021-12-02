@@ -6,7 +6,7 @@ logs/
 .git
 .cache
 
-#I gnoring all the markdown and docker files
+# Ignoring all the markdown and docker files
 *.md
 *yml
 Dockerfile
