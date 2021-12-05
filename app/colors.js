@@ -1,0 +1,72 @@
+const colors = {
+    gray0: "#f7f7f7",
+    gray1: "#b2becd",
+    gray2: "#4d4d4e",
+    gray4: "#303030",
+    gray5: "#050505",
+    skyOfMagritte: "#0099ff",
+    brandeisBlue: "#0066ec",
+    pacificBridge: "#0052ce",
+    online: "#62b93c",
+    away: "#f7e01b",
+    dnd: "#f71a30",
+    red: "rgb(255, 0, 0)",
+    albanianRed: "rgb(204, 1, 1)",
+    fireOpal: "rgb(255, 62, 4)",
+    offline: "#dfdfdf",
+    blank: "#fff"
+};
+
+const themes = {
+    light: {
+        bg: colors.gray0,
+        bg2: colors.gray1,
+        bg3: colors.white,
+        panel: colors.gray5,
+        white: colors.blank,
+        text: colors.gray4,
+        textFade: colors.gray2,
+        primBlue: colors.brandeisBlue,
+        secBlue: colors.skyOfMagritte,
+        textHover: colors.blank,
+        lightText: colors.blank,
+        lightTextHover: colors.gray1,
+        // filter: invert(0%) sepia(100%) saturate(7500%) hue-rotate(257deg) brightness(82%) contrast(115%),
+        border: colors.gray1,
+        borderHover: colors.gray2,
+        primRed: colors.red,
+        secRed: colors.fireOpal,
+        input: colors.blank,
+        // shadow: rgba(218, 216, 216, 0.25),
+        authorBorder: colors.brandeisBlue,
+        online: colors.online,
+        away: colors.away,
+        dnd: colors.dnd
+    },
+    dark: {
+        bg: colors.gray2,
+        bg2: colors.gray4,
+        bg3: colors.gray4,
+        panel: colors.gray5,
+        white: colors.blank,
+        text: colors.blank,
+        textFade: colors.gray1,
+        primBlue: colors.brandeisBlue,
+        secBlue: colors.pacificBridge,
+        textHover: colors.blank,
+        lightText: colors.blank,
+        // filter: invert(100%) sepia(96%) saturate(15%) hue-rotate(212deg) brightness(104%) contrast(104%),
+        border: colors.gray5,
+        borderHover: colors.gray2,
+        primRed: colors.red,
+        secRed: colors.albanianRed,
+        input: colors.gray5,
+        // shadow: rgba(0, 0, 0, 0.25),
+        authorBorder: colors.gray5,
+        online: colors.online,
+        away: colors.away,
+        dnd: colors.dnd
+    }
+};
+
+export default themes;
