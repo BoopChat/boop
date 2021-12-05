@@ -38,11 +38,7 @@ router.get("/google/app", async (req, res) => {
             logger.error(userInfo.userId + ":" + msg);
 
         // Creates a cookie with the user's login information
-        res.cookie("loginCookie", JSON.stringify(userInfo), {
-            secure: false,
-            httpOnly: true,
-            expires: dayjs().add(1, "month").toDate(),
-        }).status(200).send({
+        createCookie(JSON.stringify(userInfo), res).status(200).send({
             msg: "Logged in successfully"
         });
     } catch (err) {
@@ -53,9 +49,9 @@ router.get("/google/app", async (req, res) => {
     }
 });
 
-const createCookie = (req, res) => {
+const createCookie = (user, res) => {
     // Creates a cookie with the user's login information
-    res.cookie("loginCookie", JSON.stringify(req.user), {
+    res.cookie("loginCookie", user, {
         secure: false,
         httpOnly: true,
         expires: dayjs().add(1, "month").toDate(),
@@ -67,7 +63,7 @@ const createCookie = (req, res) => {
 router.get("/google/callback", passport.authenticate("google", { session: false }), (req, res) => {
     // Redirects to the login page and stores the login cookie in the users browser.
     logger.info("Redirected to login: " + req.user);
-    createCookie(req, res).status(200).redirect(global.gConfig.homeUrl);
+    createCookie(JSON.stringify(req.user), res).status(200).redirect(global.gConfig.homeUrl);
 });
 
 //Facebook login route
@@ -76,7 +72,7 @@ router.get("/facebook", passport.authenticate("facebook", { scope: ["email", "pu
 // after successful login with Facebook strategy, user db record will be sent here in the req.user property.
 router.get("/facebook/callback", passport.authenticate("facebook", { session: false }), (req, res) => {
     // Redirects to the login page and stores the login cookie in the users browser.
-    createCookie(req, res).status(200).redirect(global.gConfig.homeUrl);
+    createCookie(JSON.stringify(req.user), res).status(200).redirect(global.gConfig.homeUrl);
 });
 
 // Creates a jwt access token if the cookie with the users login information exists.
