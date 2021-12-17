@@ -1,5 +1,8 @@
 const logger = require("../logger");
 const jwt = require("jsonwebtoken");
+const db = require("../models");
+const User = db.User;
+const Sequelize = require("sequelize");
 
 // Authentication middle was for socket io connection
 global.io.use((socket, next) => {
@@ -28,4 +31,23 @@ global.io.on("connection", (socket) => {
             socket.join(conversationId);
         }
     });
+
+    const authToken = socket.handshake.auth.token;
+    const user = jwt.verify(authToken, process.env.TOKEN_SECRET);
+    // update last active for user every 10 seconds
+    const updater = setInterval(() => {
+        User.update({
+            lastActive: Sequelize.fn("NOW"),
+        }, {
+            where: {
+                id: user.id,
+            },
+        }).catch((e) => {
+            // catch any errors
+            logger.error("Failed to update last active for `" + user.id + "` - " + e);
+        });
+    }, 10000);
+
+    // user disconnected, stop their last active
+    socket.on("disconnect", () => clearInterval(updater));
 });

@@ -24,9 +24,9 @@ export const ContactsController = {
         if (!lastActive)
             return "offline";
         // for now status is either online or offline
-        // if user not active within the last 5mins - offline
+        // if user not active within the last 15 seconds - offline
         let diff = Date.now() - (new Date(lastActive)).getTime();
-        return diff > (5 * 60 * 1000) ? "offline": "online";
+        return diff > (15 * 1000) ? "offline": "online";
     },
     addContact: async (token, email) => {
         const res = await fetch("/api/contacts", {
