@@ -1,5 +1,8 @@
 const logger = require("../logger");
 const jwt = require("jsonwebtoken");
+const db = require("../models");
+const User = db.User;
+const Sequelize = require("sequelize");
 
 // Authentication middle was for socket io connection
 global.io.use((socket, next) => {
@@ -14,6 +17,7 @@ global.io.use((socket, next) => {
             next(new Error("No user information stored in JWT"));
         } else {
             socket.join(user.id);
+            socket.user = user;
             next();
         }
     } catch (e) {
@@ -28,4 +32,22 @@ global.io.on("connection", (socket) => {
             socket.join(conversationId);
         }
     });
+
+    const { user } = socket;
+    // update last active for user every 10 seconds
+    const updater = setInterval(() => {
+        User.update({
+            lastActive: Sequelize.fn("NOW"),
+        }, {
+            where: {
+                id: user.id,
+            },
+        }).catch((e) => {
+            // catch any errors
+            logger.error("Failed to update last active for `" + user.id + "` - " + e);
+        });
+    }, 10000);
+
+    // user disconnected, stop updating their last active
+    socket.on("disconnect", () => clearInterval(updater));
 });
