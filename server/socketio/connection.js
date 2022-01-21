@@ -17,6 +17,7 @@ global.io.use((socket, next) => {
             next(new Error("No user information stored in JWT"));
         } else {
             socket.join(user.id);
+            socket.user = user;
             next();
         }
     } catch (e) {
@@ -32,8 +33,7 @@ global.io.on("connection", (socket) => {
         }
     });
 
-    const authToken = socket.handshake.auth.token;
-    const user = jwt.verify(authToken, process.env.TOKEN_SECRET);
+    const { user } = socket;
     // update last active for user every 10 seconds
     const updater = setInterval(() => {
         User.update({
@@ -48,6 +48,6 @@ global.io.on("connection", (socket) => {
         });
     }, 10000);
 
-    // user disconnected, stop their last active
+    // user disconnected, stop updating their last active
     socket.on("disconnect", () => clearInterval(updater));
 });
