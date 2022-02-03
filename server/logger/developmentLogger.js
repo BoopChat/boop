@@ -7,12 +7,17 @@ const DevelopmentLogger = () => {
     return createLogger({
         level: "debug",
         format: combine(
-            colorize(),
             timestamp({ format: "HH:mm:ss" }),
             devFormat
         ),
         transports: [
-            new transports.Console(),
+            new transports.Console({
+                format: combine(
+                    colorize(),
+                    timestamp({ format: "HH:mm:ss" }),
+                    devFormat
+                )
+            }),
             new transports.File({ filename: "error.log", level: "error" }),
             new transports.File({ filename: "combined.log" }),
         ],
