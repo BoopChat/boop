@@ -37,7 +37,7 @@ app.use(morganLogger);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join("client", "build")));
 
 // Use jwt verification middleware on every request except for the api/login/auth requests.
 app.use(
