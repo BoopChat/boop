@@ -91,12 +91,6 @@ div.dots {
     display: flex;
 }
 
-div.slides {
-    display: none;
-    width: 100%;
-    height: 500px;
-}
-
 div.loader {
     margin: auto;
 }
