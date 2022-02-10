@@ -12,10 +12,17 @@ const Participant = db.Participant;
 const Message = db.Message;
 
 module.exports = {
-    up: async () => {
+    up: async (queryInterface) => {
         console.log(`process.env.NODE_ENV = ${process.env.NODE_ENV}`);
         if (process.env.NODE_ENV === "development"){ // seeder can only run in development
-            // for each user need to put imaageUrl as a robohash image
+            // delete any existing entries
+            await queryInterface.bulkDelete("Messages", null, {});
+            await queryInterface.bulkDelete("Conversations", null, {});
+            await queryInterface.bulkDelete("Contacts", null, {});
+            await queryInterface.bulkDelete("SigninOptions", null, {});
+            await queryInterface.bulkDelete("Users", null, {});
+
+            console.log("All messages, conversations, contacts and users have been deleted from the database.");
 
             let configEmail = process.env.USER_INFO_EMAIL;
             let configFirstName = process.env.USER_INFO_FIRST_NAME;
@@ -498,10 +505,11 @@ module.exports = {
 
     down: async (queryInterface) => {
         if (process.env.NODE_ENV === "development"){ // seeder can only run in development
-            await queryInterface.bulkDelete("messages", null, {});
-            await queryInterface.bulkDelete("conversations", null, {});
-            await queryInterface.bulkDelete("contacts", null, {});
-            await queryInterface.bulkDelete("users", null, {});
+            await queryInterface.bulkDelete("Messages", null, {});
+            await queryInterface.bulkDelete("Conversations", null, {});
+            await queryInterface.bulkDelete("Contacts", null, {});
+            await queryInterface.bulkDelete("SigninOptions", null, {});
+            await queryInterface.bulkDelete("Users", null, {});
 
             console.log("All messages, conversations, contacts and users have been deleted from the database.");
         } else {

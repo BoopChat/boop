@@ -1,15 +1,19 @@
-# Boop
+# Boop <!-- omit in toc -->
 
 Boop is a chat app under development by computer science students from The University of the West Indies
 along with their mentor David Fowler (Partner Software Architect at Microsoft).
 
-# ✍️ Getting Started with Boop
+# ✍️ Getting Started with Boop <!-- omit in toc -->
 
-- [🔻Downloading the project](#-downloading-the-project)
+
+- [🔻Downloading the project](#downloading-the-project)
 - [🚀 Quick Start](#-quick-start)
-- [🏃‍♂️ Quick resume](#-quick-resume)
+- [🏃‍♂️ Quick resume](#️-quick-resume)
 - [🗄 Setting up the server](#-setting-up-the-server)
-- [📄 Setting up Environment Variables](#-setting-up-environment-variables)
+  - [📄 Setting up Environment Variables](#-setting-up-environment-variables)
+  - [Getting the server to work](#getting-the-server-to-work)
+  - [Getting Google Login to Work](#getting-google-login-to-work)
+  - [Getting Facebook Login to Work](#getting-facebook-login-to-work)
 - [💻 Using the client](#-using-the-client)
 - [🐋 Building a docker image](#-building-a-docker-image)
 
@@ -29,7 +33,7 @@ along with their mentor David Fowler (Partner Software Architect at Microsoft).
 
  4. After it is complete wait a few seconds for your database container to start running
 
- 5. From the root run the following to run the migrations and seed the database:
+ 5. From the root run the following to run the migrations and seed the database (it will be cleared first):
    
     `npm run dev-quick-server`
 
