@@ -27,7 +27,7 @@ var server = http.createServer(app);
  */
 global.io = socketio(server, {
   cors: {
-    origin: global.gConfig.homeUrl,
+    origin: process.env.HOME_URL,
   },
 });
 

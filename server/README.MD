@@ -6,6 +6,11 @@ Boop is a chat app under development by computer science students from The Unive
 
 The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b5b0146e9aed7) and in the boop-db.png image in the project root.
 
+# Setting up Environment Variables
+1. Make a .env file at the root of the server directory, with your values for the variables in server/env.sample
+   
+   (Note the DB_NAME, DB_USERNAME, DB_PASSWORD must match the docker compose file's POSTGRES_DB, POSTGRES_USER, and POSTGRES_PASSWORD, so if you made changes there reflect them in this file)
+
 # Getting the server to work
 
 1. Docker
@@ -21,11 +26,7 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 
             `docker-compose up -d`
 
-2. Database settings in server files:
-    1. In VSCode or whatever code editor you're using open server/config and create a new file called config.json. 
-    2. Use the sample_config.json file as a guide for the structure of the contents of config.json and fill in the information used in the command from step 1 or the server/docker-compose.yml file.
-
-3. Run database migrations to create your tables in the database in docker (container MUST be running) using:
+2. Run database migrations to create your tables in the database in docker (container MUST be running) using:
 
     Change to the server dir in the project:
 
@@ -38,11 +39,11 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 
     `npx sequelize-cli db:migrate`
     
-4. Run the server in development mode using:
+3. Run the server in development mode using:
     
     `npm run dev`
 
-5. (Optional) Use the [Thunder Client](https://marketplace.visualstudio.com/items?itemName=rangav.vscode-thunder-client) VSCode extension to test the routes. Here's a [JSON file](https://drive.google.com/drive/folders/14SfX97UpaPSqzPgeuLMLAoRXbzHXtx0O?usp=sharing) with some sample queries.
+4. (Optional) Use the [Thunder Client](https://marketplace.visualstudio.com/items?itemName=rangav.vscode-thunder-client) VSCode extension to test the routes. Here's a [JSON file](https://drive.google.com/drive/folders/14SfX97UpaPSqzPgeuLMLAoRXbzHXtx0O?usp=sharing) with some sample queries.
 
 # Getting Google Login to Work
 

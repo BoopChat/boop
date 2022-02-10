@@ -11,11 +11,6 @@ dotenv.config();
 // Middleware to verify the jwt
 const jwt = require("express-jwt");
 
-// Configuration of the login callback URLs depending on the environment.
-const environment = process.env.NODE_ENV || "development";
-const config = require("./config/config.json")[environment];
-global.gConfig = config;
-
 //Server routes
 var contactsRouter = require("./routes/contacts");
 var conversationsRouter = require("./routes/conversations");

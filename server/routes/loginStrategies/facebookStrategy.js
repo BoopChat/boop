@@ -7,7 +7,7 @@ passport.use(
         {
             clientID: process.env.FACEBOOK_CLIENT_ID,
             clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-            callbackURL: global.gConfig.facebookCallbackUrl,
+            callbackURL: process.env.FACEBOOK_CALLBACK_URL,
             profileFields: ["first_name", "last_name", "photos", "email"],
         },
         async function (accessToken, refreshToken, profile, done) {

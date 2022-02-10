@@ -1,6 +1,5 @@
 "use strict";
-const config = require("../config/config.json")["development"];
-//environment variables configuration
+// environment variables configuration
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -18,9 +17,9 @@ module.exports = {
         if (process.env.NODE_ENV === "development"){ // seeder can only run in development
             // for each user need to put imaageUrl as a robohash image
 
-            let configEmail = config.userInfo.email;
-            let configFirstName = config.userInfo.firstName;
-            let configLastName = config.userInfo.lastName;
+            let configEmail = process.env.USER_INFO_EMAIL;
+            let configFirstName = process.env.USER_INFO_FIRST_NAME;
+            let configLastName = process.env.USER_INFO_LAST_NAME;
 
             const users = [
                 {
