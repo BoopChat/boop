@@ -1,6 +1,5 @@
 "use strict";
-const config = require("../config/config.json")["development"];
-//environment variables configuration
+// environment variables configuration
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -13,14 +12,21 @@ const Participant = db.Participant;
 const Message = db.Message;
 
 module.exports = {
-    up: async () => {
+    up: async (queryInterface) => {
         console.log(`process.env.NODE_ENV = ${process.env.NODE_ENV}`);
         if (process.env.NODE_ENV === "development"){ // seeder can only run in development
-            // for each user need to put imaageUrl as a robohash image
+            // delete any existing entries
+            await queryInterface.bulkDelete("Messages", null, {});
+            await queryInterface.bulkDelete("Conversations", null, {});
+            await queryInterface.bulkDelete("Contacts", null, {});
+            await queryInterface.bulkDelete("SigninOptions", null, {});
+            await queryInterface.bulkDelete("Users", null, {});
 
-            let configEmail = config.userInfo.email;
-            let configFirstName = config.userInfo.firstName;
-            let configLastName = config.userInfo.lastName;
+            console.log("All messages, conversations, contacts and users have been deleted from the database.");
+
+            let configEmail = process.env.USER_INFO_EMAIL;
+            let configFirstName = process.env.USER_INFO_FIRST_NAME;
+            let configLastName = process.env.USER_INFO_LAST_NAME;
 
             const users = [
                 {
@@ -499,10 +505,11 @@ module.exports = {
 
     down: async (queryInterface) => {
         if (process.env.NODE_ENV === "development"){ // seeder can only run in development
-            await queryInterface.bulkDelete("messages", null, {});
-            await queryInterface.bulkDelete("conversations", null, {});
-            await queryInterface.bulkDelete("contacts", null, {});
-            await queryInterface.bulkDelete("users", null, {});
+            await queryInterface.bulkDelete("Messages", null, {});
+            await queryInterface.bulkDelete("Conversations", null, {});
+            await queryInterface.bulkDelete("Contacts", null, {});
+            await queryInterface.bulkDelete("SigninOptions", null, {});
+            await queryInterface.bulkDelete("Users", null, {});
 
             console.log("All messages, conversations, contacts and users have been deleted from the database.");
         } else {

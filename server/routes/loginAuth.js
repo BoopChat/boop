@@ -24,7 +24,7 @@ router.get("/google", passport.authenticate("google", { scope: ["email", "profil
 router.get("/google/callback", passport.authenticate("google", { session: false }), (req, res) => {
     // Redirects to the login page and stores the login cookie in the users browser.
     logger.info("Redirected to login: " + req.user);
-    createCookie(JSON.stringify(req.user), res).status(200).redirect(global.gConfig.homeUrl);
+    createCookie(JSON.stringify(req.user), res).status(200).redirect(process.env.HOME_URL);
 });
 
 //Facebook login route
@@ -34,7 +34,7 @@ router.get("/facebook", passport.authenticate("facebook", { scope: ["email", "pu
 router.get("/facebook/callback", passport.authenticate("facebook", { session: false }), (req, res) => {
     // Redirects to the login page and stores the login cookie in the users browser.
     logger.info("Redirected to login: " + req.user);
-    createCookie(JSON.stringify(req.user), res).status(200).redirect(global.gConfig.homeUrl);
+    createCookie(JSON.stringify(req.user), res).status(200).redirect(process.env.HOME_URL);
 });
 
 // Creates a jwt access token if the cookie with the users login information exists.

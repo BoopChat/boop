@@ -11,11 +11,6 @@ dotenv.config();
 // Middleware to verify the jwt
 const jwt = require("express-jwt");
 
-// Configuration of the login callback URLs depending on the environment.
-const environment = process.env.NODE_ENV || "development";
-const config = require("./config/config.json")[environment];
-global.gConfig = config;
-
 //Server routes
 var contactsRouter = require("./routes/contacts");
 var conversationsRouter = require("./routes/conversations");
@@ -59,7 +54,7 @@ app.use(function (req, res, next) {
 app.use(function (err, req, res) {
     // set locals, only providing error in development
     res.locals.message = err.message;
-    res.locals.error = req.app.get("env") === "development" ? err : {};
+    res.locals.error = process.env.NODE_ENV === "development" ? err : {};
 
     // render the error page
     res.status(err.status || 500);
