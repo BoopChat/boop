@@ -8,8 +8,6 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 
 # Setting up Environment Variables
 1. Make a .env file at the root of the server directory, with your values for the variables in server/env.sample
-   
-   (Note the DB_NAME, DB_USERNAME, DB_PASSWORD must match the docker compose file's POSTGRES_DB, POSTGRES_USER, and POSTGRES_PASSWORD, so if you made changes there reflect them in this file)
 
 # Getting the server to work
 
@@ -101,7 +99,7 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 You are Finished. Login using Google.
 
 
-# Getting Facebook Login to Work
+### Getting Facebook Login to Work
 
 1. Setting up Enviroment Variables
 

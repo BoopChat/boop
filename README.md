@@ -3,27 +3,41 @@
 Boop is a chat app under development by computer science students from The University of the West Indies
 along with their mentor David Fowler (Partner Software Architect at Microsoft).
 
-# Getting Started with Boop
-## Downloading the project
+# ✍️ Getting Started with Boop
+
+- [🔻Downloading the project](#-downloading-the-project)
+- [🚀 Quick Start](#-quick-start)
+- [🏃‍♂️ Quick resume](#-quick-resume)
+- [🗄 Setting up the server](#-setting-up-the-server)
+- [📄 Setting up Environment Variables](#-setting-up-environment-variables)
+- [💻 Using the client](#-using-the-client)
+- [🐋 Building a docker image](#-building-a-docker-image)
+
+## 🔻Downloading the project
+
 [This](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository#cloning-a-repository) GitHub guide can walk you through cloning the repo. 
 
-## Quick Start 
+## 🚀 Quick Start
+
  1. Make a .env file at the root of the server directory, with your values for the variables in server/env.sample
- 3. Start [docker desktop](https://www.docker.com/products/docker-desktop). Let it run in the background.
- 4. From the root directory run the following to install all dependencies and create the database:
+
+ 2. Start [docker desktop](https://www.docker.com/products/docker-desktop). Let it run in the background.
+
+ 3. From the root directory run the following to install all dependencies and create the database:
     
     `npm run dev-quick-setup` 
 
- 5. After it is complete wait a few seconds for your database container to start running
- 6. From the root run the following to run the migrations and seed the database:
+ 4. After it is complete wait a few seconds for your database container to start running
+
+ 5. From the root run the following to run the migrations and seed the database:
    
     `npm run dev-quick-server`
 
- 7. Run the application in development mode:
+ 6. Run the application in development mode:
   
     `npm run dev`
 
-## Quick resume
+## 🏃‍♂️ Quick resume
 Assuming you've already installed all dependencies, created the database, run all migrations and seeded the database:
 1. Start the database container and run the app in development mode:
    
@@ -38,16 +52,15 @@ Assuming you've already installed all dependencies, created the database, run al
 <br>
 <br>
 
-## Setting up the server
+## 🗄 Setting up the server
 
-### Database structure
+<b>Database structure</b>
 
 The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b5b0146e9aed7) and in the boop-db.png image in the project root.
 
-## Setting up Environment Variables
+### 📄 Setting up Environment Variables
+
 1. Make a .env file at the root of the server directory, with your values for the variables in server/env.sample. 
-   
-   (Note the DB_NAME, DB_USERNAME, DB_PASSWORD must match the docker compose file's POSTGRES_DB, POSTGRES_USER, and POSTGRES_PASSWORD, so if you made changes there reflect them in this file)
 
 ### Getting the server to work
 
@@ -64,7 +77,7 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 
             `docker-compose up -d`
 
-3. Run database migrations to create your tables in the database in docker (container MUST be running) using:
+2. Run database migrations to create your tables in the database in docker (container MUST be running) using:
 
     1. Make sure you have all needed dependencies:
     
@@ -84,11 +97,11 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
         
            `npx sequelize-cli db:migrate `
     
-4. Run the application in development mode using (in the root):
+3. Run the application in development mode using (in the root):
     
     `npm run dev`
 
-5. (Optional) Use the [Thunder Client](https://marketplace.visualstudio.com/items?itemName=rangav.vscode-thunder-client) VSCode extension to test the routes. Here's a [JSON file](https://drive.google.com/drive/folders/14SfX97UpaPSqzPgeuLMLAoRXbzHXtx0O?usp=sharing) with some sample queries.
+4. (Optional) Use the [Thunder Client](https://marketplace.visualstudio.com/items?itemName=rangav.vscode-thunder-client) VSCode extension to test the routes. Here's a [JSON file](https://drive.google.com/drive/folders/14SfX97UpaPSqzPgeuLMLAoRXbzHXtx0O?usp=sharing) with some sample queries.
 
 ### Getting Google Login to Work
 
@@ -143,7 +156,7 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
         replace < Google client secret goes here > with the acquired Goolge client sercret.
             e.g GOOGLE_CLIENT_SECRET = ajhasjdhjh48978387jkhfjkhzx
 
-# Getting Facebook Login to Work
+### Getting Facebook Login to Work
 
 1. Setting up Enviroment Variables
 
@@ -181,7 +194,8 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
         Click show next to the App secret.
         Copy the app secret into the .env file in the FACEBOOK_CLIENT_SECRET variable.
 
-## Using the client
+## 💻 Using the client
+
 1. Ensure you've followed all previous setup instructions.
 2. Ensure the database container is running:
    1. Start your container in the docker desktop app
@@ -197,3 +211,11 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
     In the project root run:
 
     `npm run dev`
+
+## 🐋 Building a docker image
+
+To build the docker image yourself you can use `docker build -t boop:0.1.0 .` while in the root of the project. This will read and perform the actions described in the Dockerfile. Ensure you have all the appropriate env vars set.
+
+Once the image is built, a container can be created from the image with the docker-compose file located in the root of the project. You will need to pass docker-compose the required env vars for each container (boop app and postgres). For example: `docker-compose -f docker-compose.yml --env-file server/.env up -d`.
+
+The app should then be accessible on port 8080. From here you will need to run the database migration before you can login to the app.
