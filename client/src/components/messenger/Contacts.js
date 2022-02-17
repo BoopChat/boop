@@ -1,33 +1,36 @@
 import plus from "../../assets/plus.svg";
 import ContactItem from "./ContactItem";
 import { ContactsController } from "./controllers/Contacts";
-import { Alert } from "../AlertDialog";
+import { AlertDialog, useAlertDialog } from "../AlertDialog";
+import Modal from "../Modal";
 
 import { React, useState, useEffect } from "react";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Dialog from "@material-ui/core/Dialog";
 
 import { useSelector } from "react-redux";
 
-const AddContactDialog = ({ open, onClose }) => {
+const AddContactDialog = ({ onClose }) => {
     const [email, setEmail] = useState("");
 
     const handleClose = () => onClose(email);
     const handleChange = (e) => setEmail(e.target.value);
 
     return (
-        <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
-            <DialogTitle id="simple-dialog-title">Add a contact by email</DialogTitle>
-            <input
-                type="email"
-                name="email"
-                placeholder="email..."
-                value={email}
-                onChange={(e) => handleChange(e)}
-                className="addContact"
-            />
-            <button onClick={() => handleClose()} name="add" className="addContact">Add</button>
-        </Dialog>
+        <Modal onClose={handleClose} center>
+            <div id="add-contact-dialog">
+                <header>Add a contact by email</header>
+                <main>
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="email..."
+                        value={email}
+                        onChange={handleChange}
+                        className="addContact"
+                    />
+                    <button onClick={() => handleClose()} name="add" className="addContact">Add</button>
+                </main>
+            </div>
+        </Modal>
     );
 };
 
@@ -35,7 +38,7 @@ const Contacts = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [contacts, setContacts] = useState([]);
     const [init, setInit] = useState(false);
-    const alertDialog = Alert.useAlertDialog();
+    const alertDialog = useAlertDialog();
 
     // Get the token from the users global state.
     const token = useSelector((state) => state.user.token);
@@ -81,18 +84,19 @@ const Contacts = () => {
 
     return (
         <div id="contact_container">
-            <Alert.AlertDialog
-                open={alertDialog.open}
-                handleClose={alertDialog.close}
-                title={alertDialog.title}
-                message={alertDialog.message}
-            />
+            { alertDialog.open ?
+                <AlertDialog
+                    handleClose={alertDialog.close}
+                    title={alertDialog.title}
+                    message={alertDialog.message}
+                /> :<></>
+            }
             <div className="main_panel_header">
                 <h1>Contacts</h1>
                 <button className="options" title="add contact" onClick={() => handleClickAdd()}>
                     <img src={plus} alt="options"/>
                 </button>
-                <AddContactDialog open={dialogOpen} onClose={addContact} />
+                { dialogOpen ? <AddContactDialog onClose={addContact}/> : <></> }
             </div>
             <div id="contacts">
                 {contacts.length > 0 ? contacts.map((contact, i) =>

@@ -1,15 +1,14 @@
 import { useEffect, useState, React } from "react";
 import { useSelector } from "react-redux";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Dialog from "@material-ui/core/Dialog";
-import { Alert } from "../AlertDialog";
+import { AlertDialog, useAlertDialog } from "../AlertDialog";
 
 import plus from "../../assets/plus.svg";
 import ConversationItem from "./ConversationItem";
 import { ConversationsController } from "./controllers/Conversations";
 import { ContactsController } from "./controllers/Contacts";
+import Modal from "../Modal";
 
-const AddConversationDialog = ({ open, onClose, token }) => {
+const AddConversationDialog = ({ onClose, token }) => {
     const [details, setDetails] = useState({
         list: [],
         title: "",
@@ -46,43 +45,46 @@ const AddConversationDialog = ({ open, onClose, token }) => {
     }, [init]);
 
     return (
-        <Dialog
-            id="add-convo-dialog"
-            onClose={() => handleClose(false)}
-            aria-labelledby="simple-dialog-title"
-            open={open}
-        >
-            <DialogTitle id="simple-dialog-title">Create a conversation</DialogTitle>
-            <input
-                type="text"
-                placeholder="Conversation Title"
-                value={details.title}
-                onChange={handleTitleChange}
-                className="addConversation"
-            />
-            <ul className="add_participants">
-                {contacts.map((contact) => (
-                    <li key={contact.contactId}>
-                        <img src={contact.contactInfo.imageUrl} alt="contact_img" />
-                        <span>{contact.contactInfo.displayName}</span>
-                        <input
-                            type="checkbox"
-                            name={contact.contactInfo.displayName}
-                            value={contact.contactId}
-                            onChange={handleListChange}
-                        />
-                    </li>
-                ))}
-            </ul>
-            <button onClick={() => handleClose(true)} name="create" className="addConversation">Create</button>
-        </Dialog>
+        <Modal onClose={() => handleClose(false)} center>
+            <div id="add-convo-dialog">
+                <header>Create a conversation</header>
+                <main>
+                    <input
+                        type="text"
+                        placeholder="Conversation Title"
+                        value={details.title}
+                        onChange={handleTitleChange}
+                        className="addConversation"
+                    />
+                    <ul className="add_participants">
+                        {contacts.map((contact) => (
+                            <li key={contact.contactId}>
+                                <div className="img_and_name">
+                                    <img src={contact.contactInfo.imageUrl} alt="contact_img" />
+                                    <span>{contact.contactInfo.displayName}</span>
+                                </div>
+                                <input
+                                    type="checkbox"
+                                    name={contact.contactInfo.displayName}
+                                    value={contact.contactId}
+                                    onChange={handleListChange}
+                                />
+                            </li>
+                        ))}
+                    </ul>
+                </main>
+                <footer>
+                    <button onClick={() => handleClose(true)} name="create" className="addConversation">Create</button>
+                </footer>
+            </div>
+        </Modal>
     );
 };
 
 const Conversations = ({ selectConversation, socket }) => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [conversations, setConversations] = useState([]);
-    const alertDialog = Alert.useAlertDialog();
+    const alertDialog = useAlertDialog();
 
     // Get the token from the users global state.
     const token = useSelector((state) => state.user.token);
@@ -131,18 +133,19 @@ const Conversations = ({ selectConversation, socket }) => {
 
     return (
         <div id="conversations_container">
-            <Alert.AlertDialog
-                open={alertDialog.open}
-                handleClose={alertDialog.close}
-                title={alertDialog.title}
-                message={alertDialog.message}
-            />
+            { alertDialog.open ?
+                <AlertDialog
+                    handleClose={alertDialog.close}
+                    title={alertDialog.title}
+                    message={alertDialog.message}
+                /> :<></>
+            }
             <div className="main_panel_header">
                 <h1>Conversations</h1>
                 <button className="options" title="options" onClick={() => handleClickAdd()}>
                     <img src={plus} alt="options" />
                 </button>
-                <AddConversationDialog open={dialogOpen} onClose={addConversation} token={token} />
+                { dialogOpen ? <AddConversationDialog onClose={addConversation} token={token} /> : <></> }
             </div>
             <div id="conversations">
                 {conversations?.map((chat, i) => (

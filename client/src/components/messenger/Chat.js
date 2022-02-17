@@ -1,76 +1,13 @@
 import { useState, useEffect, useRef, React } from "react";
 import { useSelector } from "react-redux";
-import Dialog from "@material-ui/core/Dialog";
-import Button from "@mui/material/Button";
-import AppBar from "@mui/material/AppBar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import CloseIcon from "@mui/icons-material/Close";
-import Toolbar from "@mui/material/Toolbar";
 
 import { ChatController } from "./controllers/Chat";
 import { ConversationsController } from "./controllers/Conversations";
-import { Alert } from "../AlertDialog";
+import { ChatOptionsDialog, optionsEnum } from "../ChatOptionsDialog";
+import { AlertDialog, useAlertDialog,  } from "../AlertDialog";
 
 import "../../styles/chat.css";
 import options from "../../assets/options.svg";
-
-const optionsEnum = {
-    noAction: 0,
-    successor: 1,
-    leave: 2
-};
-
-const OptionsDialog = ({ open, onClose, img, title, participants }) => {
-
-    const handleClose = value => onClose(value);
-
-    return (
-        <div>
-            <Dialog id="chat_options_dialog" fullScreen open={open} onClose={() => handleClose(optionsEnum.noAction)}>
-                <AppBar sx={{ position: "relative" }}>
-                    <Toolbar>
-                        <IconButton
-                            edge="start"
-                            color="inherit"
-                            onClick={() => handleClose(optionsEnum.noAction)}
-                            aria-label="close"
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                        <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-                            {title}
-                        </Typography>
-                        <Button autoFocus color="inherit" onClick={() => handleClose(optionsEnum.noAction)}>
-                            save
-                        </Button>
-                    </Toolbar>
-                </AppBar>
-                <img src={img} alt="chat" className="chat_image_options"/>
-                <p></p>
-                <hr/>
-                <span className="participant_label">{participants.length} participants</span>
-                {
-                    participants.map((participant, key) =>
-                        <div className="contact_item" key={key}>
-                            <div className="img_and_name">
-                                <img src={participant.imageUrl} alt="participant_img"/>
-                                <span>{participant.displayName}</span>
-                            </div>
-                        </div>
-                    )
-                }
-                <hr/>
-                <p></p>
-                <button
-                    className="btn_positive"
-                    onClick={() => handleClose(optionsEnum.successor)}
-                >Set Successor</button>
-                <button className="btn_leave" onClick={() => handleClose(optionsEnum.leave)}>Leave Conversation</button>
-            </Dialog>
-        </div>
-    );
-};
 
 const Chat = ({ conversationId, title, participants, socket }) => {
     const [messages, setMessages] = useState([]);
@@ -78,7 +15,7 @@ const Chat = ({ conversationId, title, participants, socket }) => {
     const chatbox = useRef();
 
     const [optionsDialog, setOptionsDialog] = useState(false);
-    const alertDialog = Alert.useAlertDialog();
+    const alertDialog = useAlertDialog();
 
     // Get the token from the users global state.
     const token = useSelector((state) => state.user.token);
@@ -172,13 +109,15 @@ const Chat = ({ conversationId, title, participants, socket }) => {
                 <span>{title || "Untitled Chat"}</span>
                 <img src={options} alt="options" onClick={showChatOptions} className="chat_options" />
             </header>
-            <OptionsDialog
-                open={optionsDialog}
-                onClose={onDialogClose}
-                img="https://picsum.photos/400"
-                title={title}
-                participants={[{ displayName, imageUrl }, ...participants]}
-            />
+            { optionsDialog ?
+                <ChatOptionsDialog
+                    onClose={onDialogClose}
+                    img="https://picsum.photos/400"
+                    title={title}
+                    participants={[{ displayName, imageUrl }, ...participants]}
+                />
+                : <></>
+            }
             {messages && messages.length > 0 ? (
                 <ul className="chat_section" ref={chatbox}>
                     {messages.map(msg =>
@@ -204,12 +143,13 @@ const Chat = ({ conversationId, title, participants, socket }) => {
             ) : (
                 <div></div>
             )}
-            <Alert.AlertDialog
-                open={alertDialog.open}
-                handleClose={alertDialog.close}
-                title={alertDialog.title}
-                message={alertDialog.message}
-            />
+            { alertDialog.open ?
+                <AlertDialog
+                    handleClose={alertDialog.close}
+                    title={alertDialog.title}
+                    message={alertDialog.message}
+                /> :<></>
+            }
             <form className="interactions" onSubmit={handleSend}>
                 <input type="text" name="chat_box" placeholder="chat" value={text} onChange={handleText} />
                 <button onClick={handleSend}>Send</button>

@@ -250,30 +250,3 @@ button.btn_leave, button.btn_positive {
 span.participant_label {
     padding: 5px 8px;
 }
-
-#chat_options_dialog div.MuiPaper-root,
-#alert-dialog div.MuiPaper-root,
-#add-convo-dialog div.MuiPaper-root {
-    background-color: var(--bg-3);
-    color: var(--text);
-}
-
-#chat_options_dialog header,
-#alert-dialog h2,
-#add-convo-dialog div.MuiPaper-root {
-    background-color: var(--input);
-    color: var(--text);
-}
-
-#chat_options_dialog header button:hover {
-    background-color: var(--action-button-hover);
-}
-
-#alert-dialog h2 button {
-    filter: var(--filter);
-}
-
-#add-convo-dialog input {
-    background-color: var(--bg-3);
-    color: var(--text);
-}
