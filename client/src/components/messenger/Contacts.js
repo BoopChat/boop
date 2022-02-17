@@ -37,22 +37,18 @@ const AddContactDialog = ({ onClose }) => {
 const Contacts = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [contacts, setContacts] = useState([]);
-    const [init, setInit] = useState(false);
     const alertDialog = useAlertDialog();
 
     // Get the token from the users global state.
     const token = useSelector((state) => state.user.token);
 
     useEffect(() => {
-        if (!init) { // if this is the first time rendering, get user contacts from server
-            const runAsync = async () => {
-                let contacts = await ContactsController.getContacts(token);
-                setContacts(contacts.success ? contacts.contactList : []);
-            };
-            runAsync();
-            setInit(true);
-        }
-    }, [init]);
+        const runAsync = async () => {
+            let contacts = await ContactsController.getContacts(token);
+            setContacts(contacts.success ? contacts.contactList : []);
+        };
+        runAsync();
+    }, []);
 
     const refreshContactList = () => {
         const runAsync = async () => {

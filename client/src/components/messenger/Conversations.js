@@ -14,7 +14,6 @@ const AddConversationDialog = ({ onClose, token }) => {
         title: "",
     });
     const [contacts, setContacts] = useState([]);
-    const [init, setInit] = useState(false);
 
     const handleClose = btnClicked => {
         onClose({ ...details, btnClicked });
@@ -33,16 +32,13 @@ const AddConversationDialog = ({ onClose, token }) => {
     const handleTitleChange = (e) => setDetails({ ...details, title: e.target.value });
 
     useEffect(() => {
-        if (!init) {
-            // if this is the first time rendering, get user contacts from server
-            const runAsync = async () => {
-                let contacts = await ContactsController.getContacts(token);
-                setContacts(contacts.success ? contacts.contactList : []);
-            };
-            runAsync();
-            setInit(true);
-        }
-    }, [init]);
+        // if this is the first time rendering, get user contacts from server
+        const runAsync = async () => {
+            let contacts = await ContactsController.getContacts(token);
+            setContacts(contacts.success ? contacts.contactList : []);
+        };
+        runAsync();
+    }, []);
 
     return (
         <Modal onClose={() => handleClose(false)} center>
