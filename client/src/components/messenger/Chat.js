@@ -5,6 +5,7 @@ import { ChatController } from "./controllers/Chat";
 import { ConversationsController } from "./controllers/Conversations";
 import { ChatOptionsDialog, optionsEnum } from "../ChatOptionsDialog";
 import { AlertDialog, useAlertDialog,  } from "../AlertDialog";
+import ChooseUsersDialog from "./ChooseUsersDialog";
 
 import "../../styles/chat.css";
 import options from "../../assets/options.svg";
@@ -15,6 +16,7 @@ const Chat = ({ conversationId, title, participants, socket }) => {
     const chatbox = useRef();
 
     const [optionsDialog, setOptionsDialog] = useState(false);
+    const [addUsersDialog, setAddUsersDialog] = useState(false);
     const alertDialog = useAlertDialog();
 
     // Get the token from the users global state.
@@ -47,7 +49,7 @@ const Chat = ({ conversationId, title, participants, socket }) => {
         chatbox.current.scrollTop = chatbox?.current?.scrollHeight;
     };
 
-    const onDialogClose = async action => {
+    const onOptionsDialogClose = async action => {
         setOptionsDialog(false);
         let result;
         switch (action) {
@@ -64,6 +66,26 @@ const Chat = ({ conversationId, title, participants, socket }) => {
         if (result) {
             alertDialog.display({
                 title: result.success ? "Success" : "Error",
+                message: result.msg
+            });
+        }
+    };
+
+    const onChooseDialogClose = async ({ list, btnClicked }) => {
+        setAddUsersDialog(false);
+
+        // if user simply clicked outside of the dialog ie.
+        // didn't really want to add new participants to the conversation,
+        // or simply wanted to cancel then dont make a request to the server
+        if (btnClicked) {
+            // ask the server to add new participants to this conversation
+            if (list?.length < 1) {
+                // display error message for no new participants
+                alertDialog.display({ title: "Error", message: "No new participants added" });
+            }
+            const result = await ConversationsController.addUserToConversation(token, conversationId, list);
+            alertDialog.display({
+                title: result.success ? "Success": "Error",
                 message: result.msg
             });
         }
@@ -111,11 +133,16 @@ const Chat = ({ conversationId, title, participants, socket }) => {
             </header>
             { optionsDialog ?
                 <ChatOptionsDialog
-                    onClose={onDialogClose}
+                    onClose={onOptionsDialogClose}
                     img="https://picsum.photos/400"
                     title={title}
                     participants={[{ displayName, imageUrl }, ...participants]}
+                    addUsers={() => setAddUsersDialog(true)}
                 />
+                : <></>
+            }
+            { addUsersDialog ?
+                <ChooseUsersDialog onClose={onChooseDialogClose} token={token} filterContacts={participants}/>
                 : <></>
             }
             {messages && messages.length > 0 ? (

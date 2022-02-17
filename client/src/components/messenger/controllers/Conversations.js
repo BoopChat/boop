@@ -4,7 +4,7 @@ export const ConversationsController = {
     init: (soc) => {
         socket = soc;
     },
-    getConversations: async (token, updateConversation) => {
+    getConversations: async (token, updateConversations) => {
         // make request for the conversations of user and wait for the json response
         try {
             const res = await fetch("/api/conversations", {
@@ -20,10 +20,12 @@ export const ConversationsController = {
 
             const result = await res.json();
             socket.on("newConversation", (convoObject) => {
-                updateConversation([convoObject.conversation]);
+                updateConversations([convoObject.conversation]);
                 // send back the conversation to the server to join client to that socket rooms
                 socket.emit("joinConversations", [convoObject.conversation.id]);
             });
+
+            socket.on("newConversationParticipants", ({ conversation }) => updateConversations([conversation]));
 
             // send back the conversations to the server to join client to the appropriate socket rooms
             socket.emit(
@@ -92,6 +94,30 @@ export const ConversationsController = {
             return { // return msg to display to user (whether success or fail)
                 msg: result.msg,
                 success: res.status === 200
+            };
+        } catch (e) {
+            return {
+                msg: e,
+                success: false
+            };
+        }
+    },
+    addUserToConversation: async (token, conversationId, newParticipants) => {
+        // make request to user(s) to the conversation
+        try {
+            const res = await fetch("/api/conversations", {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ conversationId, newParticipants }),
+            });
+
+            const result = await res.json();
+            return { // return msg to display to user (whether success or fail)
+                msg: result.msg,
+                success: res.status === 201
             };
         } catch (e) {
             return {

@@ -10,6 +10,8 @@ router
     // create a new conversation
     .post(controller.addConversation)
     // soft deletes participant association which "removes" a user from a conversation
-    .delete(controller.leaveConversation);
+    .delete(controller.leaveConversation)
+    // add a user to the conversation after it has been already created
+    .patch(controller.addUserToConversation);
 
 module.exports = router;

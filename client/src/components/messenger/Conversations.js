@@ -88,7 +88,6 @@ const Conversations = ({ selectConversation, socket }) => {
 
     // Get the token from the users global state.
     const token = useSelector((state) => state.user.token);
-    //const { id } = useSelector((state) => state.user.userInfo);
 
     const updateConversations = (newConversation) => {
         setConversations((conversations) => {

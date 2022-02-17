@@ -250,3 +250,28 @@ button.btn_leave, button.btn_positive {
 span.participant_label {
     padding: 5px 8px;
 }
+
+button.addUsersBtn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 8px;
+    width: 110px;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: var(--online);
+    color: var(--text);
+    outline: none;
+    border: none;
+    margin: 4px 8px 12px 8px;
+    border-radius: 4px;
+}
+
+button.addUsersBtn:hover {
+    cursor: pointer;
+    transform: scale(0.98);
+}
+
+button.addUsersBtn svg {
+    fill: var(--text);
+}

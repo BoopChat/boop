@@ -87,7 +87,7 @@
 
 #alert-dialog footer {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     padding: 10px;
 }
 
@@ -165,8 +165,9 @@
     font-size: 18px;
 }
 
-#chat_options_dialog footer {
+#chat_options_dialog > footer {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    margin-bottom: -20px;
 }
