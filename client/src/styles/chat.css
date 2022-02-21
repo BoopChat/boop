@@ -260,7 +260,7 @@ button.addUsersBtn {
     font-size: 14px;
     font-weight: bold;
     background-color: var(--online);
-    color: var(--text);
+    color: var(--light-text);
     outline: none;
     border: none;
     margin: 4px 8px 12px 8px;
@@ -273,5 +273,5 @@ button.addUsersBtn:hover {
 }
 
 button.addUsersBtn svg {
-    fill: var(--text);
+    fill: var(--light-text);
 }

@@ -13,8 +13,8 @@
     padding: 5px 0;
 }
 
-.content {
-    animation: modalopen 0.8s;
+.modal > * {
+    animation: modalopen 0.5s;
 }
 
 .xbutton {
