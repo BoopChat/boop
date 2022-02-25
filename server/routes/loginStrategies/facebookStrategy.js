@@ -1,13 +1,14 @@
 const FacebookStrategy = require("passport-facebook").Strategy;
 const passport = require("passport");
 const loginUtils = require("../loginStrategies/loginUtils");
+const { facebookCallback } = require("../../config/config").urls;
 
 passport.use(
     new FacebookStrategy(
         {
             clientID: process.env.FACEBOOK_CLIENT_ID,
             clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-            callbackURL: process.env.FACEBOOK_CALLBACK_URL,
+            callbackURL: facebookCallback,
             profileFields: ["first_name", "last_name", "photos", "email"],
         },
         async function (accessToken, refreshToken, profile, done) {

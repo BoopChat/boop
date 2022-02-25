@@ -1,7 +1,7 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
-module.exports = {
+module.exports.db = {
     "username": process.env.DB_USERNAME,
     "password": process.env.DB_PASSWORD,
     "database": process.env.DB_NAME,
@@ -14,4 +14,15 @@ module.exports = {
     "define": {
         "timestamps": true
     }
+};
+
+module.exports.urls = {
+    "facebookCallback":
+        (process.env.NODE_ENV === "development") ?
+            ("http://localhost:5000/api/login/auth/facebook/callback") :
+            (`${process.env.HOME_URL}/api/login/auth/facebook/callback`),
+    "googleCallback":
+        (process.env.NODE_ENV === "development") ?
+            ("http://localhost:5000/api/login/auth/google/callback") :
+            (`${process.env.HOME_URL}/api/login/auth/google/callback`)
 };
