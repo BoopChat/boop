@@ -14,6 +14,7 @@ const AddConversationDialog = ({ onClose, token }) => {
         title: "",
     });
     const [contacts, setContacts] = useState([]);
+    const alertDialog = useAlertDialog();
 
     const handleClose = btnClicked => {
         onClose({ ...details, btnClicked });
@@ -35,13 +36,28 @@ const AddConversationDialog = ({ onClose, token }) => {
         // if this is the first time rendering, get user contacts from server
         const runAsync = async () => {
             let contacts = await ContactsController.getContacts(token);
-            setContacts(contacts.success ? contacts.contactList : []);
+            if (contacts.success)
+                setContacts(contacts.contactList);
+            else {
+                alertDialog.display({
+                    title: "Error",
+                    message: "There was an error retrieving your contacts"
+                });
+                setContacts([]);
+            }
         };
         runAsync();
     }, []);
 
     return (
         <Modal onClose={() => handleClose(false)} center>
+            { alertDialog.open ?
+                <AlertDialog
+                    handleClose={alertDialog.close}
+                    title={alertDialog.title}
+                    message={alertDialog.message}
+                /> :<></>
+            }
             <div id="add-convo-dialog">
                 <header>Create a conversation</header>
                 <main>
@@ -95,8 +111,16 @@ const Conversations = ({ selectConversation, socket }) => {
         // send a request to the server to get conversations and setup socket to listen
         // for conversations changes
         ConversationsController.init(socket);
-        const runAsync = async () =>
-            setConversations(await ConversationsController.getConversations(token, updateConversations));
+        const runAsync = async () => {
+            const result = await ConversationsController.getConversations(token, updateConversations);
+            if (!result.success) {
+                alertDialog.display({
+                    title: "Error",
+                    message: "There was an error retrieving your conversations"
+                });
+            }
+            setConversations(result.conversations);
+        };
         runAsync();
     }, []);
 

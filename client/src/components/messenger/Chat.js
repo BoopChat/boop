@@ -117,7 +117,15 @@ const Chat = ({ conversationId, title, participants, socket }) => {
 
         // get all messages (this will include any live messages caught by above code)
         const runAsync = async () => {
-            addNewMessages((await ChatController.getMessages(token, conversationId))?.reverse());
+            const result = await ChatController.getMessages(token, conversationId);
+            if (!result.success) {
+                alertDialog.display({
+                    title: "Error",
+                    message: "Could not retrieve messages for this chat"
+                });
+            }
+            const { messages } = result;
+            addNewMessages(messages.reverse());
         };
         runAsync();
     }, [conversationId]);

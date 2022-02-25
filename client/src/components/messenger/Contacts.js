@@ -46,6 +46,12 @@ const Contacts = () => {
         const runAsync = async () => {
             let contacts = await ContactsController.getContacts(token);
             setContacts(contacts.success ? contacts.contactList : []);
+            if (!contacts.success) {
+                alertDialog.display({
+                    title: "Error",
+                    message: "There was an error retrieving your contacts"
+                });
+            }
         };
         runAsync();
     }, []);

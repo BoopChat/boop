@@ -14,16 +14,33 @@ export const ChatController = {
                     },
                 });
 
-                if (res.status !== 200)
-                    return [];
+                if (res.status !== 200) {
+                    return {
+                        success: false,
+                        messages: []
+                    };
+                }
+
 
                 const data = await res.json();
                 // get the list of messages if successful
-                return data ? data.messages : [];
+                return data ? {
+                    success: true,
+                    messages: data.messages
+                } : {
+                    success: false,
+                    messages: []
+                };
             } catch (e) {
-                return [];
+                return {
+                    success: false,
+                    messages: []
+                };
             }
-        } else return [];
+        } else return {
+            success: false,
+            messages: []
+        };
     },
     listen: (updateMessages) => socket.on("newMessage", (msg) => updateMessages(msg)),
     clear: () => {

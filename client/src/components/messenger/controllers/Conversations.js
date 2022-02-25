@@ -15,8 +15,12 @@ export const ConversationsController = {
                 },
             });
 
-            if (res.status !== 200)
-                return [];
+            if (res.status !== 200) {
+                return {
+                    success: false,
+                    conversations: []
+                };
+            }
 
             const result = await res.json();
             socket.on("newConversation", (convoObject) => {
@@ -32,9 +36,18 @@ export const ConversationsController = {
                 "joinConversations",
                 result.conversationList.map((item) => item.id)
             );
-            return result?.conversationList ? result.conversationList : [];
+            return result?.conversationList ? {
+                success: true,
+                conversations: result.conversationList
+            } : {
+                success: false,
+                conversations: []
+            };
         } catch (e) {
-            return [];
+            return {
+                success: false,
+                conversations: []
+            };
         }
     },
     evaluateDate: (lastDate) => {
