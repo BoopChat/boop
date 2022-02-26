@@ -4,7 +4,9 @@ const jwt = require("jsonwebtoken");
 const dayjs = require("dayjs");
 const logger = require("../logger");
 
-require("./loginStrategies/googleStrategy");
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET)
+    require("./loginStrategies/googleStrategy");
+
 if (process.env.FACEBOOK_CLIENT_ID && process.env.FACEBOOK_CLIENT_SECRET)
     require("./loginStrategies/facebookStrategy");
 
@@ -68,17 +70,9 @@ router.get("/cookie", (req, res) => {
 
 // Returns the configured login services
 router.get("/services", (req, res) => {
-    const services = ["GOOGLE_CLIENT", "FACEBOOK_CLIENT", "TWITTER_CLIENT"];
-    const configuredServices = {};
-    for (const service of services) {
-        const providerName = service.split("_")[0].toLowerCase();
-        if (process.env[`${service}_SECRET`] && process.env[`${service}_ID`])
-            configuredServices[providerName] = true;
-    }
-    logger.info(`Configured login services ${Object.keys(configuredServices).toString()}`);
     res.status(200).json({
         success: true,
-        configuredServices
+        configuredServices: global.configuredServices
     });
 });
 

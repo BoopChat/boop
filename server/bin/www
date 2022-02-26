@@ -17,6 +17,13 @@ var port = normalizePort(process.env.PORT || "5000");
 app.set("port", port);
 
 /**
+ * Configured Login services
+ */
+global.configuredServices = getLoginService();
+if (Object.keys(global.configuredServices).length === 0)
+  throw new Error("Atleast one OAuth login service has to be configured");
+
+/**
  * Create HTTP server.
  */
 
@@ -94,4 +101,19 @@ function onListening() {
   var addr = server.address();
   var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
   debug("Listening on " + bind);
+}
+
+/**
+ * Gets the configured login services
+ */
+function getLoginService () {
+  const services = ["GOOGLE_CLIENT", "FACEBOOK_CLIENT", "TWITTER_CLIENT"];
+  const configuredServices = {};
+  for (const service of services) {
+    const providerName = service.split("_")[0].toLowerCase();
+    if (process.env[`${service}_SECRET`] && process.env[`${service}_ID`])
+      configuredServices[providerName] = true;
+  }
+  
+  return configuredServices;
 }
