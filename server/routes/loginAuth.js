@@ -4,8 +4,11 @@ const jwt = require("jsonwebtoken");
 const dayjs = require("dayjs");
 const logger = require("../logger");
 
-require("./loginStrategies/googleStrategy");
-require("./loginStrategies/facebookStrategy");
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET)
+    require("./loginStrategies/googleStrategy");
+
+if (process.env.FACEBOOK_CLIENT_ID && process.env.FACEBOOK_CLIENT_SECRET)
+    require("./loginStrategies/facebookStrategy");
 
 const createCookie = (user, res) => {
     // Creates a cookie with the user's login information
@@ -62,6 +65,14 @@ router.get("/cookie", (req, res) => {
     res.status(200).json({
         success: false,
         msg: "Login with social provider",
+    });
+});
+
+// Returns the configured login services
+router.get("/services", (req, res) => {
+    res.status(200).json({
+        success: true,
+        configuredServices: global.configuredServices
     });
 });
 
