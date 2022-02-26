@@ -5,7 +5,8 @@ const dayjs = require("dayjs");
 const logger = require("../logger");
 
 require("./loginStrategies/googleStrategy");
-require("./loginStrategies/facebookStrategy");
+if (process.env.FACEBOOK_CLIENT_ID && process.env.FACEBOOK_CLIENT_SECRET)
+    require("./loginStrategies/facebookStrategy");
 
 const createCookie = (user, res) => {
     // Creates a cookie with the user's login information
@@ -64,6 +65,22 @@ router.get("/cookie", (req, res) => {
         msg: "Login with social provider",
     });
 });
+
+// Returns the configured login services
+router.get("/services", (req, res) => {
+    const services = ["GOOGLE_CLIENT","FACEBOOK_CLIENT","TWITTER_CLIENT"]
+    const configuredServices = {};
+    for (const service of services) {
+        const providerName = service.split("_")[0].toLowerCase();
+        if (process.env[`${service}_SECRET`] && process.env[`${service}_ID`])
+            configuredServices[providerName] = true;
+    }
+    logger.info(`Configured login services ${Object.keys(configuredServices).toString()}`)
+    res.status(200).json({
+        success: true,
+        configuredServices
+    })
+})
 
 // logs the user out.
 router.get("/logout", (req, res) => {

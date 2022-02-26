@@ -19,6 +19,11 @@ const Login = () => {
         fetched: false,
         animated: false
     });
+    const [loginService, setLoginService] = useState({
+        google: false,
+        facebook: false,
+        twitter: false
+    });
 
     // Checks if the user has successfully logged in using a provider
     // Dispatches the logIn action to change the user's login state if true;
@@ -26,6 +31,25 @@ const Login = () => {
     useEffect(() => {
         // have the loading screen run for at least 1.5s
         setTimeout(() => setLoading((prev) => { return { ...prev, animated: true }; }), 1500);
+
+        // Get the configured login services from the server
+        const fetchLoginService = async () => {
+            const res = await fetch("/api/login/auth/services", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            const data = await res.json();
+            if (data.success) {
+                setLoginService((prev) => {
+                    return {
+                        ...prev,
+                        ...data.configuredServices
+                    };
+                });
+            }
+        };
 
         const fetchData = async () => {
             const res = await fetch("/api/login/auth/cookie", {
@@ -50,6 +74,7 @@ const Login = () => {
             setLoading((prev) => { return { ...prev, fetched: true }; });
         };
 
+        fetchLoginService();
         fetchData();
     }, []);
 
@@ -64,9 +89,9 @@ const Login = () => {
             <div className="sign-in-container">
                 <h1>Boop Chat</h1>
                 <div className="sign_btns">
-                    <GoogleButton text="Continue with Google" />
-                    <FacebookButton text="Continue with facebook" />
-                    <TwitterButton text="Continue with twitter" />
+                    { loginService.google && <GoogleButton text="Continue with Google" /> }
+                    { loginService.facebook && <FacebookButton text="Continue with facebook" /> }
+                    { loginService.twitter && <TwitterButton text="Continue with twitter" /> }
                 </div>
             </div>
         );
