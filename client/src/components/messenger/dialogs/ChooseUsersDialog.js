@@ -1,7 +1,7 @@
 import { React, useEffect, useState } from "react";
 
-import { ContactsController } from "./controllers/Contacts";
-import Modal from "../Modal";
+import { ContactsController } from "../controllers/Contacts";
+import Modal from "./Modal";
 
 const ChooseUsersDialog = ({ onClose, token, filterContacts }) => {
     const [list, setList] = useState([]);

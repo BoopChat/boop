@@ -1,12 +1,12 @@
 import { useEffect, useState, React } from "react";
 import { useSelector } from "react-redux";
-import { AlertDialog, useAlertDialog } from "../AlertDialog";
+import { AlertDialog, useAlertDialog } from "./dialogs/AlertDialog";
 
 import plus from "../../assets/plus.svg";
 import ConversationItem from "./ConversationItem";
 import { ConversationsController } from "./controllers/Conversations";
 import { ContactsController } from "./controllers/Contacts";
-import Modal from "../Modal";
+import Modal from "./dialogs/Modal";
 
 const AddConversationDialog = ({ onClose, token }) => {
     const [details, setDetails] = useState({

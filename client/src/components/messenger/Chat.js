@@ -3,9 +3,10 @@ import { useSelector } from "react-redux";
 
 import { ChatController } from "./controllers/Chat";
 import { ConversationsController } from "./controllers/Conversations";
-import { ChatOptionsDialog, optionsEnum } from "../ChatOptionsDialog";
-import { AlertDialog, useAlertDialog,  } from "../AlertDialog";
-import ChooseUsersDialog from "./ChooseUsersDialog";
+import { ChatOptionsDialog, optionsEnum } from "./dialogs/ChatOptionsDialog";
+import { AlertDialog, useAlertDialog,  } from "./dialogs/AlertDialog";
+import ChooseUsersDialog from "./dialogs/ChooseUsersDialog";
+import ChooseAdminDialog from "./dialogs/ChooseAdminDialog";
 
 import "../../styles/chat.css";
 import options from "../../assets/options.svg";
@@ -17,11 +18,12 @@ const Chat = ({ conversationId, title, participants, socket }) => {
 
     const [optionsDialog, setOptionsDialog] = useState(false);
     const [addUsersDialog, setAddUsersDialog] = useState(false);
+    const [chooseAdminDialog, setChooseAdminDialog] = useState(false);
     const alertDialog = useAlertDialog();
 
     // Get the token from the users global state.
     const token = useSelector((state) => state.user.token);
-    const { id, displayName, imageUrl } = useSelector((state) => state.user.userInfo);
+    const { id } = useSelector((state) => state.user.userInfo);
 
     const handleText = (e) => {
         if (conversationId)
@@ -51,19 +53,36 @@ const Chat = ({ conversationId, title, participants, socket }) => {
 
     const onOptionsDialogClose = async action => {
         setOptionsDialog(false);
-        let result;
+        let result = null;
         switch (action) {
             case optionsEnum.leave:
                 if (participants.length === 1) // if 1 on 1 conversation, simply leave
                     result = await ConversationsController.leaveConversation(token, conversationId);
                 else {
                     // check if user is admin
-                    // currently cant check so try to leave and fail if admin
-                    result = await ConversationsController.leaveConversation(token, conversationId);
+                    console.log(participants.filter(p => p.id === id)[0]);
+                    const { Participant: { isAdmin } } = participants.filter(p => p.id === id)[0];
+
+                    if (isAdmin) {
+                        let admins = 0;
+                        for (let i = 0; i < participants.length; i++) {
+                            admins += participants[i].Participant.isAdmin ? 1 : 0;
+                            if (admins === 2)
+                                break;
+                        }
+
+                        // if at least one other admin is in the conversation, the current user (who is an admin)
+                        // can simply leave the conversation
+                        if (admins === 2)
+                            result = await ConversationsController.leaveConversation(token, conversationId);
+                        else // else make the current user choose a new admin
+                            setChooseAdminDialog(true);
+                    } else // user is not an admin, simply leave
+                        result = await ConversationsController.leaveConversation(token, conversationId);
                 }
                 break;
         }
-        if (result) {
+        if (result !== null) {
             alertDialog.display({
                 title: result.success ? "Success" : "Error",
                 message: result.msg
@@ -82,12 +101,33 @@ const Chat = ({ conversationId, title, participants, socket }) => {
             if (list?.length < 1) {
                 // display error message for no new participants
                 alertDialog.display({ title: "Error", message: "No new participants added" });
+            } else {
+                const result = await ConversationsController.addUserToConversation(token, conversationId, list);
+                alertDialog.display({
+                    title: result.success ? "Success": "Error",
+                    message: result.msg
+                });
             }
-            const result = await ConversationsController.addUserToConversation(token, conversationId, list);
-            alertDialog.display({
-                title: result.success ? "Success": "Error",
-                message: result.msg
-            });
+        }
+    };
+
+    const onChooseAdminDialogClose = async ({ choosen, btnClicked }) => {
+        setChooseAdminDialog(false);
+
+        // if user simply clicked outside of the dialog ie.
+        // didn't actually set a new admin then dont make a request to the server
+        if (btnClicked) {
+            // ask the server to set the choosen user as an admin
+            if (!choosen) { // display error message for no new admin
+                alertDialog.display({ title: "Error", message: "No new admin selected" });
+            } else {
+                // request that the user leave the conversation and send the id of the chosen successor
+                const result = await ConversationsController.leaveConversation(token, conversationId, Number(choosen));
+                alertDialog.display({
+                    title: result.success ? "Success": "Error",
+                    message: result.msg
+                });
+            }
         }
     };
 
@@ -144,13 +184,17 @@ const Chat = ({ conversationId, title, participants, socket }) => {
                     onClose={onOptionsDialogClose}
                     img="https://picsum.photos/400"
                     title={title}
-                    participants={[{ displayName, imageUrl }, ...participants]}
+                    participants={participants}
                     addUsers={() => setAddUsersDialog(true)}
                 />
                 : <></>
             }
             { addUsersDialog ?
                 <ChooseUsersDialog onClose={onChooseDialogClose} token={token} filterContacts={participants}/>
+                : <></>
+            }
+            { chooseAdminDialog ?
+                <ChooseAdminDialog onClose={onChooseAdminDialogClose} participants={participants} id={id}/>
                 : <></>
             }
             {messages && messages.length > 0 ? (

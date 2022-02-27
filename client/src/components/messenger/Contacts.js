@@ -1,8 +1,8 @@
 import plus from "../../assets/plus.svg";
 import ContactItem from "./ContactItem";
 import { ContactsController } from "./controllers/Contacts";
-import { AlertDialog, useAlertDialog } from "../AlertDialog";
-import Modal from "../Modal";
+import { AlertDialog, useAlertDialog } from "./dialogs/AlertDialog";
+import Modal from "./dialogs/Modal";
 
 import { React, useState, useEffect } from "react";
 

@@ -37,6 +37,10 @@ div.contact_item, div.chat_item {
     justify-content: space-between;
 }
 
+svg.adminCrown {
+    fill: var(--away);
+}
+
 div.contact_item:hover, div.chat_item:hover {
     cursor: pointer;
     background-color: var(--sec-blue);

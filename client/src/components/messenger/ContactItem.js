@@ -2,8 +2,8 @@ import { React, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { ContactsController } from "./controllers/Contacts";
-import { AlertDialog, useAlertDialog } from "../AlertDialog";
-import Modal from "../Modal";
+import { AlertDialog, useAlertDialog } from "./dialogs/AlertDialog";
+import Modal from "./dialogs/Modal";
 
 import "../../styles/dialog.css";
 import trash from "../../assets/trash.svg";

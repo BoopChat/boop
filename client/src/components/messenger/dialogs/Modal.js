@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 
-import "../styles/dialog.css";
+import "../../../styles/dialog.css";
 
 const Modal = ({ children, onClose, center }) => {
     const modal = useRef();
