@@ -5,7 +5,6 @@
  */
 
 var app = require("../app");
-var debug = require("debug")("server:server");
 var http = require("http");
 const socketio = require("socket.io");
 
@@ -98,9 +97,9 @@ function onError(error) {
  */
 
 function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
-  debug("Listening on " + bind);
+    const addr = server.address();
+    const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+    console.log("Boop server listening on " + bind);
 }
 
 /**

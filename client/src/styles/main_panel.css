@@ -37,6 +37,10 @@ div.contact_item, div.chat_item {
     justify-content: space-between;
 }
 
+svg.adminCrown {
+    fill: var(--away);
+}
+
 div.contact_item:hover, div.chat_item:hover {
     cursor: pointer;
     background-color: var(--sec-blue);
@@ -156,6 +160,9 @@ input.addConversation {
     border-right: none;
     outline: none;
     margin-bottom: 8px;
+    width: 100%;
+    background-color: var(--bg-3);
+    color: var(--text);
 }
 
 button.addContact, button.addConversation {
@@ -163,6 +170,7 @@ button.addContact, button.addConversation {
     color: var(--light-text);
     background-color: var(--prim-blue);
     border: none;
+    width: 100%;
 }
 
 button.addContact:hover, button.addConversation:hover {
@@ -252,6 +260,11 @@ ul.add_participants li {
     display: flex;
     justify-content: space-between;
     padding: 8px;
+}
+
+ul.add_participants li .img_and_name {
+    display: flex;
+    gap: 8px;
 }
 
 div.MuiPaper-root {

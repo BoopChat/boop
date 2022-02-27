@@ -251,29 +251,27 @@ span.participant_label {
     padding: 5px 8px;
 }
 
-#chat_options_dialog div.MuiPaper-root,
-#alert-dialog div.MuiPaper-root,
-#add-convo-dialog div.MuiPaper-root {
-    background-color: var(--bg-3);
-    color: var(--text);
+button.addUsersBtn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 8px;
+    width: 110px;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: var(--online);
+    color: var(--light-text);
+    outline: none;
+    border: none;
+    margin: 4px 8px 12px 8px;
+    border-radius: 4px;
 }
 
-#chat_options_dialog header,
-#alert-dialog h2,
-#add-convo-dialog div.MuiPaper-root {
-    background-color: var(--input);
-    color: var(--text);
+button.addUsersBtn:hover {
+    cursor: pointer;
+    transform: scale(0.98);
 }
 
-#chat_options_dialog header button:hover {
-    background-color: var(--action-button-hover);
-}
-
-#alert-dialog h2 button {
-    filter: var(--filter);
-}
-
-#add-convo-dialog input {
-    background-color: var(--bg-3);
-    color: var(--text);
+button.addUsersBtn svg {
+    fill: var(--light-text);
 }

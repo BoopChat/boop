@@ -169,8 +169,8 @@ const Sidebar = ({ username, userPic, userName }) => {
                     </Details>
                 </Profile>
                 <SideItems clicked={click}>
-                    <NavLink onClick={() => setClick(false)} activeClassName="active" to="/chats">
-                        <img src={chats} alt="chats" />
+                    <NavLink onClick={() => setClick(false)} activeClassName="active" to="/conversations">
+                        <img src={chats} alt="conversations" />
                         <Text clicked={click}>Chats</Text>
                     </NavLink>
                     <NavLink onClick={() => setClick(false)} activeClassName="active" to="/contacts">

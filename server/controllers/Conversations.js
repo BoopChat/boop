@@ -73,7 +73,7 @@ module.exports.addConversation = async (req, res) => {
                     [db.Sequelize.Op.not]: [{ id: userId }],
                 },
                 // specify what atributes you want returned
-                attributes: ["displayName", "imageUrl"],
+                attributes: ["displayName", "imageUrl", "id"],
                 // Prevents the entire belongs-to-many mapping object (Participant)
                 // from being returned
                 through: { attributes: [] },
@@ -123,14 +123,14 @@ module.exports.getConversations = async (req, res) => {
                 model: User,
                 as: "participants",
                 // exclude the requesting user's info from the participants list
-                where: {
-                    [db.Sequelize.Op.not]: [{ id: userId }],
-                },
+                // where: {
+                //     [db.Sequelize.Op.not]: [{ id: userId }],
+                // },
                 // specify what atributes you want returned
-                attributes: ["displayName", "imageUrl"],
+                attributes: ["displayName", "imageUrl", "id"],
                 // Prevents the entire belongs-to-many mapping object (Participant)
                 // from being returned
-                through: { attributes: [] },
+                through: { attributes: ["isAdmin"] },
             },
         },
     });
@@ -306,4 +306,68 @@ module.exports.leaveConversation = async (req, res) => {
     let msg = "User successfully removed from the conversation!";
     logger.info(msg + `${userId} - ${conversationId}`);
     return res.status(200).send({ msg });
+};
+
+module.exports.addUserToConversation = async (req, res) => {
+    const { user: { id: userId } } = req;
+    const { newParticipants, conversationId } = req.body;
+
+    // verify all data required has been provided
+    if (newParticipants?.length < 1) {
+        logger.error(userId + " failed to provide new participants to add to the conversation");
+        return res.status(400).send({ msg: "No new participants" });
+    }
+
+    if (!conversationId) {
+        logger.error(userId + " tried to add participants to a conversation without providing the conversation id");
+        return res.status(400).send({ msg: "Conversation not provided" });
+    }
+
+    let t = await db.sequelize.transaction();
+    try {
+        // add the user ids passed as users in the conversation
+        await Promise.all(newParticipants.map(async (id) =>
+            await Participant.create({ userId: id, conversationId, isAdmin: false }, { transaction: t })));
+
+        await t.commit();
+
+        // retrieve the updated conversation with it's participants' info
+        let conversation = await Conversation.findByPk(conversationId, {
+            attributes: ["id", "title", "imageUrl"],
+            // get each participant's info from the Users table
+            include: {
+                model: User,
+                as: "participants",
+                // exclude the requesting user's info from the participants list
+                where: { [db.Sequelize.Op.not]: [{ id: userId }], },
+                // specify what atributes you want returned
+                attributes: ["displayName", "imageUrl", "id"],
+                // Prevents the entire belongs-to-many mapping object (Participant)
+                // from being returned
+                through: { attributes: [] },
+            },
+        });
+
+        // Emit the new conversation to all participants and the sender
+        const participantIds = conversation.participants.map(({ id }) => Number(id));
+        global.io.to([...participantIds, userId]).emit("newConversationParticipants", { conversation });
+
+        // return a success message
+        const msg = "Conversation successfully updated";
+        logger.info(msg + ":" + conversationId);
+        return res.status(201).send({ msg });
+    } catch (e) {
+        // abort transaction due to error
+        await t.rollback();
+
+        if (e.message.includes("insert or update on table")) {
+            logger.error(`At least one of the participants were invalid when trying to create the
+                conversation: ${userId} - ${newParticipants}`);
+            return res.status(404).send({ msg: "At least one of your participants isn't a valid user" });
+        }
+
+        const msg = e.message || "Some error occurred while updating the Conversation.";
+        logger.error(msg);
+        return res.status(500).send({ msg });
+    }
 };
