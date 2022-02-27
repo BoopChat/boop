@@ -123,14 +123,14 @@ module.exports.getConversations = async (req, res) => {
                 model: User,
                 as: "participants",
                 // exclude the requesting user's info from the participants list
-                where: {
-                    [db.Sequelize.Op.not]: [{ id: userId }],
-                },
+                // where: {
+                //     [db.Sequelize.Op.not]: [{ id: userId }],
+                // },
                 // specify what atributes you want returned
                 attributes: ["displayName", "imageUrl", "id"],
                 // Prevents the entire belongs-to-many mapping object (Participant)
                 // from being returned
-                through: { attributes: [] },
+                through: { attributes: ["isAdmin"] },
             },
         },
     });
