@@ -12,15 +12,16 @@ const Participant = db.Participant;
 const Message = db.Message;
 
 module.exports = {
-    up: async (queryInterface) => {
+    up: async () => {
         console.log(`process.env.NODE_ENV = ${process.env.NODE_ENV}`);
         if (process.env.NODE_ENV === "development"){ // seeder can only run in development
-            // delete any existing entries
-            await queryInterface.bulkDelete("Messages", null, {});
-            await queryInterface.bulkDelete("Conversations", null, {});
-            await queryInterface.bulkDelete("Contacts", null, {});
-            await queryInterface.bulkDelete("SigninOptions", null, {});
-            await queryInterface.bulkDelete("Users", null, {});
+            // delete any existing entries and reset any auto-incrementing keys
+            await Message.sync({ force: true });
+            await Participant.sync({ force: true });
+            await Conversation.sync({ force: true });
+            await Contact.sync({ force: true });
+            await SigninOption.sync({ force: true });
+            await User.sync({ force: true });
 
             console.log("All messages, conversations, contacts and users have been deleted from the database.");
 
@@ -233,52 +234,63 @@ module.exports = {
             let participants = [
                 {
                     userId: mainUser,
-                    conversationId: conv1
+                    conversationId: conv1,
+                    isAdmin: true
                 },
                 {
                     userId: bff1,
-                    conversationId: conv1
+                    conversationId: conv1,
+                    isAdmin: true
                 },
 
                 {
                     userId: mainUser,
-                    conversationId: conv2
+                    conversationId: conv2,
+                    isAdmin: true
                 },
                 {
                     userId: bff2,
-                    conversationId: conv2
+                    conversationId: conv2,
+                    isAdmin: true
                 },
 
                 {
                     userId: mainUser,
-                    conversationId: conv3
+                    conversationId: conv3,
+                    isAdmin: true
                 },
                 {
                     userId: bff3,
-                    conversationId: conv3
+                    conversationId: conv3,
+                    isAdmin: true
                 },
 
                 {
                     userId: mainUser,
-                    conversationId: conv4
+                    conversationId: conv4,
+                    isAdmin: true
                 },
                 {
                     userId: bff4,
-                    conversationId: conv4
+                    conversationId: conv4,
+                    isAdmin: true
                 },
 
                 {
                     userId: mainUser,
-                    conversationId: conv5
+                    conversationId: conv5,
+                    isAdmin: true
                 },
                 {
                     userId: bff5,
-                    conversationId: conv5
+                    conversationId: conv5,
+                    isAdmin: true
                 },
 
                 {
                     userId: mainUser,
-                    conversationId: conv6
+                    conversationId: conv6,
+                    isAdmin: true
                 },
                 {
                     userId: bff1,
@@ -503,13 +515,14 @@ module.exports = {
         }
     },
 
-    down: async (queryInterface) => {
+    down: async () => {
         if (process.env.NODE_ENV === "development"){ // seeder can only run in development
-            await queryInterface.bulkDelete("Messages", null, {});
-            await queryInterface.bulkDelete("Conversations", null, {});
-            await queryInterface.bulkDelete("Contacts", null, {});
-            await queryInterface.bulkDelete("SigninOptions", null, {});
-            await queryInterface.bulkDelete("Users", null, {});
+            await Message.sync({ force: true });
+            await Participant.sync({ force: true });
+            await Conversation.sync({ force: true });
+            await Contact.sync({ force: true });
+            await SigninOption.sync({ force: true });
+            await User.sync({ force: true });
 
             console.log("All messages, conversations, contacts and users have been deleted from the database.");
         } else {
