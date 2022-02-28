@@ -1,4 +1,3 @@
-@import url("https://fonts.googleapis.com/css?family=Open+Sans|Roboto:400,700&display=swap");
 * {
   margin: 0;
   padding: 0;
@@ -7,7 +6,7 @@
 }
 
 body {
-  font-family: "Open Sans", sans-serif;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   background: var(--bg);
   color: var(--text);
   line-height: 1.5;
@@ -187,7 +186,7 @@ App
     position: absolute;
     display: inline-block;
     background-image: url('../assets/bg.png');
-    opacity: .6;
+    opacity: .85;
     background-repeat: no-repeat;
     background-size:cover;
     top: 0;

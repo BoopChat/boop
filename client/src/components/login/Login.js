@@ -12,6 +12,8 @@ import GoogleButton from "../GoogleButton.js";
 import FacebookButton from "../FacebookButton.js";
 import TwitterButton from "../TwitterButton.js";
 
+import logo from "../../assets/bg.png";
+
 const Login = () => {
     const dispatch = useDispatch();
     const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
@@ -87,6 +89,7 @@ const Login = () => {
     const LoginForm = () => {
         return (
             <div className="sign-in-container">
+                <img src={logo} alt=" " className="logo"/>
                 <h1>Boop Chat</h1>
                 <div className="sign_btns">
                     { loginService.google && <GoogleButton text="Continue with Google" /> }

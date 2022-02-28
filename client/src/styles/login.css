@@ -1,6 +1,6 @@
-h1 {
+div.sign-in-container h1 {
     font-family: 'Monserrat', sans-serif;
-    font-size: 24px;
+    font-size: 28px;
     color: var(--text);
 }
 
@@ -8,24 +8,63 @@ div.sign-in-container {
     background: var(--bg);
     display: flex;
     flex-direction: column;
-    padding: 30px 10px;
-    width: 65%;
-    margin: auto;
-    justify-content: center;
+    height: 100%;
+    width: 100%;
     align-items: center;
+    justify-content: center;
     text-align: center;
-    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.25), 0 10px 15px rgba(0, 0, 0, 0.22);
-    border-radius: .5rem;
+    position: relative;
+}
+
+img.logo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    position: absolute;
+    top: 9%;
+    object-fit: cover;
+    border: 1px rgba(168, 168, 168, 0.363) solid;
+}
+
+@media only screen and (min-width: 640px) {
+    div.sign-in-container {
+        width: 75%;
+        padding-left: 14%;
+        margin-left: auto;
+        clip-path: polygon(100% 0%, 33.94% 0%, 0% 101%, 101% 100%);
+    }
+
+    img.logo {
+        display: none;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    div.sign-in-container {
+        width: 60%;
+    }
+
+    div.sign-in-container h1 {
+        font-size: 32px;
+    }
+
+    div.sign-in-container span.switch {
+        font-size: 16px;
+    }
 }
 
 div.sign_btns {
     display: flex;
     flex-direction: column;
-    margin: 10px 0;
+    margin: 20px 0;
 }
 
 div.sign_btns > * {
-    margin: 5px 0;
+    margin: 8px 0;
+}
+
+div.sign_btns > *:hover {
+    transform: scale(1.02);
 }
 
 div.sign-in-container span.switch {
@@ -45,20 +84,6 @@ hr {
     border: none;
     height: 1px;
     width: 100%;
-}
-
-@media only screen and (min-width: 768px) {
-    div.sign-in-container {
-        width: 50%;
-    }
-
-    h1 {
-        font-size: 32px;
-    }
-
-    div.sign-in-container span.switch {
-        font-size: 16px;
-    }
 }
 
 span.dot {
