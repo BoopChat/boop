@@ -1,4 +1,4 @@
-import plus from "../../assets/plus.svg";
+import Plus from "../../assets/plus";
 import ContactItem from "./ContactItem";
 import { ContactsController } from "./controllers/Contacts";
 import { AlertDialog, useAlertDialog } from "./dialogs/AlertDialog";
@@ -96,7 +96,7 @@ const Contacts = () => {
             <div className="main_panel_header">
                 <h1>Contacts</h1>
                 <button className="options" title="add contact" onClick={() => handleClickAdd()}>
-                    <img src={plus} alt="options"/>
+                    <Plus/>
                 </button>
                 { dialogOpen ? <AddContactDialog onClose={addContact}/> : <></> }
             </div>

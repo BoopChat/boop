@@ -14,12 +14,13 @@ import { useDispatch } from "react-redux";
 import { logOut } from "../login/userSlice";
 
 const MenuButton = styled.button`
-    background-color: var(--panel);
+    background-color: var(--raven_coat);
     border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin: 8px 0 0 2px;
+    width: 50px;
+    height: 50px;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+    margin: 20px 0 0 0px;
     cursor: pointer;
     display: flex;
     justify-content: center;
@@ -30,14 +31,16 @@ const MenuButton = styled.button`
     &::after {
         content: "";
         background-color: var(--white);
-        height: 2px;
-        width: 16px;
+        height: 4px;
+        width: 25px;
         position: absolute;
         transition: all 0.3s ease;
+        margin-top: 5px;
+        margin-left: -5px;
     }
 
     &::before {
-        top: ${(props) => (props.clicked ? "24" : "16px")};
+        top: ${(props) => (props.clicked ? "24" : "14px")};
         transform: ${(props) => (props.clicked ? "rotate(135deg)" : "rotate(0)")};
     }
 
@@ -49,15 +52,12 @@ const MenuButton = styled.button`
 
 const SideItems = styled.ul`
     color: var(--white);
-    background-color: inherit;
+    background-color: transparent;
     list-style: none;
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: absolute;
-    top: 90px;
-    left: 0;
-    width: ${(props) => (props.clicked ? "170px" : "56px")};
+    width: ${(props) => (props.clicked ? "170px" : "60px")};
     transition: all 0.3s ease;
     border-radius: 0 30px 30px 0;
     padding: 16px 0;
@@ -65,52 +65,25 @@ const SideItems = styled.ul`
 `;
 
 const Text = styled.span`
-    width: ${(props) => (props.clicked ? "100%" : "0")};
+    width: "fit-content";
     overflow: hidden;
-    margin-left: ${(props) => (props.clicked ? "24px" : "0")};
+    margin-left: 16px;
     transition: all 0.3s ease;
+    padding: 0 5px;
+    display: ${(props) => (props.clicked ? "block" : "none")};
 `;
 
 const Profile = styled.div`
     color: var(--white);
-    background-color: var(--panel);
-    list-style: none;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: left;
-    position: absolute;
-    top: 0;
-    left: 0;
-    max-width: ${(props) => (props.clicked ? "440px" : "56px")};
-    transition: all 0.3s ease;
-    border-radius: 0 26px ${(props) => (props.clicked ? "26px" : "0px")} 0;
+    background-color: transparent;
+    max-width: 56px;
+    border-radius: 0 26px 0px 0;
     padding: 14px 5px;
 `;
 
-const Details = styled.div`
-    display: ${(props) => (props.clicked ? "flex" : "none")};
-    justify-content: space-between;
-    align-items: center;
-
-    div {
-        padding: 0 24px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    h4 {
-        display: inline-block;
-    }
-`;
-
-const Sidebar = ({ username, userPic, userName }) => {
+const Sidebar = ({ username, userPic }) => {
     const [click, setClick] = useState(false);
     const handleClick = () => setClick(!click);
-
-    const [profileClick, setProfileClick] = useState(false);
-    const handleProfileClick = () => setProfileClick(!profileClick);
 
     const [themeIcon, setThemeIcon] = useState(() => {
         return document.getElementsByTagName("body")[0].classList[0] === "dark" ? sun : moon;
@@ -156,17 +129,8 @@ const Sidebar = ({ username, userPic, userName }) => {
         <div>
             <MenuButton title="Menu" clicked={click} onClick={() => handleClick()}></MenuButton>
             <div id="sidebar_container">
-                <Profile id="profile" clicked={profileClick}>
-                    <img onClick={() => handleProfileClick()} src={userPic} alt={username + " pic"} />
-                    <Details clicked={profileClick}>
-                        <div>
-                            <h4>{username}</h4>
-                            <h5>{userName}</h5>
-                        </div>
-                        <button id="logout" onClick={handleLogOut}>
-                            <img src={logout} alt="logout" />
-                        </button>
-                    </Details>
+                <Profile id="profile">
+                    <img src={userPic} alt={username} />
                 </Profile>
                 <SideItems clicked={click}>
                     <NavLink onClick={() => setClick(false)} activeClassName="active" to="/conversations">
@@ -184,6 +148,9 @@ const Sidebar = ({ username, userPic, userName }) => {
                 </SideItems>
                 <button id="toggleTheme" onClick={toggleTheme}>
                     <img src={themeIcon} alt="toggle theme" />
+                </button>
+                <button id="logout" onClick={handleLogOut}>
+                    <img src={logout} alt="logout" />
                 </button>
             </div>
         </div>

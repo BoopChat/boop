@@ -2,7 +2,7 @@ import { useEffect, useState, React } from "react";
 import { useSelector } from "react-redux";
 import { AlertDialog, useAlertDialog } from "./dialogs/AlertDialog";
 
-import plus from "../../assets/plus.svg";
+import Plus from "../../assets/plus";
 import ConversationItem from "./ConversationItem";
 import { ConversationsController } from "./controllers/Conversations";
 import { ContactsController } from "./controllers/Contacts";
@@ -161,8 +161,8 @@ const Conversations = ({ selectConversation, socket }) => {
             }
             <div className="main_panel_header">
                 <h1>Conversations</h1>
-                <button className="options" title="options" onClick={() => handleClickAdd()}>
-                    <img src={plus} alt="options" />
+                <button className="options" title="create conversation" onClick={() => handleClickAdd()}>
+                    <Plus/>
                 </button>
                 { dialogOpen ? <AddConversationDialog onClose={addConversation} token={token} /> : <></> }
             </div>

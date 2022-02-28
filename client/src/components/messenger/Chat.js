@@ -9,7 +9,7 @@ import ChooseUsersDialog from "./dialogs/ChooseUsersDialog";
 import ChooseAdminDialog from "./dialogs/ChooseAdminDialog";
 
 import "../../styles/chat.css";
-import options from "../../assets/options.svg";
+import Options from "../../assets/options.js";
 
 const Chat = ({ conversationId, title, participants, socket }) => {
     const [messages, setMessages] = useState([]);
@@ -177,7 +177,7 @@ const Chat = ({ conversationId, title, participants, socket }) => {
             <header className="chat_title">
                 <img src="https://picsum.photos/400" className="skeleton" alt="chat" />
                 <span>{title || "Untitled Chat"}</span>
-                <img src={options} alt="options" onClick={showChatOptions} className="chat_options" />
+                <Options action={showChatOptions} />
             </header>
             { optionsDialog ?
                 <ChatOptionsDialog

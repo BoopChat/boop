@@ -57,7 +57,7 @@ const Settings = ({ userInfo, updateUser }) => {
     };
 
     return (
-        <div>
+        <div id="settings_container">
             <h1>Settings</h1>
             <div className="setting_item">
                 <div>

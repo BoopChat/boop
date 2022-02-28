@@ -1,7 +1,8 @@
 #chat_panel {
     height: 95%;
-    width: 58%;
-    margin: auto 0px;
+    width: 61.5%;
+    margin: 15px 0px;
+    border-radius: 16px;
     background-color: var(--bg-2);
 }
 
@@ -11,6 +12,8 @@ div.chat_container {
     justify-content: space-between;
     background: var(--bg-3);
     height: 100%;
+    padding: 10px;
+    border-radius: 16px;
 }
 
 header.chat_title {
@@ -156,9 +159,8 @@ form.interactions {
     flex-direction: row;
     justify-content: space-between;
     align-content: flex-end;
-    padding: 20px;
+    padding: 12px 5px 8px 5px;
     background-color: var(--bg-3);
-    border-top: 1px solid var(--border);
 }
 
 form.interactions input {
@@ -201,11 +203,7 @@ header img {
     width: auto;
 }
 
-header img.chat_options {
-    filter: var(--filter);
-}
-
-header img.chat_options:hover {
+header svg.chat_options:hover {
     cursor: pointer;
 }
 

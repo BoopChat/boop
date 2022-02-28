@@ -25,3 +25,6 @@ trim_trailing_whitespace = false
 
 [GoogleButton.js]
 max_line_length = off
+
+[options.js]
+max_line_length = off

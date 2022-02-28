@@ -74,7 +74,7 @@ const ContactItem = ({ img, username, status, id, triggerRefresh }) => {
             { imageDialogOpen ?
                 <ViewContactDialog onClose={closeContactImage} img={img} username={username}/> : <></> }
             { confirmDialogOpen ? <ConfirmDialog onClose={deleteContact} username={username}/>  : <></> }
-            <div className="img_and_name">
+            <div className="img_and_name contacts">
                 <img onClick={handleClickContact} src={img} className="skeleton" alt=""/>
                 <span>{username}</span>
             </div>
