@@ -1,8 +1,8 @@
 import { useEffect, useState, React } from "react";
 import { useSelector } from "react-redux";
-import { AlertDialog, useAlertDialog } from "./dialogs/AlertDialog";
+import { AlertDialog, useAlertDialog, AlertType } from "./dialogs/AlertDialog";
 
-import Plus from "../../assets/plus";
+import Plus from "../../assets/icons/plus";
 import ConversationItem from "./ConversationItem";
 import { ConversationsController } from "./controllers/Conversations";
 import { ContactsController } from "./controllers/Contacts";
@@ -41,7 +41,8 @@ const AddConversationDialog = ({ onClose, token }) => {
             else {
                 alertDialog.display({
                     title: "Error",
-                    message: "There was an error retrieving your contacts"
+                    message: "There was an error retrieving your contacts",
+                    type: AlertType.Error
                 });
                 setContacts([]);
             }
@@ -56,6 +57,7 @@ const AddConversationDialog = ({ onClose, token }) => {
                     handleClose={alertDialog.close}
                     title={alertDialog.title}
                     message={alertDialog.message}
+                    type={alertDialog.type}
                 /> :<></>
             }
             <div id="add-convo-dialog">
@@ -116,7 +118,8 @@ const Conversations = ({ selectConversation, socket }) => {
             if (!result.success) {
                 alertDialog.display({
                     title: "Error",
-                    message: "There was an error retrieving your conversations"
+                    message: "There was an error retrieving your conversations",
+                    type: AlertType.Error
                 });
             }
             setConversations(result.conversations);
@@ -136,6 +139,14 @@ const Conversations = ({ selectConversation, socket }) => {
                 return;
             const runAsync = async () => {
                 let { title, list } = conversationDetails;
+                if (list.length < 1) {
+                    alertDialog.display({
+                        title: "Error",
+                        message: "You need to add participants to the conversation",
+                        type: AlertType.Error
+                    });
+                    return;
+                }
                 if (title.length < 1) {
                     // create a title from the chosen participants' names
                     title = list
@@ -143,8 +154,15 @@ const Conversations = ({ selectConversation, socket }) => {
                         .reduce((prevValue, curValue) => prevValue + curValue + ", ", "You, ")
                         .substring(0, 25);
                 }
-                await ConversationsController.createConversation(
+                const success = await ConversationsController.createConversation(
                     token, list.map(i => i.id), title, updateConversations);
+                if (!success) {
+                    alertDialog.display({
+                        title: "Error",
+                        message: "An error occurred trying to create the conversation",
+                        type: AlertType.Error
+                    });
+                }
             };
             runAsync();
         }
@@ -157,6 +175,7 @@ const Conversations = ({ selectConversation, socket }) => {
                     handleClose={alertDialog.close}
                     title={alertDialog.title}
                     message={alertDialog.message}
+                    type={alertDialog.type}
                 /> :<></>
             }
             <div className="main_panel_header">

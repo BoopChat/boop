@@ -1,4 +1,4 @@
-import edit_icon from "../../assets/icons8-edit.svg";
+import edit_icon from "../../assets/icons/icons8-edit.svg";
 
 import { useState, React } from "react";
 

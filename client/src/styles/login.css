@@ -80,7 +80,7 @@ a {
 }
 
 hr {
-    background-color: var(--bg);
+    background-color: var(--separator_color);
     border: none;
     height: 1px;
     width: 100%;

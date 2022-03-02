@@ -31,12 +31,22 @@ body {
   --border: var(--gray1);
   --border-hover: var(--gray2);
   --prim-red: var(--red);
-  --sec-red: var(--fire-opal);
+  --sec-red: var(--whero_red);
   --input: var(--blank);
   --shadow: rgba(218, 216, 216, 0.25);
   --author-border: var(--brandeis-blue);
   --action-button-hover: var(--offline);
   --icon: var(--brandeis-blue);
+  --separator_color: var(--tender_twilight);
+
+  --dialog_success_bg: var(--online);
+  --dialog_success: var(--white);
+  --dialog_warning_bg: var(--away);
+  --dialog_warning: var(--white);
+  --dialog_info_bg: var(--prim-blue);
+  --dialog_info: var(--white);
+  --dialog_error_bg: var(--sec-red);
+  --dialog_error: var(--white);
 }
 
 .dark {
@@ -62,6 +72,16 @@ body {
   --author-border: var(--gray5);
   --action-button-hover: var(--gray2);
   --icon: var(--blank);
+  --separator_color: var(--buroi_black);
+
+  --dialog_success_bg: var(--gray5);
+  --dialog_success: var(--online);
+  --dialog_warning_bg: var(--gray5);
+  --dialog_warning: var(--away);
+  --dialog_info_bg: var(--gray5);
+  --dialog_info: var(--prim-blue);
+  --dialog_error_bg: var(--gray5);
+  --dialog_error: var(--sec-red);
 }
 
 :root {
@@ -78,10 +98,12 @@ body {
   --dnd: #f71a30;
   --red: rgb(255, 0, 0);
   --albanian-red: rgb(204, 1, 1);
-  --fire-opal: rgb(255, 62, 4);
+  --whero_red: #DC2626;
   --offline: #dfdfdf;
   --blank:#fff;
   --raven_coat: rgba(2, 2, 5, 0.9);
+  --tender_twilight: #b8cfe55e;
+  --buroi_black: #0d131a5e;
 }
 
 ul {

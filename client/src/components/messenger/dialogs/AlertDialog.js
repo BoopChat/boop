@@ -2,12 +2,23 @@ import { React, useState } from "react";
 
 import Modal from "./Modal";
 
-const AlertDialog = ({ handleClose, title, message, closeMessage="Okay" }) => {
+const AlertType = { Success: 0, Warning: 1, Info: 2, Error: 3 };
+
+const style = [
+    { name: "success", icon: require("../../../assets/icons/check").default },
+    { name: "warning", icon: require("../../../assets/icons/warning").default },
+    { name: "info", icon: require("../../../assets/icons/info").default },
+    { name: "error", icon: require("../../../assets/icons/exclamation").default }
+];
+
+const AlertDialog = ({ handleClose, title, message, closeMessage="Okay", type }) => {
+
     return (
         <Modal onClose={handleClose} center>
             <div id="alert-dialog">
-                <header>
+                <header className={style[type].name}>
                     <span>{title}</span>
+                    { style[type].icon({ className: style[type].name }) }
                     <span className="xbutton" onClick={handleClose}>&times;</span>
                 </header>
                 <main>{message}</main>
@@ -23,7 +34,8 @@ const useAlertDialog = () => {
     const [messageDialog, setMessageDialog] = useState({
         open: false,
         title: "",
-        message: ""
+        message: "",
+        type: AlertType.Info
     });
 
     return {
@@ -33,7 +45,8 @@ const useAlertDialog = () => {
             setMessageDialog({
                 title: "",
                 message: "",
-                open: false
+                open: false,
+                type: AlertType.Info
             });
         }
     };
@@ -41,5 +54,6 @@ const useAlertDialog = () => {
 
 export {
     AlertDialog,
-    useAlertDialog
+    useAlertDialog,
+    AlertType
 };

@@ -5,6 +5,7 @@
     display: flex;
     flex-direction: column;
     margin-left: 26px;
+    justify-content: space-between;
 }
 
 #panels {
@@ -52,10 +53,6 @@ div.contact_item:hover, div.chat_item:hover {
     cursor: pointer;
     background-color: var(--sec-blue);
     color: var(--text-hover);
-}
-
-div.chat_item {
-    padding: 34px 18px;
 }
 
 div.skeleton-text {
@@ -144,10 +141,15 @@ div#contacts, div#conversations {
     scrollbar-width: none;
 }
 
+/* scrollbar-width: none; for browsers other than firefox */
+div#contacts::-webkit-scrollbar, div#conversations::-webkit-scrollbar {
+    display: none;
+}
+
 div#contact_container, div#conversations_container, div#settings_container {
     display: flex;
     flex-direction: column;
-    height: 90%;
+    height: 88%;
     width: 100%;
     background-color: var(--bg);
     border-radius: 16px;
@@ -193,6 +195,8 @@ input.addContact {
     border: none;
     border-top: 1px solid var(--border);
     outline: none;
+    background-color: var(--bg-3);
+    color: var(--text);
 }
 
 input.addConversation {
@@ -213,6 +217,8 @@ button.addContact, button.addConversation {
     background-color: var(--prim-blue);
     border: none;
     width: 100%;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
 }
 
 button.addContact:hover, button.addConversation:hover {
@@ -331,49 +337,47 @@ div.trash_and_status {
     justify-content: space-between;
 }
 
-.btn_confirm {
-    color: var(--light-text);
-    background-color: var(--prim-blue);
-    border-radius: 5px;
+#delete-contact-dialog button {
     padding: 6px 18px;
     outline: none;
-    border: 1px solid;
-    width: 77%;
+    width: 50%;
     height: 55px;
-    margin-top:5%;
+    font-size: 14px;
+}
+
+.btn_confirm {
+    color: var(--light-text);
+    background-color: var(--sec-blue);
+    border: solid 1px var(--prim-blue);
+    border-bottom: 2px solid var(--prim-blue);
+    border-bottom-left-radius: 8px;
 }
 
 .btn_confirm:hover {
-    background-color: var(--sec-blue);
+    background-color: var(--prim-blue);
     cursor: pointer;
+    box-shadow: 0 1px 3px 0 var(--prim-blue), 0 1px 2px -1px var(--prim-blue);
 }
 
 .btn_deny {
     color: var(--light-text);
-    background-color: var(--prim-red);
-    border-radius: 5px;
-    padding: 6px 18px;
-    outline: none;
-    border: 1px solid;
-    width: 77%;
-    height: 55px;
-    margin-top:5%;
+    background-color: var(--sec-red);
+    border: solid 1px var(--prim-red);
+    border-bottom: 2px solid var(--prim-red);
+    border-bottom-right-radius: 8px;
 }
 
 .btn_deny:hover {
-    background-color: var(--sec-red);
+    background-color: var(--prim-red);
     cursor: pointer;
+    box-shadow: 0 1px 3px 0 var(--prim-red), 0 1px 2px -1px var(--prim-red);
 }
 
-#search {
+div#search {
     height: 8%;
     background-color: var(--bg);
     padding: 10px;
     border-radius: 16px;
-    margin-bottom: 15px;
-}
-
-div#search {
     display: flex;
     align-items: center;
 }
@@ -388,7 +392,7 @@ div#search svg {
         height: 65%;
     }
 
-    #search {
+    div#search {
         height: 9%;
     }
 }

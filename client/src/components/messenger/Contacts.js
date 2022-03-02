@@ -1,7 +1,7 @@
-import Plus from "../../assets/plus";
+import Plus from "../../assets/icons/plus";
 import ContactItem from "./ContactItem";
 import { ContactsController } from "./controllers/Contacts";
-import { AlertDialog, useAlertDialog } from "./dialogs/AlertDialog";
+import { AlertDialog, useAlertDialog, AlertType } from "./dialogs/AlertDialog";
 import Modal from "./dialogs/Modal";
 
 import { React, useState, useEffect } from "react";
@@ -11,11 +11,11 @@ import { useSelector } from "react-redux";
 const AddContactDialog = ({ onClose }) => {
     const [email, setEmail] = useState("");
 
-    const handleClose = () => onClose(email);
+    const handleClose = btnClicked => onClose(email, btnClicked);
     const handleChange = (e) => setEmail(e.target.value);
 
     return (
-        <Modal onClose={handleClose} center>
+        <Modal onClose={() => handleClose(false)} center>
             <div id="add-contact-dialog">
                 <header>Add a contact by email</header>
                 <main>
@@ -27,7 +27,7 @@ const AddContactDialog = ({ onClose }) => {
                         onChange={handleChange}
                         className="addContact"
                     />
-                    <button onClick={() => handleClose()} name="add" className="addContact">Add</button>
+                    <button onClick={() => handleClose(true)} name="add" className="addContact">Add</button>
                 </main>
             </div>
         </Modal>
@@ -49,7 +49,8 @@ const Contacts = () => {
             if (!contacts.success) {
                 alertDialog.display({
                     title: "Error",
-                    message: "There was an error retrieving your contacts"
+                    message: "There was an error retrieving your contacts",
+                    type: AlertType.Error
                 });
             }
         };
@@ -66,8 +67,11 @@ const Contacts = () => {
 
     const handleClickAdd = () => setDialogOpen(true);
 
-    const addContact = (email) => {
+    const addContact = (email, btnClicked) => {
         setDialogOpen(false); // close add dialog
+
+        if (!btnClicked) return; // user clicked outside the dialog (i.e. didnt click add)
+
         // ask the server to add the user with this email to user's contacts
         if (email) {
             const runAsync = async () => {
@@ -77,10 +81,17 @@ const Contacts = () => {
                 else // display error message
                     alertDialog.display({
                         title: "Error",
-                        message: result.msg
+                        message: result.msg,
+                        type: AlertType.Error
                     });
             };
             runAsync();
+        } else {
+            alertDialog.display({
+                title: "Error",
+                message: "You need to enter an email to add a contact",
+                type: AlertType.Error
+            });
         }
     };
 
@@ -91,6 +102,7 @@ const Contacts = () => {
                     handleClose={alertDialog.close}
                     title={alertDialog.title}
                     message={alertDialog.message}
+                    type={alertDialog.type}
                 /> :<></>
             }
             <div className="main_panel_header">

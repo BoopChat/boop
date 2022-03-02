@@ -1,9 +1,9 @@
-import chats from "../../assets/chats.svg";
-import contacts from "../../assets/contacts.svg";
-import logout from "../../assets/logout.svg";
-import settings from "../../assets/settings.svg";
-import sun from "../../assets/sun.svg";
-import moon from "../../assets/moon.svg";
+import chats from "../../assets/icons/chats.svg";
+import contacts from "../../assets/icons/contacts.svg";
+import logout from "../../assets/icons/logout.svg";
+import settings from "../../assets/icons/settings.svg";
+import sun from "../../assets/icons/sun.svg";
+import moon from "../../assets/icons/moon.svg";
 import "../../styles/sidebar.css";
 
 import styled from "styled-components";
@@ -146,10 +146,10 @@ const Sidebar = ({ username, userPic }) => {
                         <Text clicked={click}>Settings</Text>
                     </NavLink>
                 </SideItems>
-                <button id="toggleTheme" onClick={toggleTheme}>
+                <button id="toggleTheme" onClick={toggleTheme} title="toggle theme">
                     <img src={themeIcon} alt="toggle theme" />
                 </button>
-                <button id="logout" onClick={handleLogOut}>
+                <button id="logout" onClick={handleLogOut} title="logout">
                     <img src={logout} alt="logout" />
                 </button>
             </div>

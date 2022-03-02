@@ -83,7 +83,7 @@ export const ConversationsController = {
                     title,
                 }),
             });
-            return res.status !== 201;
+            return res.status === 201;
         } catch (e) {
             return false;
         }

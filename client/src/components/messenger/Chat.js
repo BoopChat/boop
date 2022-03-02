@@ -4,12 +4,12 @@ import { useSelector } from "react-redux";
 import { ChatController } from "./controllers/Chat";
 import { ConversationsController } from "./controllers/Conversations";
 import { ChatOptionsDialog, optionsEnum } from "./dialogs/ChatOptionsDialog";
-import { AlertDialog, useAlertDialog,  } from "./dialogs/AlertDialog";
+import { AlertDialog, AlertType, useAlertDialog,  } from "./dialogs/AlertDialog";
 import ChooseUsersDialog from "./dialogs/ChooseUsersDialog";
 import ChooseAdminDialog from "./dialogs/ChooseAdminDialog";
 
 import "../../styles/chat.css";
-import Options from "../../assets/options.js";
+import Options from "../../assets/icons/options.js";
 
 const Chat = ({ conversationId, title, participants, socket }) => {
     const [messages, setMessages] = useState([]);
@@ -45,6 +45,7 @@ const Chat = ({ conversationId, title, participants, socket }) => {
             alertDialog.display({
                 title: "Error",
                 message: result.msg,
+                type: AlertType.Error
             });
         }
         // scroll to the bottom of the chat where new message has been rendered
@@ -85,7 +86,8 @@ const Chat = ({ conversationId, title, participants, socket }) => {
         if (result !== null) {
             alertDialog.display({
                 title: result.success ? "Success" : "Error",
-                message: result.msg
+                message: result.msg,
+                type: result.success ? AlertType.Success : AlertType.Error
             });
         }
     };
@@ -105,7 +107,8 @@ const Chat = ({ conversationId, title, participants, socket }) => {
                 const result = await ConversationsController.addUserToConversation(token, conversationId, list);
                 alertDialog.display({
                     title: result.success ? "Success": "Error",
-                    message: result.msg
+                    message: result.msg,
+                    type: result.success ? AlertType.Success : AlertType.Error
                 });
             }
         }
@@ -119,13 +122,14 @@ const Chat = ({ conversationId, title, participants, socket }) => {
         if (btnClicked) {
             // ask the server to set the choosen user as an admin
             if (!choosen) { // display error message for no new admin
-                alertDialog.display({ title: "Error", message: "No new admin selected" });
+                alertDialog.display({ title: "Error", message: "No new admin selected", type: AlertType.Error });
             } else {
                 // request that the user leave the conversation and send the id of the chosen successor
                 const result = await ConversationsController.leaveConversation(token, conversationId, Number(choosen));
                 alertDialog.display({
                     title: result.success ? "Success": "Error",
-                    message: result.msg
+                    message: result.msg,
+                    type: result.success ? AlertType.Success : AlertType.Error
                 });
             }
         }
@@ -161,7 +165,8 @@ const Chat = ({ conversationId, title, participants, socket }) => {
             if (!result.success) {
                 alertDialog.display({
                     title: "Error",
-                    message: "Could not retrieve messages for this chat"
+                    message: "Could not retrieve messages for this chat",
+                    type: AlertType.Error
                 });
             }
             const { messages } = result;
@@ -227,6 +232,7 @@ const Chat = ({ conversationId, title, participants, socket }) => {
                     handleClose={alertDialog.close}
                     title={alertDialog.title}
                     message={alertDialog.message}
+                    type={alertDialog.type}
                 /> :<></>
             }
             <form className="interactions" onSubmit={handleSend}>
