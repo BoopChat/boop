@@ -103,7 +103,12 @@ const Chat = ({ conversationId, title, participants, socket, closeChat }) => {
             // ask the server to add new participants to this conversation
             if (list?.length < 1) {
                 // display error message for no new participants
-                alertDialog.display({ title: "Error", message: "No new participants added" });
+                alertDialog.display(
+                    {
+                        title: "Error",
+                        message: "No new participants added",
+                        type: AlertType.Error
+                    });
             } else {
                 const result = await ConversationsController.addUserToConversation(token, conversationId, list);
                 alertDialog.display({
