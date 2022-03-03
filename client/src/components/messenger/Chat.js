@@ -150,7 +150,7 @@ const Chat = ({ conversationId, title, participants, socket, closeChat }) => {
             if (!messages.slice(-messageList.length-1).find(({ id }) => id === msg.id))
                 add.push(msg);
         });
-        setMessages(prevMessages => prevMessages.length > 1 ? [...prevMessages, ...add] : add);
+        setMessages(prevMessages => prevMessages.length > 0 ? [...prevMessages, ...add] : add);
     };
 
     useEffect(() => {
@@ -161,7 +161,7 @@ const Chat = ({ conversationId, title, participants, socket, closeChat }) => {
         ChatController.listen((message) => {
             // if the new message is a message for the currently opened chat
             // if not simply ignore it in the ui
-            if (message.newMessage.conversationId === conversationId.toString())
+            if (message.newMessage.conversation.id === conversationId.toString())
                 addNewMessages([message.newMessage]);
         });
 
