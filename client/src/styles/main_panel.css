@@ -309,11 +309,6 @@ ul.add_participants li .img_and_name {
     gap: 8px;
 }
 
-div.MuiPaper-root {
-    max-width: 600px;
-    min-width: 320px;
-}
-
 button.trash_btn {
     background-color: inherit;
     outline:none;
@@ -409,18 +404,16 @@ div#search {
     div#search {
         display: flex;
         border-radius: 16px;
+        height: 9%;
+        max-height: 80px;
     }
 }
 
 div#search svg {
     height: 65%;
+    max-height: 40px;
     fill: var(--icon);
 }
-
-div#search {
-    height: 9%;
-}
-
 /* search box input all screen */
 input.searchBox {
     margin-left: 8px;

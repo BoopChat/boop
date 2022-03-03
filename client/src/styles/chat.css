@@ -177,7 +177,6 @@ li.message p {
 @media screen and (min-width: 640px) {
     li.message p {
         width: fit-content;
-        min-width: 200px;
         max-width: 65%;
     }
 }

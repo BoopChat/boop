@@ -198,12 +198,9 @@ p {
 App
 =======================
 */
-#root {
-  height: 100vh;
-}
-
 .App {
     height: 100vh;
+    max-height: 1080px;
     width: 100%;
     z-index: 1;
     display: flex;
