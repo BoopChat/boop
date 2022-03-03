@@ -3,6 +3,7 @@ import ContactItem from "./ContactItem";
 import { ContactsController } from "./controllers/Contacts";
 import { AlertDialog, useAlertDialog, AlertType } from "./dialogs/AlertDialog";
 import Modal from "./dialogs/Modal";
+import SearchBox from "./SearchBox";
 
 import { React, useState, useEffect } from "react";
 
@@ -39,8 +40,8 @@ const Contacts = () => {
     const [contacts, setContacts] = useState([]);
     const alertDialog = useAlertDialog();
 
-    // Get the token from the users global state.
-    const token = useSelector((state) => state.user.token);
+    // Get the token and userInfo from the users global state.
+    const { token, userInfo: { displayName, imageUrl } } = useSelector((state) => state.user);
 
     useEffect(() => {
         const runAsync = async () => {
@@ -106,12 +107,16 @@ const Contacts = () => {
                 /> :<></>
             }
             <div className="main_panel_header">
-                <h1>Contacts</h1>
+                <div className="img_and_title">
+                    <img src={imageUrl} alt={displayName} className="profile_img_mobile"/>
+                    <h1>Contacts</h1>
+                </div>
                 <button className="options" title="add contact" onClick={() => handleClickAdd()}>
                     <Plus/>
                 </button>
                 { dialogOpen ? <AddContactDialog onClose={addContact}/> : <></> }
             </div>
+            <SearchBox id="search_mobile"/>
             <div id="contacts">
                 {contacts.length > 0 ? contacts.map((contact, i) =>
                     <ContactItem

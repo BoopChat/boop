@@ -127,3 +127,22 @@ span.loader-text {
     margin: 30px;
     display: inline-block;
 }
+
+span.blue {
+    color: var(--prim-blue);
+}
+
+svg.chat_logo {
+    fill: var(--text);
+    width: 30px;
+    margin-right: 10px;
+}
+
+header.booptext {
+    display: flex;
+    align-items: center;
+}
+
+header.booptext h1 {
+    margin: 0;
+}

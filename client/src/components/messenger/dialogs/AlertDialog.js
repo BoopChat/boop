@@ -19,7 +19,7 @@ const AlertDialog = ({ handleClose, title, message, closeMessage="Okay", type })
                 <header className={style[type].name}>
                     <span>{title}</span>
                     { style[type].icon({ className: style[type].name }) }
-                    <span className="xbutton" onClick={handleClose}>&times;</span>
+                    <span className="xbutton alert" onClick={handleClose}>&times;</span>
                 </header>
                 <main>{message}</main>
                 <footer>

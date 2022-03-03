@@ -1,20 +1,18 @@
-import chats from "../../assets/icons/chats.svg";
-import contacts from "../../assets/icons/contacts.svg";
+import Chat from "../../assets/icons/chat";
+import Contacts from "../../assets/icons/contacts";
+import Settings from "../../assets/icons/settings";
 import logout from "../../assets/icons/logout.svg";
-import settings from "../../assets/icons/settings.svg";
-import sun from "../../assets/icons/sun.svg";
-import moon from "../../assets/icons/moon.svg";
 import "../../styles/sidebar.css";
 
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import { useState, React } from "react";
-import { useDispatch } from "react-redux";
 
-import { logOut } from "../login/userSlice";
+import useThemeSwitcher from "./hooks/useThemeSwitcher";
+import useLogout from "./hooks/useLogout";
 
 const MenuButton = styled.button`
-    background-color: var(--raven_coat);
+    background-color: var(--raven_coat_glass);
     border: none;
     width: 50px;
     height: 50px;
@@ -85,48 +83,11 @@ const Sidebar = ({ username, userPic }) => {
     const [click, setClick] = useState(false);
     const handleClick = () => setClick(!click);
 
-    const [themeIcon, setThemeIcon] = useState(() => {
-        return document.getElementsByTagName("body")[0].classList[0] === "dark" ? sun : moon;
-    });
-
-    // Used to send actions to the redux store to change its state
-    const dispatch = useDispatch();
-
-    // handles logout
-    // deletes access token cookie from browser
-    // dispatches logOut action
-    const handleLogOut = async () => {
-        const res = await fetch("/api/login/auth/logout", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-
-        const data = await res.json();
-        const { success } = data;
-
-        if (success) {
-            // Logs the user out.
-            dispatch(logOut());
-        }
-    };
-
-    const toggleTheme = () => {
-        let body = document.getElementsByTagName("body")[0];
-        if (body.classList[0] === "light") {
-            body.classList.replace("light", "dark");
-            localStorage.setItem("theme", "dark");
-            setThemeIcon(sun);
-        } else {
-            body.classList.replace("dark", "light");
-            localStorage.setItem("theme", "light");
-            setThemeIcon(moon);
-        }
-    };
+    const { handleLogOut } = useLogout();
+    const { toggleTheme, themeIcon } = useThemeSwitcher();
 
     return (
-        <div>
+        <div id="sidebar">
             <MenuButton title="Menu" clicked={click} onClick={() => handleClick()}></MenuButton>
             <div id="sidebar_container">
                 <Profile id="profile">
@@ -134,15 +95,15 @@ const Sidebar = ({ username, userPic }) => {
                 </Profile>
                 <SideItems clicked={click}>
                     <NavLink onClick={() => setClick(false)} activeClassName="active" to="/conversations">
-                        <img src={chats} alt="conversations" />
+                        <Chat/>
                         <Text clicked={click}>Chats</Text>
                     </NavLink>
                     <NavLink onClick={() => setClick(false)} activeClassName="active" to="/contacts">
-                        <img src={contacts} alt="contacts" />
+                        <Contacts/>
                         <Text clicked={click}>Contacts</Text>
                     </NavLink>
                     <NavLink onClick={() => setClick(false)} activeClassName="active" to="/settings">
-                        <img src={settings} alt="settings" />
+                        <Settings/>
                         <Text clicked={click}>Settings</Text>
                     </NavLink>
                 </SideItems>

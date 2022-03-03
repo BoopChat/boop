@@ -19,6 +19,10 @@
 
 .xbutton {
     font-size: 1.875rem;
+    color: var(--text);
+}
+
+.xbutton.alert {
     color: var(--light-text);
 }
 

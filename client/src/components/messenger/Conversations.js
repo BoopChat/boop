@@ -7,6 +7,7 @@ import ConversationItem from "./ConversationItem";
 import { ConversationsController } from "./controllers/Conversations";
 import { ContactsController } from "./controllers/Contacts";
 import Modal from "./dialogs/Modal";
+import SearchBox from "./SearchBox";
 
 const AddConversationDialog = ({ onClose, token }) => {
     const [details, setDetails] = useState({
@@ -100,8 +101,8 @@ const Conversations = ({ selectConversation, socket }) => {
     const [conversations, setConversations] = useState([]);
     const alertDialog = useAlertDialog();
 
-    // Get the token from the users global state.
-    const token = useSelector((state) => state.user.token);
+    // Get the token and userInfo from the users global state.
+    const { token, userInfo: { displayName, imageUrl } } = useSelector((state) => state.user);
 
     const updateConversations = (newConversation) => {
         setConversations((conversations) => {
@@ -179,12 +180,16 @@ const Conversations = ({ selectConversation, socket }) => {
                 /> :<></>
             }
             <div className="main_panel_header">
-                <h1>Conversations</h1>
+                <div className="img_and_title">
+                    <img src={imageUrl} alt={displayName} className="profile_img_mobile"/>
+                    <h1>Chats</h1>
+                </div>
                 <button className="options" title="create conversation" onClick={() => handleClickAdd()}>
                     <Plus/>
                 </button>
                 { dialogOpen ? <AddConversationDialog onClose={addConversation} token={token} /> : <></> }
             </div>
+            <SearchBox id="search_mobile"/>
             <div id="conversations">
                 {conversations?.map((chat, i) => (
                     <ConversationItem

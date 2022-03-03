@@ -101,7 +101,8 @@ body {
   --whero_red: #DC2626;
   --offline: #dfdfdf;
   --blank:#fff;
-  --raven_coat: rgba(2, 2, 5, 0.9);
+  --raven_coat_glass: rgba(2, 2, 5, 0.9);
+  --raven_coat: rgba(2, 2, 5);
   --tender_twilight: #b8cfe55e;
   --buroi_black: #0d131a5e;
 }
@@ -117,6 +118,7 @@ a {
 img {
   width: 100%;
   display: block;
+  overflow-x: hidden;
 }
 
 h1,
@@ -187,8 +189,8 @@ p {
   place-items: center;
 }
 
-img {
-  overflow-x: hidden;
+.hidden {
+  display: none;
 }
 
 /*

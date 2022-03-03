@@ -10,8 +10,9 @@ import ChooseAdminDialog from "./dialogs/ChooseAdminDialog";
 
 import "../../styles/chat.css";
 import Options from "../../assets/icons/options.js";
+import Arrow from "../../assets/icons/arrow";
 
-const Chat = ({ conversationId, title, participants, socket }) => {
+const Chat = ({ conversationId, title, participants, socket, closeChat }) => {
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState("");
     const chatbox = useRef();
@@ -180,7 +181,10 @@ const Chat = ({ conversationId, title, participants, socket }) => {
     return (
         <div className="chat_container">
             <header className="chat_title">
-                <img src="https://picsum.photos/400" className="skeleton" alt="chat" />
+                <div className="img_and_back">
+                    <Arrow onClick={closeChat}/>
+                    <img src="https://picsum.photos/400" className="skeleton" alt="chat" />
+                </div>
                 <span>{title || "Untitled Chat"}</span>
                 <Options action={showChatOptions} />
             </header>
@@ -213,12 +217,9 @@ const Chat = ({ conversationId, title, participants, socket }) => {
                                 <span className="user" title={msg.sender?.displayName}>{msg.sender?.displayName}</span>
                                 <span className="time">{ChatController.evaluateElapsed(msg.createdAt)}</span>
                             </div>
-                            <div className="avatar" href="/">
-                                <img
-                                    alt="user avatar"
-                                    src={msg.sender?.imageUrl}
-                                    title={msg.sender?.displayName}
-                                />
+                            <div className="avatar">
+                                <img alt="user avatar" src={msg.sender?.imageUrl} title={msg.sender?.displayName}/>
+                                <span className="time">{ChatController.evaluateElapsed(msg.createdAt)}</span>
                             </div>
                             <p>{msg.content}</p>
                         </li>
@@ -237,7 +238,7 @@ const Chat = ({ conversationId, title, participants, socket }) => {
             }
             <form className="interactions" onSubmit={handleSend}>
                 <input type="text" name="chat_box" placeholder="chat" value={text} onChange={handleText} />
-                <button onClick={handleSend}>Send</button>
+                <button onClick={handleSend} title="send"> <Arrow/> </button>
             </form>
         </div>
     );

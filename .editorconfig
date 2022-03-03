@@ -26,5 +26,5 @@ trim_trailing_whitespace = false
 [GoogleButton.js]
 max_line_length = off
 
-[options.js]
+[client/src/assets/icons/*]
 max_line_length = off
