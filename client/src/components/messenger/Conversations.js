@@ -1,12 +1,13 @@
 import { useEffect, useState, React } from "react";
 import { useSelector } from "react-redux";
-import { AlertDialog, useAlertDialog } from "./dialogs/AlertDialog";
+import { AlertDialog, useAlertDialog, AlertType } from "./dialogs/AlertDialog";
 
-import plus from "../../assets/plus.svg";
+import Plus from "../../assets/icons/plus";
 import ConversationItem from "./ConversationItem";
 import { ConversationsController } from "./controllers/Conversations";
 import { ContactsController } from "./controllers/Contacts";
 import Modal from "./dialogs/Modal";
+import SearchBox from "./SearchBox";
 
 const AddConversationDialog = ({ onClose, token }) => {
     const [details, setDetails] = useState({
@@ -41,7 +42,8 @@ const AddConversationDialog = ({ onClose, token }) => {
             else {
                 alertDialog.display({
                     title: "Error",
-                    message: "There was an error retrieving your contacts"
+                    message: "There was an error retrieving your contacts",
+                    type: AlertType.Error
                 });
                 setContacts([]);
             }
@@ -56,6 +58,7 @@ const AddConversationDialog = ({ onClose, token }) => {
                     handleClose={alertDialog.close}
                     title={alertDialog.title}
                     message={alertDialog.message}
+                    type={alertDialog.type}
                 /> :<></>
             }
             <div id="add-convo-dialog">
@@ -98,8 +101,8 @@ const Conversations = ({ selectConversation, socket }) => {
     const [conversations, setConversations] = useState([]);
     const alertDialog = useAlertDialog();
 
-    // Get the token from the users global state.
-    const token = useSelector((state) => state.user.token);
+    // Get the token and userInfo from the users global state.
+    const { token, userInfo: { displayName, imageUrl } } = useSelector((state) => state.user);
 
     const updateConversations = (newConversation) => {
         setConversations((conversations) => {
@@ -116,7 +119,8 @@ const Conversations = ({ selectConversation, socket }) => {
             if (!result.success) {
                 alertDialog.display({
                     title: "Error",
-                    message: "There was an error retrieving your conversations"
+                    message: "There was an error retrieving your conversations",
+                    type: AlertType.Error
                 });
             }
             setConversations(result.conversations);
@@ -136,6 +140,14 @@ const Conversations = ({ selectConversation, socket }) => {
                 return;
             const runAsync = async () => {
                 let { title, list } = conversationDetails;
+                if (list.length < 1) {
+                    alertDialog.display({
+                        title: "Error",
+                        message: "You need to add participants to the conversation",
+                        type: AlertType.Error
+                    });
+                    return;
+                }
                 if (title.length < 1) {
                     // create a title from the chosen participants' names
                     title = list
@@ -143,8 +155,15 @@ const Conversations = ({ selectConversation, socket }) => {
                         .reduce((prevValue, curValue) => prevValue + curValue + ", ", "You, ")
                         .substring(0, 25);
                 }
-                await ConversationsController.createConversation(
+                const success = await ConversationsController.createConversation(
                     token, list.map(i => i.id), title, updateConversations);
+                if (!success) {
+                    alertDialog.display({
+                        title: "Error",
+                        message: "An error occurred trying to create the conversation",
+                        type: AlertType.Error
+                    });
+                }
             };
             runAsync();
         }
@@ -157,15 +176,20 @@ const Conversations = ({ selectConversation, socket }) => {
                     handleClose={alertDialog.close}
                     title={alertDialog.title}
                     message={alertDialog.message}
+                    type={alertDialog.type}
                 /> :<></>
             }
             <div className="main_panel_header">
-                <h1>Conversations</h1>
-                <button className="options" title="options" onClick={() => handleClickAdd()}>
-                    <img src={plus} alt="options" />
+                <div className="img_and_title">
+                    <img src={imageUrl} alt={displayName} className="profile_img_mobile"/>
+                    <h1>Chats</h1>
+                </div>
+                <button className="options" title="create conversation" onClick={() => handleClickAdd()}>
+                    <Plus/>
                 </button>
                 { dialogOpen ? <AddConversationDialog onClose={addConversation} token={token} /> : <></> }
             </div>
+            <SearchBox id="search_mobile"/>
             <div id="conversations">
                 {conversations?.map((chat, i) => (
                     <ConversationItem

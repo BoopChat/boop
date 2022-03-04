@@ -62,23 +62,7 @@ module.exports.addConversation = async (req, res) => {
         // everything worked as planned - commit the changes
         await t.commit();
         // retrieve the newly created conversation with it's participants' info
-        let conversation = await Conversation.findByPk(conversationInfo.id, {
-            attributes: ["id", "title", "imageUrl"],
-            // get each participant's info from the Users table
-            include: {
-                model: User,
-                as: "participants",
-                // exclude the requesting user's info from the participants list
-                where: {
-                    [db.Sequelize.Op.not]: [{ id: userId }],
-                },
-                // specify what atributes you want returned
-                attributes: ["displayName", "imageUrl", "id"],
-                // Prevents the entire belongs-to-many mapping object (Participant)
-                // from being returned
-                through: { attributes: [] },
-            },
-        });
+        let conversation = await getConvo(conversationInfo.id);
         //return a success message + the newly created conversation
         let msg = "Conversation successfully created";
         logger.info(msg + ":" + conversation.id);
@@ -332,21 +316,7 @@ module.exports.addUserToConversation = async (req, res) => {
         await t.commit();
 
         // retrieve the updated conversation with it's participants' info
-        let conversation = await Conversation.findByPk(conversationId, {
-            attributes: ["id", "title", "imageUrl"],
-            // get each participant's info from the Users table
-            include: {
-                model: User,
-                as: "participants",
-                // exclude the requesting user's info from the participants list
-                where: { [db.Sequelize.Op.not]: [{ id: userId }], },
-                // specify what atributes you want returned
-                attributes: ["displayName", "imageUrl", "id"],
-                // Prevents the entire belongs-to-many mapping object (Participant)
-                // from being returned
-                through: { attributes: [] },
-            },
-        });
+        let conversation = await getConvo(conversationId);
 
         // Emit the new conversation to all participants and the sender
         const participantIds = conversation.participants.map(({ id }) => Number(id));
@@ -370,4 +340,25 @@ module.exports.addUserToConversation = async (req, res) => {
         logger.error(msg);
         return res.status(500).send({ msg });
     }
+};
+
+/**
+ *
+ * @param {Number} conversationId
+ * @returns the conversation's info including participants list (w/ isAdmin values)
+ */
+const getConvo = async(conversationId) => {
+    return await Conversation.findByPk(conversationId, {
+        attributes: ["id", "title", "imageUrl"],
+        // get each participant's info from the Users table
+        include: {
+            model: User,
+            as: "participants",
+            // specify what atributes you want returned
+            attributes: ["displayName", "imageUrl", "id"],
+            // Prevents the entire belongs-to-many mapping object (Participant)
+            // from being returned
+            through: { attributes: ["isAdmin"] },
+        },
+    });
 };

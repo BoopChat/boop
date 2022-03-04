@@ -2,11 +2,11 @@ import { React, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { ContactsController } from "./controllers/Contacts";
-import { AlertDialog, useAlertDialog } from "./dialogs/AlertDialog";
+import { AlertDialog, useAlertDialog, AlertType } from "./dialogs/AlertDialog";
 import Modal from "./dialogs/Modal";
 
 import "../../styles/dialog.css";
-import trash from "../../assets/trash.svg";
+import trash from "../../assets/icons/trash.svg";
 
 
 const ViewContactDialog = ({ onClose, img, username }) => {
@@ -60,7 +60,8 @@ const ContactItem = ({ img, username, status, id, triggerRefresh }) => {
                 let result = await ContactsController.deleteContact(token, id);
                 alertDialog.display({
                     title: result.success ? "Success" : "Error",
-                    message: result.msg
+                    message: result.msg,
+                    type: result.success ? AlertType.Success : AlertType.Error
                 });
             };
             runAsync();
@@ -74,7 +75,7 @@ const ContactItem = ({ img, username, status, id, triggerRefresh }) => {
             { imageDialogOpen ?
                 <ViewContactDialog onClose={closeContactImage} img={img} username={username}/> : <></> }
             { confirmDialogOpen ? <ConfirmDialog onClose={deleteContact} username={username}/>  : <></> }
-            <div className="img_and_name">
+            <div className="img_and_name contacts">
                 <img onClick={handleClickContact} src={img} className="skeleton" alt=""/>
                 <span>{username}</span>
             </div>
@@ -84,6 +85,7 @@ const ContactItem = ({ img, username, status, id, triggerRefresh }) => {
                     handleClose={alertDialog.close}
                     title={alertDialog.title}
                     message={alertDialog.message}
+                    type={alertDialog.type}
                 /> :<></>
             }
 

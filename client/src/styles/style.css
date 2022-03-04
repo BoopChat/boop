@@ -1,4 +1,3 @@
-@import url("https://fonts.googleapis.com/css?family=Open+Sans|Roboto:400,700&display=swap");
 * {
   margin: 0;
   padding: 0;
@@ -7,7 +6,7 @@
 }
 
 body {
-  font-family: "Open Sans", sans-serif;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   background: var(--bg);
   color: var(--text);
   line-height: 1.5;
@@ -32,11 +31,22 @@ body {
   --border: var(--gray1);
   --border-hover: var(--gray2);
   --prim-red: var(--red);
-  --sec-red: var(--fire-opal);
+  --sec-red: var(--whero_red);
   --input: var(--blank);
   --shadow: rgba(218, 216, 216, 0.25);
   --author-border: var(--brandeis-blue);
   --action-button-hover: var(--offline);
+  --icon: var(--brandeis-blue);
+  --separator_color: var(--tender_twilight);
+
+  --dialog_success_bg: var(--online);
+  --dialog_success: var(--white);
+  --dialog_warning_bg: var(--away);
+  --dialog_warning: var(--white);
+  --dialog_info_bg: var(--prim-blue);
+  --dialog_info: var(--white);
+  --dialog_error_bg: var(--sec-red);
+  --dialog_error: var(--white);
 }
 
 .dark {
@@ -61,6 +71,17 @@ body {
   --shadow: rgba(0, 0, 0, 0.25);
   --author-border: var(--gray5);
   --action-button-hover: var(--gray2);
+  --icon: var(--blank);
+  --separator_color: var(--buroi_black);
+
+  --dialog_success_bg: var(--gray5);
+  --dialog_success: var(--online);
+  --dialog_warning_bg: var(--gray5);
+  --dialog_warning: var(--away);
+  --dialog_info_bg: var(--gray5);
+  --dialog_info: var(--prim-blue);
+  --dialog_error_bg: var(--gray5);
+  --dialog_error: var(--sec-red);
 }
 
 :root {
@@ -77,9 +98,13 @@ body {
   --dnd: #f71a30;
   --red: rgb(255, 0, 0);
   --albanian-red: rgb(204, 1, 1);
-  --fire-opal: rgb(255, 62, 4);
+  --whero_red: #DC2626;
   --offline: #dfdfdf;
   --blank:#fff;
+  --raven_coat_glass: rgba(2, 2, 5, 0.9);
+  --raven_coat: rgba(2, 2, 5);
+  --tender_twilight: #b8cfe55e;
+  --buroi_black: #0d131a5e;
 }
 
 ul {
@@ -93,13 +118,14 @@ a {
 img {
   width: 100%;
   display: block;
+  overflow-x: hidden;
 }
 
 h1,
 h2,
 h3,
 h4 {
-  letter-spacing: 0.25rem;
+  letter-spacing: 0.1rem;
   text-transform: capitalize;
   line-height: 1.25;
   margin-bottom: 0.75rem;
@@ -163,17 +189,18 @@ p {
   place-items: center;
 }
 
+.hidden {
+  display: none;
+}
+
 /*
 =======================
 App
 =======================
 */
-#root {
-  height: 100vh;
-}
-
 .App {
     height: 100vh;
+    max-height: 1080px;
     width: 100%;
     z-index: 1;
     display: flex;
@@ -187,7 +214,7 @@ App
     position: absolute;
     display: inline-block;
     background-image: url('../assets/bg.png');
-    opacity: .6;
+    opacity: .85;
     background-repeat: no-repeat;
     background-size:cover;
     top: 0;

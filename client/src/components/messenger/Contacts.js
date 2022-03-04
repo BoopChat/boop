@@ -1,8 +1,9 @@
-import plus from "../../assets/plus.svg";
+import Plus from "../../assets/icons/plus";
 import ContactItem from "./ContactItem";
 import { ContactsController } from "./controllers/Contacts";
-import { AlertDialog, useAlertDialog } from "./dialogs/AlertDialog";
+import { AlertDialog, useAlertDialog, AlertType } from "./dialogs/AlertDialog";
 import Modal from "./dialogs/Modal";
+import SearchBox from "./SearchBox";
 
 import { React, useState, useEffect } from "react";
 
@@ -11,11 +12,11 @@ import { useSelector } from "react-redux";
 const AddContactDialog = ({ onClose }) => {
     const [email, setEmail] = useState("");
 
-    const handleClose = () => onClose(email);
+    const handleClose = btnClicked => onClose(email, btnClicked);
     const handleChange = (e) => setEmail(e.target.value);
 
     return (
-        <Modal onClose={handleClose} center>
+        <Modal onClose={() => handleClose(false)} center>
             <div id="add-contact-dialog">
                 <header>Add a contact by email</header>
                 <main>
@@ -27,7 +28,7 @@ const AddContactDialog = ({ onClose }) => {
                         onChange={handleChange}
                         className="addContact"
                     />
-                    <button onClick={() => handleClose()} name="add" className="addContact">Add</button>
+                    <button onClick={() => handleClose(true)} name="add" className="addContact">Add</button>
                 </main>
             </div>
         </Modal>
@@ -39,8 +40,8 @@ const Contacts = () => {
     const [contacts, setContacts] = useState([]);
     const alertDialog = useAlertDialog();
 
-    // Get the token from the users global state.
-    const token = useSelector((state) => state.user.token);
+    // Get the token and userInfo from the users global state.
+    const { token, userInfo: { displayName, imageUrl } } = useSelector((state) => state.user);
 
     useEffect(() => {
         const runAsync = async () => {
@@ -49,7 +50,8 @@ const Contacts = () => {
             if (!contacts.success) {
                 alertDialog.display({
                     title: "Error",
-                    message: "There was an error retrieving your contacts"
+                    message: "There was an error retrieving your contacts",
+                    type: AlertType.Error
                 });
             }
         };
@@ -66,8 +68,11 @@ const Contacts = () => {
 
     const handleClickAdd = () => setDialogOpen(true);
 
-    const addContact = (email) => {
+    const addContact = (email, btnClicked) => {
         setDialogOpen(false); // close add dialog
+
+        if (!btnClicked) return; // user clicked outside the dialog (i.e. didnt click add)
+
         // ask the server to add the user with this email to user's contacts
         if (email) {
             const runAsync = async () => {
@@ -77,10 +82,17 @@ const Contacts = () => {
                 else // display error message
                     alertDialog.display({
                         title: "Error",
-                        message: result.msg
+                        message: result.msg,
+                        type: AlertType.Error
                     });
             };
             runAsync();
+        } else {
+            alertDialog.display({
+                title: "Error",
+                message: "You need to enter an email to add a contact",
+                type: AlertType.Error
+            });
         }
     };
 
@@ -91,15 +103,20 @@ const Contacts = () => {
                     handleClose={alertDialog.close}
                     title={alertDialog.title}
                     message={alertDialog.message}
+                    type={alertDialog.type}
                 /> :<></>
             }
             <div className="main_panel_header">
-                <h1>Contacts</h1>
+                <div className="img_and_title">
+                    <img src={imageUrl} alt={displayName} className="profile_img_mobile"/>
+                    <h1>Contacts</h1>
+                </div>
                 <button className="options" title="add contact" onClick={() => handleClickAdd()}>
-                    <img src={plus} alt="options"/>
+                    <Plus/>
                 </button>
                 { dialogOpen ? <AddContactDialog onClose={addContact}/> : <></> }
             </div>
+            <SearchBox id="search_mobile"/>
             <div id="contacts">
                 {contacts.length > 0 ? contacts.map((contact, i) =>
                     <ContactItem

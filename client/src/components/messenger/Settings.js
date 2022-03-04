@@ -1,4 +1,4 @@
-import edit_icon from "../../assets/icons8-edit.svg";
+import edit_icon from "../../assets/icons/icons8-edit.svg";
 
 import { useState, React } from "react";
 
@@ -57,7 +57,7 @@ const Settings = ({ userInfo, updateUser }) => {
     };
 
     return (
-        <div>
+        <div id="settings_container">
             <h1>Settings</h1>
             <div className="setting_item">
                 <div>

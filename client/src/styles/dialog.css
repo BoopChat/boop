@@ -19,7 +19,11 @@
 
 .xbutton {
     font-size: 1.875rem;
-    color: #6B7280;
+    color: var(--text);
+}
+
+.xbutton.alert {
+    color: var(--light-text);
 }
 
 .xbutton:hover {
@@ -42,7 +46,39 @@
     background-color: var(--bg-3);
     color: var(--text);
     height: fit-content;
-    border-radius: 6px;
+    border-radius: 10px;
+}
+
+#alert-dialog header.success,
+svg.success {
+    background-color: var(--dialog_success_bg);
+    color: var(--dialog_success);
+    fill: var(--dialog_success);
+}
+
+#alert-dialog header.warning,
+svg.warning {
+    background-color: var(--dialog_warning_bg);
+    color: var(--dialog_warning);
+    fill: var(--dialog_warning);
+}
+
+#alert-dialog header.info,
+svg.info {
+    background-color: var(--dialog_info_bg);
+    color: var(--dialog_info);
+    fill: var(--dialog_info);
+}
+
+#alert-dialog header.error,
+svg.error {
+    background-color: var(--dialog_error_bg);
+    color: var(--dialog_error);
+    fill: var(--dialog_error);
+}
+
+div#alert-dialog svg {
+    height: 15px;
 }
 
 @media screen and (min-width: 720px) {
@@ -52,7 +88,7 @@
 }  
 
 #alert-dialog main {
-    padding: 8px;
+    padding: 22px 12px 0px 12px;
 }
 
 #alert-dialog header {
@@ -88,7 +124,7 @@
 #alert-dialog footer {
     display: flex;
     justify-content: flex-end;
-    padding: 10px;
+    padding: 6px;
 }
 
 #view-contact-dialog {
@@ -100,9 +136,12 @@
 #add-contact-dialog header,
 #add-convo-dialog header {
     background-color: var(--input);
+    color: var(--text);
     padding: 12px;
     font-size: 18px;
     font-weight: 500;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
 }
 
 #view-contact-dialog img { 
@@ -115,18 +154,13 @@
 #add-convo-dialog {
     background-color: var(--bg-3);
     height: fit-content;
+    border-radius: 8px;
 }
 
 #delete-contact-dialog main {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     width: 100%;
-    padding: 10px;
-}
-
-#delete-contact-dialog main > button {
-    margin: 2% auto;
 }
 
 #add-contact-dialog {
@@ -139,14 +173,35 @@
 }
 
 #add-convo-dialog {
-    width: 25%;
+    width: 75%;
+    border-radius: 8px;
+}
+
+@media screen and (min-width: 640px) {
+    #add-convo-dialog {
+        width: 55%;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    #add-convo-dialog,
+    #delete-contact-dialog {
+        width: 30%;
+    }
 }
 
 #chat_options_dialog {
-    width: 75%;
+    width: 100%;
     background-color: var(--bg-3);
     color: var(--text);
     height: fit-content;
+    border-radius: 10px;
+}
+
+@media screen and (min-width: 640px) {
+    #chat_options_dialog {
+        width: 75%;
+    }
 }
 
 @media screen and (min-width: 900px) {

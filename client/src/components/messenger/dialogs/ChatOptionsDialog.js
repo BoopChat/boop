@@ -22,8 +22,11 @@ const ChatOptionsDialog = ({ onClose, img, title, participants, addUsers }) => {
                     <img src={img} alt="chat" className="chat_image_options" />
                     <p></p>
                     <hr />
-                    <span className="participant_label">{participants.length} participants</span>
-                    {
+                    <section className="participants_description">
+                        <span className="participant_label">Participants</span>
+                        <span className="participants_count">{participants.length}</span>
+                    </section>
+                    <section className="participants">{
                         participants.map((participant, key) =>
                             <div className="contact_item" key={key}>
                                 <div className="img_and_name">
@@ -48,7 +51,7 @@ const ChatOptionsDialog = ({ onClose, img, title, participants, addUsers }) => {
                                 </div>
                             </div>
                         )
-                    }
+                    }</section>
                     <hr />
                     <p></p>
                 </main>

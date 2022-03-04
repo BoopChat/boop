@@ -9,6 +9,8 @@ import Contacts from "./Contacts";
 import Settings from "./Settings";
 import Sidebar from "./Sidebar";
 import Chat from "./Chat";
+import SearchBox from "./SearchBox";
+import Navbar from "./Navbar";
 
 import "../../styles/main_panel.css";
 
@@ -16,9 +18,11 @@ const Messenger = () => {
     const location = useLocation();
     const dispatch = useDispatch();
 
+    const [showChat, setShowChat] = useState(false);
     const [currentConvo, setCurrentConvo] = useState({});
     const changeConvo = (id, title, participants) => {
         setCurrentConvo({ id, title, participants });
+        setShowChat(true);
     };
 
     const userInfo = useSelector((state) => state.user.userInfo);
@@ -37,9 +41,11 @@ const Messenger = () => {
 
     return (
         <div className="container">
-            <Sidebar username={userInfo.displayName} userPic={userInfo.imageUrl} userName={userInfo.firstName} />
+            <Sidebar username={userInfo.displayName} userPic={userInfo.imageUrl} />
+            <Navbar/>
             <div id="panels">
                 <div id="main_panel">
+                    <SearchBox id="search"/>
                     <Switch location={location} key={location.pathname}>
                         <Route path="/conversations">
                             <Conversations selectConversation={changeConvo} socket={socket} />
@@ -53,17 +59,17 @@ const Messenger = () => {
                         </Route>
                     </Switch>
                 </div>
-                <div id="chat_panel">
+                <div id="chat_panel" className={showChat ? "" : "hidden"}>
                     {currentConvo.id ?
                         <Chat
                             conversationId={currentConvo.id}
                             title={currentConvo.title}
                             participants={currentConvo.participants}
                             socket={socket}
+                            closeChat={() => setShowChat(false)}
                         />
                         : <></>
                     }
-
                 </div>
             </div>
         </div>

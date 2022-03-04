@@ -4,14 +4,15 @@ import { useSelector } from "react-redux";
 import { ChatController } from "./controllers/Chat";
 import { ConversationsController } from "./controllers/Conversations";
 import { ChatOptionsDialog, optionsEnum } from "./dialogs/ChatOptionsDialog";
-import { AlertDialog, useAlertDialog,  } from "./dialogs/AlertDialog";
+import { AlertDialog, AlertType, useAlertDialog,  } from "./dialogs/AlertDialog";
 import ChooseUsersDialog from "./dialogs/ChooseUsersDialog";
 import ChooseAdminDialog from "./dialogs/ChooseAdminDialog";
 
 import "../../styles/chat.css";
-import options from "../../assets/options.svg";
+import Options from "../../assets/icons/options.js";
+import Arrow from "../../assets/icons/arrow";
 
-const Chat = ({ conversationId, title, participants, socket }) => {
+const Chat = ({ conversationId, title, participants, socket, closeChat }) => {
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState("");
     const chatbox = useRef();
@@ -45,6 +46,7 @@ const Chat = ({ conversationId, title, participants, socket }) => {
             alertDialog.display({
                 title: "Error",
                 message: result.msg,
+                type: AlertType.Error
             });
         }
         // scroll to the bottom of the chat where new message has been rendered
@@ -85,7 +87,8 @@ const Chat = ({ conversationId, title, participants, socket }) => {
         if (result !== null) {
             alertDialog.display({
                 title: result.success ? "Success" : "Error",
-                message: result.msg
+                message: result.msg,
+                type: result.success ? AlertType.Success : AlertType.Error
             });
         }
     };
@@ -100,12 +103,18 @@ const Chat = ({ conversationId, title, participants, socket }) => {
             // ask the server to add new participants to this conversation
             if (list?.length < 1) {
                 // display error message for no new participants
-                alertDialog.display({ title: "Error", message: "No new participants added" });
+                alertDialog.display(
+                    {
+                        title: "Error",
+                        message: "No new participants added",
+                        type: AlertType.Error
+                    });
             } else {
                 const result = await ConversationsController.addUserToConversation(token, conversationId, list);
                 alertDialog.display({
                     title: result.success ? "Success": "Error",
-                    message: result.msg
+                    message: result.msg,
+                    type: result.success ? AlertType.Success : AlertType.Error
                 });
             }
         }
@@ -119,13 +128,14 @@ const Chat = ({ conversationId, title, participants, socket }) => {
         if (btnClicked) {
             // ask the server to set the choosen user as an admin
             if (!choosen) { // display error message for no new admin
-                alertDialog.display({ title: "Error", message: "No new admin selected" });
+                alertDialog.display({ title: "Error", message: "No new admin selected", type: AlertType.Error });
             } else {
                 // request that the user leave the conversation and send the id of the chosen successor
                 const result = await ConversationsController.leaveConversation(token, conversationId, Number(choosen));
                 alertDialog.display({
                     title: result.success ? "Success": "Error",
-                    message: result.msg
+                    message: result.msg,
+                    type: result.success ? AlertType.Success : AlertType.Error
                 });
             }
         }
@@ -140,7 +150,7 @@ const Chat = ({ conversationId, title, participants, socket }) => {
             if (!messages.slice(-messageList.length-1).find(({ id }) => id === msg.id))
                 add.push(msg);
         });
-        setMessages(prevMessages => prevMessages.length > 1 ? [...prevMessages, ...add] : add);
+        setMessages(prevMessages => prevMessages.length > 0 ? [...prevMessages, ...add] : add);
     };
 
     useEffect(() => {
@@ -151,7 +161,7 @@ const Chat = ({ conversationId, title, participants, socket }) => {
         ChatController.listen((message) => {
             // if the new message is a message for the currently opened chat
             // if not simply ignore it in the ui
-            if (message.newMessage.conversationId === conversationId.toString())
+            if (message.newMessage.conversation.id === conversationId.toString())
                 addNewMessages([message.newMessage]);
         });
 
@@ -161,7 +171,8 @@ const Chat = ({ conversationId, title, participants, socket }) => {
             if (!result.success) {
                 alertDialog.display({
                     title: "Error",
-                    message: "Could not retrieve messages for this chat"
+                    message: "Could not retrieve messages for this chat",
+                    type: AlertType.Error
                 });
             }
             const { messages } = result;
@@ -175,9 +186,12 @@ const Chat = ({ conversationId, title, participants, socket }) => {
     return (
         <div className="chat_container">
             <header className="chat_title">
-                <img src="https://picsum.photos/400" className="skeleton" alt="chat" />
+                <div className="img_and_back">
+                    <Arrow onClick={closeChat}/>
+                    <img src="https://picsum.photos/400" className="skeleton" alt="chat" />
+                </div>
                 <span>{title || "Untitled Chat"}</span>
-                <img src={options} alt="options" onClick={showChatOptions} className="chat_options" />
+                <Options action={showChatOptions} />
             </header>
             { optionsDialog ?
                 <ChatOptionsDialog
@@ -208,12 +222,9 @@ const Chat = ({ conversationId, title, participants, socket }) => {
                                 <span className="user" title={msg.sender?.displayName}>{msg.sender?.displayName}</span>
                                 <span className="time">{ChatController.evaluateElapsed(msg.createdAt)}</span>
                             </div>
-                            <div className="avatar" href="/">
-                                <img
-                                    alt="user avatar"
-                                    src={msg.sender?.imageUrl}
-                                    title={msg.sender?.displayName}
-                                />
+                            <div className="avatar">
+                                <img alt="user avatar" src={msg.sender?.imageUrl} title={msg.sender?.displayName}/>
+                                <span className="time">{ChatController.evaluateElapsed(msg.createdAt)}</span>
                             </div>
                             <p>{msg.content}</p>
                         </li>
@@ -227,11 +238,12 @@ const Chat = ({ conversationId, title, participants, socket }) => {
                     handleClose={alertDialog.close}
                     title={alertDialog.title}
                     message={alertDialog.message}
+                    type={alertDialog.type}
                 /> :<></>
             }
             <form className="interactions" onSubmit={handleSend}>
                 <input type="text" name="chat_box" placeholder="chat" value={text} onChange={handleText} />
-                <button onClick={handleSend}>Send</button>
+                <button onClick={handleSend} title="send"> <Arrow/> </button>
             </form>
         </div>
     );
