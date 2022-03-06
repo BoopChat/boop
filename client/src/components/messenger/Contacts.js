@@ -4,6 +4,7 @@ import { ContactsController } from "./controllers/Contacts";
 import { AlertDialog, useAlertDialog, AlertType } from "./dialogs/AlertDialog";
 import Modal from "./dialogs/Modal";
 import SearchBox from "./SearchBox";
+import { useSearchContext } from "./hooks/SearchContext";
 
 import { React, useState, useEffect } from "react";
 
@@ -39,6 +40,7 @@ const Contacts = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [contacts, setContacts] = useState([]);
     const alertDialog = useAlertDialog();
+    const { search } = useSearchContext();
 
     // Get the token and userInfo from the users global state.
     const { token, userInfo: { displayName, imageUrl } } = useSelector((state) => state.user);
@@ -96,6 +98,24 @@ const Contacts = () => {
         }
     };
 
+    const filterContacts = ({ contactInfo: { displayName } }) => {
+        return search === "" || displayName.toLowerCase().includes(search.toLowerCase());
+    };
+
+    const getRelevancy = ({ contactInfo: { displayName } }) => {
+        if (search === displayName) // highest relevance, search matches contact (even in case)
+            return 4;
+        else if (search.toLowerCase() === displayName.toLowerCase()) // search matches (but not case)
+            return 3;
+        else if (displayName.startsWith(search)) // search is first part of the contact's name (case matched)
+            return 2;
+        else if (displayName.toLowerCase().startsWith(search.toLowerCase()))
+            return 1; // search is first part of the contact's name (case not matched)
+        else return 0;
+    };
+
+    const sortContacts = (a, b) => getRelevancy(b) - getRelevancy(a);
+
     return (
         <div id="contact_container">
             { alertDialog.open ?
@@ -118,7 +138,7 @@ const Contacts = () => {
             </div>
             <SearchBox id="search_mobile"/>
             <div id="contacts">
-                {contacts.length > 0 ? contacts.map((contact, i) =>
+                {contacts.length > 0 ? contacts.filter(filterContacts).sort(sortContacts).map((contact, i) =>
                     <ContactItem
                         img={contact.contactInfo.imageUrl}
                         username={contact.contactInfo.displayName}

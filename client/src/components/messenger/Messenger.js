@@ -3,6 +3,7 @@ import { useState, React } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setUserInfo } from "../login/userSlice";
 import { io } from "socket.io-client";
+import { SearchProvider } from "./hooks/SearchContext";
 
 import Conversations from "./Conversations";
 import Contacts from "./Contacts";
@@ -45,19 +46,21 @@ const Messenger = () => {
             <Navbar/>
             <div id="panels">
                 <div id="main_panel">
-                    <SearchBox id="search"/>
-                    <Switch location={location} key={location.pathname}>
-                        <Route path="/conversations">
-                            <Conversations selectConversation={changeConvo} socket={socket} />
-                        </Route>
-                        <Route path="/contacts" component={Contacts} />
-                        <Route path="/settings">
-                            <Settings userInfo={userInfo} updateUser={updateUser} />
-                        </Route>
-                        <Route path="/">
-                            <Conversations selectConversation={changeConvo} socket={socket} />
-                        </Route>
-                    </Switch>
+                    <SearchProvider>
+                        <SearchBox id="search"/>
+                        <Switch location={location} key={location.pathname}>
+                            <Route path="/conversations">
+                                <Conversations selectConversation={changeConvo} socket={socket} />
+                            </Route>
+                            <Route path="/contacts" component={Contacts} />
+                            <Route path="/settings">
+                                <Settings userInfo={userInfo} updateUser={updateUser} />
+                            </Route>
+                            <Route path="/">
+                                <Conversations selectConversation={changeConvo} socket={socket} />
+                            </Route>
+                        </Switch>
+                    </SearchProvider>
                 </div>
                 <div id="chat_panel" className={showChat ? "" : "hidden"}>
                     {currentConvo.id ?
