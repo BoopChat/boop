@@ -22,6 +22,7 @@ div.chat_container {
     background: var(--bg-3);
     height: 100%;
     padding: 10px;
+    position: relative;
 }
 
 @media screen and (min-width: 1024px) {
@@ -221,7 +222,6 @@ form.interactions {
     padding: 12px 5px 8px 5px;
     background-color: var(--bg-3);
     border-top: solid 1px var(--separator_color);
-    position: relative;
     align-items: center;
 }
 
@@ -408,8 +408,8 @@ div.img_and_back svg:hover {
 
 section.emoji-mart {
     position: absolute;
-    bottom: 66px;
-    right: 0;
+    right: 12px;
+    bottom: 65px;
 }
 
 section.emoji-mart .emoji-mart-emoji {
@@ -426,4 +426,12 @@ button.emoji-mart-emoji span:hover {
 
 section.emoji-mart-search input {
     margin-bottom: 4px;
+}
+
+section.emoji-mart input:hover {
+    border: 1px solid var(--border-hover);
+}
+section.emoji-mart input:focus {
+    outline: 2px solid var(--sec-blue);
+    border: 1px solid var(--bg);
 }

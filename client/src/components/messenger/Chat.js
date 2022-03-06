@@ -55,6 +55,7 @@ const Chat = ({ conversationId, title, participants, socket, closeChat, isDark }
 
     const handleSend = async (e) => {
         e.preventDefault();
+        setShowEmojiPicker(false); // close the emoji picker
         // if a conversation is not active, disable send button
         if (!conversationId) return;
         // if text box is empty dont bother trying to send message
@@ -265,11 +266,11 @@ const Chat = ({ conversationId, title, participants, socket, closeChat, isDark }
             <form className="interactions" onSubmit={handleSend}>
                 <input type="text" name="chat_box" placeholder="chat" value={text} onChange={handleText}
                     className="textBox" ref={textbox}/>
-                { showEmojiPicker && <Picker title="Spice it up" emoji="point_up" onClick={onEmojiClick}
-                    defaultSkin={4} theme={isDark ? "dark": "light"} sheetSize={32} color="#0066ec"/> }
                 <Emoji emoji="smiley" skin={4} size={20} onClick={() => setShowEmojiPicker(!showEmojiPicker)}/>
                 <button className="enterBtn" onClick={handleSend} title="send"> <Arrow/> </button>
             </form>
+            { showEmojiPicker && <Picker title="Spice it up" emoji="point_up" onClick={onEmojiClick}
+                defaultSkin={4} theme={isDark ? "dark": "light"} sheetSize={32} color="#0066ec"/> }
         </div>
     );
 };
