@@ -1,6 +1,7 @@
 import { useEffect, useState, React } from "react";
 import { useSelector } from "react-redux";
 import { AlertDialog, useAlertDialog, AlertType } from "./dialogs/AlertDialog";
+import { useSearchContext } from "./hooks/SearchContext";
 
 import Plus from "../../assets/icons/plus";
 import ConversationItem from "./ConversationItem";
@@ -100,6 +101,7 @@ const Conversations = ({ selectConversation, socket }) => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [conversations, setConversations] = useState([]);
     const alertDialog = useAlertDialog();
+    const { search } = useSearchContext();
 
     // Get the token and userInfo from the users global state.
     const { token, userInfo: { displayName, imageUrl } } = useSelector((state) => state.user);
@@ -169,6 +171,22 @@ const Conversations = ({ selectConversation, socket }) => {
         }
     };
 
+    const filterConversations = ({ title }) => search === "" || title.toLowerCase().includes(search.toLowerCase());
+
+    const getRelevancy = ({ title }) => {
+        if (search === title) // highest relevance, search matches conversation (even in case)
+            return 4;
+        else if (search.toLowerCase() === title.toLowerCase()) // search matches (but not case)
+            return 3;
+        else if (title.startsWith(search)) // search is first part of the conversations's name (case matched)
+            return 2;
+        else if (title.toLowerCase().startsWith(search.toLowerCase()))
+            return 1; // search is first part of the conversations's name (case not matched)
+        else return 0;
+    };
+
+    const sortConversations = (a, b) => getRelevancy(b) - getRelevancy(a);
+
     return (
         <div id="conversations_container">
             { alertDialog.open ?
@@ -191,7 +209,7 @@ const Conversations = ({ selectConversation, socket }) => {
             </div>
             <SearchBox id="search_mobile"/>
             <div id="conversations">
-                {conversations?.map((chat, i) => (
+                {conversations?.filter(filterConversations).sort(sortConversations).map((chat, i) => (
                     <ConversationItem
                         name={chat.title}
                         img={chat.imgUrl}

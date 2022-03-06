@@ -1,6 +1,11 @@
 import React from "react";
+import { useSearchContext } from "./hooks/SearchContext";
 
 const SearchBox = ({ id }) => {
+    const { search, setSearch } = useSearchContext();
+
+    const updateSearch = e => setSearch(e.target.value);
+
     return (
         <div id={id}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" name="searchIcon">
@@ -10,7 +15,7 @@ const SearchBox = ({ id }) => {
                     0C515.9 484.7 515.9 459.3 501.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42
                     128 128c0 70.58-57.42 127-128 128S79.1 278.6 79.1 208z" />
             </svg>
-            <input type="text" placeholder="Search" readOnly className="searchBox" />
+            <input type="text" placeholder="Search" value={search} onChange={updateSearch} className="searchBox" />
         </div>
     );
 };
