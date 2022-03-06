@@ -221,10 +221,12 @@ form.interactions {
     padding: 12px 5px 8px 5px;
     background-color: var(--bg-3);
     border-top: solid 1px var(--separator_color);
+    position: relative;
+    align-items: center;
 }
 
-form.interactions input {
-    width: 100%;
+form.interactions input.textBox {
+    width: 92%;
     padding: 8px;
     outline: none;
     margin-right: 4px;
@@ -232,11 +234,12 @@ form.interactions input {
     background-color: var(--input);
     color: var(--text);
     border-radius: 4px;
+    height: fit-content
 }
 
 @media screen and (min-width: 1024px) {
-    form.interactions input {
-        width: 96%;
+    form.interactions input.textBox {
+        width: 90%;
     }
 }
 
@@ -249,12 +252,12 @@ form.interactions input:focus {
     border: 1px solid var(--bg);
 }
 
-form.interactions button {
+form.interactions button.enterBtn {
     display: none;
 }
 
 @media screen and (min-width: 1024px) {
-    form.interactions button {
+    form.interactions button.enterBtn {
         border: none;
         background-color: transparent;
         padding: 2px;
@@ -262,14 +265,14 @@ form.interactions button {
         display: block;
     }
 
-    form.interactions button svg {
+    form.interactions button.enterBtn svg {
         transform: rotate(90deg);
         fill: var(--icon);
         width: 100%;
     }
 }
 
-form.interactions button:hover {
+form.interactions button.enterBtn:hover {
     cursor: pointer;
 }
 
@@ -399,4 +402,28 @@ div.img_and_back svg:hover {
     div.img_and_back svg {
         display: none;
     }
+}
+
+/* emoji picker styles */
+
+section.emoji-mart {
+    position: absolute;
+    bottom: 66px;
+    right: 0;
+}
+
+section.emoji-mart .emoji-mart-emoji {
+    padding: 4px;
+}
+
+section.emoji-mart-category .emoji-mart-emoji:hover::before {
+    display: none;
+}
+
+button.emoji-mart-emoji span:hover {
+    cursor: pointer;
+}
+
+section.emoji-mart-search input {
+    margin-bottom: 4px;
 }
