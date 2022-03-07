@@ -8,7 +8,6 @@ import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import { useState, React } from "react";
 
-import useThemeSwitcher from "./hooks/useThemeSwitcher";
 import useLogout from "./hooks/useLogout";
 
 const MenuButton = styled.button`
@@ -79,12 +78,11 @@ const Profile = styled.div`
     padding: 14px 5px;
 `;
 
-const Sidebar = ({ username, userPic }) => {
+const Sidebar = ({ username, userPic, toggleTheme, themeIcon }) => {
     const [click, setClick] = useState(false);
     const handleClick = () => setClick(!click);
 
     const { handleLogOut } = useLogout();
-    const { toggleTheme, themeIcon } = useThemeSwitcher();
 
     return (
         <div id="sidebar">

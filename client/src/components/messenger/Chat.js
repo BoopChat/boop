@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef, React } from "react";
 import { useSelector } from "react-redux";
+import "emoji-mart/css/emoji-mart.css";
+import { Picker, Emoji } from "emoji-mart";
 
 import { ChatController } from "./controllers/Chat";
 import { ConversationsController } from "./controllers/Conversations";
@@ -12,11 +14,14 @@ import "../../styles/chat.css";
 import Options from "../../assets/icons/options.js";
 import Arrow from "../../assets/icons/arrow";
 
-const Chat = ({ conversationId, title, participants, socket, closeChat }) => {
+const Chat = ({ conversationId, title, participants, socket, closeChat, isDark }) => {
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState("");
+    const [cursorPosition, setCursorPosition] = useState(0);
     const chatbox = useRef();
+    const textbox = useRef();
 
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [optionsDialog, setOptionsDialog] = useState(false);
     const [addUsersDialog, setAddUsersDialog] = useState(false);
     const [chooseAdminDialog, setChooseAdminDialog] = useState(false);
@@ -32,8 +37,25 @@ const Chat = ({ conversationId, title, participants, socket, closeChat }) => {
             setText(e.target.value);
     };
 
+    const onEmojiClick = (emojiObj) => {
+        textbox.current.focus();
+
+        // split the text in 2 parts... left side and right side of the cursor
+        const leftSplit = text.substring(0, textbox.current.selectionStart);
+        const rightSplit = text.substring(textbox.current.selectionStart);
+
+        // insert the emoji between the text on either side of the cursor
+        setText(leftSplit + emojiObj.native + rightSplit);
+
+        // update the cursor position behind the newly inserted emoji
+        setCursorPosition(textbox.current.selectionStart + emojiObj.native.length);
+    };
+
+    useEffect(() => textbox.current.selectionEnd = cursorPosition, [cursorPosition]);
+
     const handleSend = async (e) => {
         e.preventDefault();
+        setShowEmojiPicker(false); // close the emoji picker
         // if a conversation is not active, disable send button
         if (!conversationId) return;
         // if text box is empty dont bother trying to send message
@@ -242,9 +264,13 @@ const Chat = ({ conversationId, title, participants, socket, closeChat }) => {
                 /> :<></>
             }
             <form className="interactions" onSubmit={handleSend}>
-                <input type="text" name="chat_box" placeholder="chat" value={text} onChange={handleText} />
-                <button onClick={handleSend} title="send"> <Arrow/> </button>
+                <input type="text" name="chat_box" placeholder="chat" value={text} onChange={handleText}
+                    className="textBox" ref={textbox}/>
+                <Emoji emoji="smiley" skin={4} size={20} onClick={() => setShowEmojiPicker(!showEmojiPicker)}/>
+                <button className="enterBtn" onClick={handleSend} title="send"> <Arrow/> </button>
             </form>
+            { showEmojiPicker && <Picker title="Spice it up" emoji="point_up" onClick={onEmojiClick}
+                defaultSkin={4} theme={isDark ? "dark": "light"} sheetSize={32} color="#0066ec"/> }
         </div>
     );
 };

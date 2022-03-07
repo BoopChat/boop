@@ -6,15 +6,13 @@ import Contacts from "../../assets/icons/contacts";
 import Settings from "../../assets/icons/settings";
 import Arrow from "../../assets/icons/arrow";
 
-import useThemeSwitcher from "./hooks/useThemeSwitcher";
 import useLogout from "./hooks/useLogout";
 
 import logout from "../../assets/icons/logout.svg";
 import "../../styles/navbar.css";
 
-const OptionsNav = () => {
+const OptionsNav = ({ toggleTheme, themeIcon, isDark }) => {
     const { handleLogOut } = useLogout();
-    const { toggleTheme, themeIcon, isDark } = useThemeSwitcher();
 
     return (
         <div id="options_popup" onClick={(e) => e.stopPropagation()}>
@@ -29,7 +27,7 @@ const OptionsNav = () => {
     );
 };
 
-const Navbar = () => {
+const Navbar = ({ toggleTheme, themeIcon, isDark }) => {
     const [showOptions, setShowOptions] = useState(false);
 
     return (
@@ -39,7 +37,7 @@ const Navbar = () => {
                 <NavLink to="/contacts" activeClassName="active"> <Contacts/> </NavLink>
                 <NavLink to="/settings" activeClassName="active"> <Settings/> </NavLink>
                 <button className="more" onClick={() => setShowOptions(!showOptions)}>
-                    { showOptions && <OptionsNav/> }
+                    { showOptions && <OptionsNav toggleTheme={toggleTheme} themeIcon={themeIcon} isDark={isDark}/> }
                     <Arrow/>
                 </button>
             </div>

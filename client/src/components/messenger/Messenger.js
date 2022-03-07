@@ -13,6 +13,8 @@ import Chat from "./Chat";
 import SearchBox from "./SearchBox";
 import Navbar from "./Navbar";
 
+import useThemeSwitcher from "./hooks/useThemeSwitcher";
+
 import "../../styles/main_panel.css";
 
 const Messenger = () => {
@@ -25,6 +27,8 @@ const Messenger = () => {
         setCurrentConvo({ id, title, participants });
         setShowChat(true);
     };
+
+    const { toggleTheme, themeIcon, isDark } = useThemeSwitcher();
 
     const userInfo = useSelector((state) => state.user.userInfo);
     const token = useSelector((state) => state.user.token);
@@ -42,8 +46,9 @@ const Messenger = () => {
 
     return (
         <div className="container">
-            <Sidebar username={userInfo.displayName} userPic={userInfo.imageUrl} />
-            <Navbar/>
+            <Sidebar username={userInfo.displayName} userPic={userInfo.imageUrl} toggleTheme={toggleTheme}
+                themeIcon={themeIcon}/>
+            <Navbar toggleTheme={toggleTheme} themeIcon={themeIcon} isDark={isDark}/>
             <div id="panels">
                 <div id="main_panel">
                     <SearchProvider>
@@ -70,6 +75,7 @@ const Messenger = () => {
                             participants={currentConvo.participants}
                             socket={socket}
                             closeChat={() => setShowChat(false)}
+                            isDark={isDark}
                         />
                         : <></>
                     }
