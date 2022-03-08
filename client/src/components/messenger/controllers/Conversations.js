@@ -4,29 +4,51 @@ export const ConversationsController = {
     init: (soc) => {
         socket = soc;
     },
-    getConversations: async (token, updateConversation) => {
+    getConversations: async (token, updateConversations) => {
         // make request for the conversations of user and wait for the json response
-        const res = await fetch("/api/conversations", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-        });
+        try {
+            const res = await fetch("/api/conversations", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
-        const result = await res.json();
-        socket.on("newConversation", (convoObject) => {
-            updateConversation([convoObject.conversation]);
-            // send back the conversation to the server to join client to that socket rooms
-            socket.emit("joinConversations", [convoObject.conversation.id]);
-        });
+            if (res.status !== 200) {
+                return {
+                    success: false,
+                    conversations: []
+                };
+            }
 
-        // send back the conversations to the server to join client to the appropriate socket rooms
-        socket.emit(
-            "joinConversations",
-            result.conversationList.map((item) => item.id)
-        );
-        return res.status !== 200 ? [] : result && result.conversationList ? result.conversationList : [];
+            const result = await res.json();
+            socket.on("newConversation", (convoObject) => {
+                updateConversations([convoObject.conversation]);
+                // send back the conversation to the server to join client to that socket rooms
+                socket.emit("joinConversations", [convoObject.conversation.id]);
+            });
+
+            socket.on("newConversationParticipants", ({ conversation }) => updateConversations([conversation]));
+
+            // send back the conversations to the server to join client to the appropriate socket rooms
+            socket.emit(
+                "joinConversations",
+                result.conversationList.map((item) => item.id)
+            );
+            return result?.conversationList ? {
+                success: true,
+                conversations: result.conversationList
+            } : {
+                success: false,
+                conversations: []
+            };
+        } catch (e) {
+            return {
+                success: false,
+                conversations: []
+            };
+        }
     },
     evaluateDate: (lastDate) => {
         // decide whether to return the date as (d/mm/yy) or as time(\d{2}:\d{2} (A|P)M)
@@ -49,37 +71,72 @@ export const ConversationsController = {
     },
     createConversation: async (token, participants, title) => {
         // make request to create a conversation with participants and title
-        const res = await fetch("/api/conversations", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-                participants,
-                title,
-            }),
-        });
-        return res.status !== 201;
+        try {
+            const res = await fetch("/api/conversations", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    participants,
+                    title,
+                }),
+            });
+            return res.status === 201;
+        } catch (e) {
+            return false;
+        }
     },
     leaveConversation: async (token, conversationId, successorId) => {
         // make request to leave conversation
-        const res = await fetch("/api/conversations", {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-                conversationId,
-                successorId,
-            }),
-        });
+        try {
+            const res = await fetch("/api/conversations", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    conversationId,
+                    successorId,
+                }),
+            });
 
-        const result = await res.json();
-        return { // return msg to display to user (whether success or fail)
-            msg: result.msg,
-            success: result.status === 200
-        };
+            const result = await res.json();
+            return { // return msg to display to user (whether success or fail)
+                msg: result.msg,
+                success: res.status === 200
+            };
+        } catch (e) {
+            return {
+                msg: e,
+                success: false
+            };
+        }
+    },
+    addUserToConversation: async (token, conversationId, newParticipants) => {
+        // make request to user(s) to the conversation
+        try {
+            const res = await fetch("/api/conversations", {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ conversationId, newParticipants }),
+            });
+
+            const result = await res.json();
+            return { // return msg to display to user (whether success or fail)
+                msg: result.msg,
+                success: res.status === 201
+            };
+        } catch (e) {
+            return {
+                msg: e,
+                success: false
+            };
+        }
     }
 };

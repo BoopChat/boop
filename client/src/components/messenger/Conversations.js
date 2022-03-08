@@ -1,21 +1,22 @@
 import { useEffect, useState, React } from "react";
 import { useSelector } from "react-redux";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Dialog from "@material-ui/core/Dialog";
-import { Alert } from "../AlertDialog";
+import { AlertDialog, useAlertDialog, AlertType } from "./dialogs/AlertDialog";
+import { useSearchContext } from "./hooks/SearchContext";
 
-import plus from "../../assets/plus.svg";
+import Plus from "../../assets/icons/plus";
 import ConversationItem from "./ConversationItem";
 import { ConversationsController } from "./controllers/Conversations";
 import { ContactsController } from "./controllers/Contacts";
+import Modal from "./dialogs/Modal";
+import SearchBox from "./SearchBox";
 
-const AddConversationDialog = ({ open, onClose, token }) => {
+const AddConversationDialog = ({ onClose, token }) => {
     const [details, setDetails] = useState({
         list: [],
         title: "",
     });
     const [contacts, setContacts] = useState([]);
-    const [init, setInit] = useState(false);
+    const alertDialog = useAlertDialog();
 
     const handleClose = btnClicked => {
         onClose({ ...details, btnClicked });
@@ -34,59 +35,76 @@ const AddConversationDialog = ({ open, onClose, token }) => {
     const handleTitleChange = (e) => setDetails({ ...details, title: e.target.value });
 
     useEffect(() => {
-        if (!init) {
-            // if this is the first time rendering, get user contacts from server
-            const runAsync = async () => {
-                let contacts = await ContactsController.getContacts(token);
-                setContacts(contacts.success ? contacts.contactList : []);
-            };
-            runAsync();
-            setInit(true);
-        }
-    }, [init]);
+        // if this is the first time rendering, get user contacts from server
+        const runAsync = async () => {
+            let contacts = await ContactsController.getContacts(token);
+            if (contacts.success)
+                setContacts(contacts.contactList);
+            else {
+                alertDialog.display({
+                    title: "Error",
+                    message: "There was an error retrieving your contacts",
+                    type: AlertType.Error
+                });
+                setContacts([]);
+            }
+        };
+        runAsync();
+    }, []);
 
     return (
-        <Dialog
-            id="add-convo-dialog"
-            onClose={() => handleClose(false)}
-            aria-labelledby="simple-dialog-title"
-            open={open}
-        >
-            <DialogTitle id="simple-dialog-title">Create a conversation</DialogTitle>
-            <input
-                type="text"
-                placeholder="Conversation Title"
-                value={details.title}
-                onChange={handleTitleChange}
-                className="addConversation"
-            />
-            <ul className="add_participants">
-                {contacts.map((contact) => (
-                    <li key={contact.contactId}>
-                        <img src={contact.contactInfo.imageUrl} alt="contact_img" />
-                        <span>{contact.contactInfo.displayName}</span>
-                        <input
-                            type="checkbox"
-                            name={contact.contactInfo.displayName}
-                            value={contact.contactId}
-                            onChange={handleListChange}
-                        />
-                    </li>
-                ))}
-            </ul>
-            <button onClick={() => handleClose(true)} name="create" className="addConversation">Create</button>
-        </Dialog>
+        <Modal onClose={() => handleClose(false)} center>
+            { alertDialog.open ?
+                <AlertDialog
+                    handleClose={alertDialog.close}
+                    title={alertDialog.title}
+                    message={alertDialog.message}
+                    type={alertDialog.type}
+                /> :<></>
+            }
+            <div id="add-convo-dialog">
+                <header>Create a conversation</header>
+                <main>
+                    <input
+                        type="text"
+                        placeholder="Conversation Title"
+                        value={details.title}
+                        onChange={handleTitleChange}
+                        className="addConversation"
+                    />
+                    <ul className="add_participants">
+                        {contacts.map((contact) => (
+                            <li key={contact.contactId}>
+                                <div className="img_and_name">
+                                    <img src={contact.contactInfo.imageUrl} alt="contact_img" />
+                                    <span>{contact.contactInfo.displayName}</span>
+                                </div>
+                                <input
+                                    type="checkbox"
+                                    name={contact.contactInfo.displayName}
+                                    value={contact.contactId}
+                                    onChange={handleListChange}
+                                />
+                            </li>
+                        ))}
+                    </ul>
+                </main>
+                <footer>
+                    <button onClick={() => handleClose(true)} name="create" className="addConversation">Create</button>
+                </footer>
+            </div>
+        </Modal>
     );
 };
 
 const Conversations = ({ selectConversation, socket }) => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [conversations, setConversations] = useState([]);
-    const alertDialog = Alert.useAlertDialog();
+    const alertDialog = useAlertDialog();
+    const { search } = useSearchContext();
 
-    // Get the token from the users global state.
-    const token = useSelector((state) => state.user.token);
-    //const { id } = useSelector((state) => state.user.userInfo);
+    // Get the token and userInfo from the users global state.
+    const { token, userInfo: { displayName, imageUrl } } = useSelector((state) => state.user);
 
     const updateConversations = (newConversation) => {
         setConversations((conversations) => {
@@ -98,8 +116,17 @@ const Conversations = ({ selectConversation, socket }) => {
         // send a request to the server to get conversations and setup socket to listen
         // for conversations changes
         ConversationsController.init(socket);
-        const runAsync = async () =>
-            setConversations(await ConversationsController.getConversations(token, updateConversations));
+        const runAsync = async () => {
+            const result = await ConversationsController.getConversations(token, updateConversations);
+            if (!result.success) {
+                alertDialog.display({
+                    title: "Error",
+                    message: "There was an error retrieving your conversations",
+                    type: AlertType.Error
+                });
+            }
+            setConversations(result.conversations);
+        };
         runAsync();
     }, []);
 
@@ -115,6 +142,14 @@ const Conversations = ({ selectConversation, socket }) => {
                 return;
             const runAsync = async () => {
                 let { title, list } = conversationDetails;
+                if (list.length < 1) {
+                    alertDialog.display({
+                        title: "Error",
+                        message: "You need to add participants to the conversation",
+                        type: AlertType.Error
+                    });
+                    return;
+                }
                 if (title.length < 1) {
                     // create a title from the chosen participants' names
                     title = list
@@ -122,30 +157,59 @@ const Conversations = ({ selectConversation, socket }) => {
                         .reduce((prevValue, curValue) => prevValue + curValue + ", ", "You, ")
                         .substring(0, 25);
                 }
-                await ConversationsController.createConversation(
+                const success = await ConversationsController.createConversation(
                     token, list.map(i => i.id), title, updateConversations);
+                if (!success) {
+                    alertDialog.display({
+                        title: "Error",
+                        message: "An error occurred trying to create the conversation",
+                        type: AlertType.Error
+                    });
+                }
             };
             runAsync();
         }
     };
 
+    const filterConversations = ({ title }) => search === "" || title.toLowerCase().includes(search.toLowerCase());
+
+    const getRelevancy = ({ title }) => {
+        if (search === title) // highest relevance, search matches conversation (even in case)
+            return 4;
+        else if (search.toLowerCase() === title.toLowerCase()) // search matches (but not case)
+            return 3;
+        else if (title.startsWith(search)) // search is first part of the conversations's name (case matched)
+            return 2;
+        else if (title.toLowerCase().startsWith(search.toLowerCase()))
+            return 1; // search is first part of the conversations's name (case not matched)
+        else return 0;
+    };
+
+    const sortConversations = (a, b) => getRelevancy(b) - getRelevancy(a);
+
     return (
         <div id="conversations_container">
-            <Alert.AlertDialog
-                open={alertDialog.open}
-                handleClose={alertDialog.close}
-                title={alertDialog.title}
-                message={alertDialog.message}
-            />
+            { alertDialog.open ?
+                <AlertDialog
+                    handleClose={alertDialog.close}
+                    title={alertDialog.title}
+                    message={alertDialog.message}
+                    type={alertDialog.type}
+                /> :<></>
+            }
             <div className="main_panel_header">
-                <h1>Conversations</h1>
-                <button className="options" title="options" onClick={() => handleClickAdd()}>
-                    <img src={plus} alt="options" />
+                <div className="img_and_title">
+                    <img src={imageUrl} alt={displayName} className="profile_img_mobile"/>
+                    <h1>Chats</h1>
+                </div>
+                <button className="options" title="create conversation" onClick={() => handleClickAdd()}>
+                    <Plus/>
                 </button>
-                <AddConversationDialog open={dialogOpen} onClose={addConversation} token={token} />
+                { dialogOpen ? <AddConversationDialog onClose={addConversation} token={token} /> : <></> }
             </div>
+            <SearchBox id="search_mobile"/>
             <div id="conversations">
-                {conversations?.map((chat, i) => (
+                {conversations?.filter(filterConversations).sort(sortConversations).map((chat, i) => (
                     <ConversationItem
                         name={chat.title}
                         img={chat.imgUrl}

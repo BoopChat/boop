@@ -4,19 +4,43 @@ export const ChatController = {
     init: (soc) => (socket = soc), // set the socket the controller should use
     getMessages: async (token, conversationId) => {
         if (conversationId) {
-            // make request for the messages of conversationid and wait for the json response
-            const data = await (
-                await fetch("/api/messages/" + conversationId, {
+            try {
+                // make request for the messages of conversationid and wait for the json response
+                const res = await fetch("/api/messages/" + conversationId, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`,
                     },
-                })
-            ).json();
-            // get the list of messages if successful
-            return data ? data.messages : [];
-        } else return [];
+                });
+
+                if (res.status !== 200) {
+                    return {
+                        success: false,
+                        messages: []
+                    };
+                }
+
+
+                const data = await res.json();
+                // get the list of messages if successful
+                return data ? {
+                    success: true,
+                    messages: data.messages
+                } : {
+                    success: false,
+                    messages: []
+                };
+            } catch (e) {
+                return {
+                    success: false,
+                    messages: []
+                };
+            }
+        } else return {
+            success: false,
+            messages: []
+        };
     },
     listen: (updateMessages) => socket.on("newMessage", (msg) => updateMessages(msg)),
     clear: () => {
@@ -39,27 +63,34 @@ export const ChatController = {
         }
     },
     sendMessage: async (token, conversationId, message) => {
-        const res = await fetch("/api/messages/" + conversationId, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-                content: message,
-            }),
-        });
+        try {
+            const res = await fetch("/api/messages/" + conversationId, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    content: message,
+                }),
+            });
 
-        const result = await res.json();
-        if (res.status !== 201)
+            const result = await res.json();
+            if (res.status !== 201)
+                return {
+                    // message was not added ... return reason why
+                    success: false,
+                    msg: result.msg,
+                };
+            else
+                return {
+                    success: true,
+                };
+        } catch (e) {
             return {
-                // message was not added ... return reason why
                 success: false,
-                msg: result.msg,
+                msg: e
             };
-        else
-            return {
-                success: true,
-            };
+        }
     },
 };

@@ -2,27 +2,28 @@
 
 button.google {
     background-color: rgb(255, 255, 255);
-    display: inline-flex;
+    display: flex;
     align-items: center;
     color: rgba(0, 0, 0, 0.54);
     box-shadow: rgba(0, 0, 0, 0.24) 0px 2px 2px 0px, rgba(0, 0, 0, 0.24) 0px 0px 1px 0px;
-    padding: 0px;
-    border-radius: 2px;
+    padding: 12px 10px;
+    border-radius: 9999px;
     border: 1px solid transparent;
     font-size: 14px;
     font-weight: 500;
     font-family: Roboto, sans-serif;
+    overflow: hidden;
 }
 
-button.google div {
-    margin-right: 10px;
-    background: rgb(255, 255, 255) none repeat scroll 0% 0%;
-    padding: 10px;
-    border-radius: 2px;
+button.google:hover {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 2px 2px 0px, rgba(0, 0, 0, 0.24) 0px 0px 6px 0px;
+}
+
+button.google svg {
+    margin-right: 15px;
 }
 
 button.google span {
-    padding: 10px 10px 10px 0px;
     font-weight: 500;
 }
 
@@ -34,7 +35,7 @@ span.facebook {
 }
 
 button.facebook {
-    border-radius: 0;
+    border-radius: 9999px;
     font-family: Helvetica,sans-serif;
     font-weight: 700;
     -webkit-font-smoothing: antialiased;
@@ -45,13 +46,13 @@ button.facebook {
     transition: background-color .3s,border-color .3s;
     background-color: #4c69ba;
     border: calc(.06887vw + .67769px) solid #4c69ba;
-    padding: calc(.34435vw + 13.38843px) calc(.34435vw + 18.38843px);
+    padding: calc(.34435vw + 9.38843px) calc(.34435vw + 18.38843px);
     text-align: center;
+    box-shadow: #4c69ba 0px 2px 2px 0px, #4c69ba 0px 0px 1px 0px;
 }
 
 button.facebook:hover {
-    color: #4c69ba;
-    background-color: white;
+    box-shadow: #4c69ba 0px 2px 2px 0px, #4c69ba 0px 0px 8px 0px;
 }
 
 /* end facebook button */
@@ -61,7 +62,7 @@ button.facebook:hover {
 button.twitter {
     border: #0f9afb 1px solid;
     border-radius: 9999px;
-    padding: 8px 15px;
+    padding: 10px 15px;
     background: white;
     color: #0f9afb;
 }
@@ -70,6 +71,7 @@ button.twitter:hover {
     color: white;
     background-color: #0f9afb;
     font-weight: bold;
+    box-shadow: #0f9afb 0px 2px 2px 0px, #0f9afb 0px 0px 8px 0px;
 }
 
 /* end twitter button */

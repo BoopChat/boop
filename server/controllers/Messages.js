@@ -99,6 +99,17 @@ module.exports.addMessage = async (req, res) => {
         logger.error(msg + userId + " - " + conversationId);
         res.status(500).send({ msg });
     });
+
+    newMessage = {
+        id: newMessage.id,
+        content: newMessage.content,
+        senderId: newMessage.senderId,
+        createdAt: newMessage.createdAt,
+        updatedAt: newMessage.updatedAt,
+        conversation: { id: newMessage.conversationId },
+        sender: { displayName: req.user.displayName, imageUrl: req.user.imageUrl }
+    };
+
     //return a success message + the newly created msg;
     let msg = "Message successfully added to the conversation";
     logger.info(msg);

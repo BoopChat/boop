@@ -23,16 +23,11 @@ var app = express();
 // using UTC so times are neutral and can be adjusted to user's timezone in the client
 process.env.TZ = "UTC";
 
-// MAY NOT BE NEEDED
-// view engine setup
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "jade");
-
 app.use(morganLogger);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join("client", "build")));
+app.use(["/conversations", "/contacts", "/settings", "/"], express.static(path.join(__dirname, "../client/build")));
 
 // Use jwt verification middleware on every request except for the api/login/auth requests.
 app.use(

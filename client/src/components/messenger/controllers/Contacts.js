@@ -1,24 +1,28 @@
 export const ContactsController = {
     getContacts: async token => {
-        // make request for the contacts of user and wait for the json response
-        const res = await fetch("/api/contacts", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-            },
-        });
+        try {
+            // make request for the contacts of user and wait for the json response
+            const res = await fetch("/api/contacts", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+            });
 
-        const result = await res.json();
-        if (res.status !== 200)
-            return { // error getting contact list ... return why
-                success: false,
-            };
-        else // get the list of contacts if successful
-            return {
-                success: true,
-                contactList: result?.contactList ?? []
-            };
+            const result = await res.json();
+            if (res.status !== 200)
+                return { // error getting contact list ... return why
+                    success: false,
+                };
+            else // get the list of contacts if successful
+                return {
+                    success: true,
+                    contactList: result?.contactList ?? []
+                };
+        } catch (e) {
+            return { success: false };
+        }
     },
     evaluateStatus: lastActive => {
         if (!lastActive)
@@ -29,28 +33,35 @@ export const ContactsController = {
         return diff > (15 * 1000) ? "offline": "online";
     },
     addContact: async (token, email) => {
-        const res = await fetch("/api/contacts", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-                contactEmail: email
-            })
-        });
+        try {
+            const res = await fetch("/api/contacts", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    contactEmail: email
+                })
+            });
 
-        const result = await res.json();
-        if (res.status !== 201)
-            return { // contact was not added ... return reason why
-                success: false,
-                msg: result.message
-            };
-        else // return new contact to add to the list ... add new contact to the back of the list
+            const result = await res.json();
+            if (res.status !== 201)
+                return { // contact was not added ... return reason why
+                    success: false,
+                    msg: result.message
+                };
+            else // return new contact to add to the list ... add new contact to the back of the list
+                return {
+                    success: true,
+                    contact: result.contact
+                };
+        } catch (e) {
             return {
-                success: true,
-                contact: result.contact
+                success: false,
+                msg: e
             };
+        }
     },
     startConversation: async (token, contactId) => {
         // search the database for a conversation with current user and chosen contact
@@ -76,21 +87,28 @@ export const ContactsController = {
             };
     },
     deleteContact: async (token, id) => {
-        const res = await fetch("/api/contacts", {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-                contactId: id
-            })
-        });
+        try {
+            const res = await fetch("/api/contacts", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    contactId: id
+                })
+            });
 
-        const result = await res.json();
-        return { // return msg to display to user (whether success or fail)
-            msg: result.msg,
-            success: result.status === 200
-        };
+            const result = await res.json();
+            return { // return msg to display to user (whether success or fail)
+                msg: result.msg,
+                success: res.status === 200
+            };
+        } catch (e) {
+            return {
+                msg: e,
+                success: false
+            };
+        }
     }
 };

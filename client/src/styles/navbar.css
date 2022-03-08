@@ -1,0 +1,109 @@
+#nav_container {
+    background-color: var(--raven_coat);
+    height: 8%;
+    width: 100vw;
+    padding: 8px 4px;
+    display: flex;
+    position: fixed;
+    bottom: 0;
+}
+
+@media screen and (min-width: 1024px) {
+    #nav_container {
+        display: none;
+    }
+}
+
+div.nav {
+    color: var(--white);
+    background-color: transparent;
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+
+a {
+    padding: 4px 10px;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+a.active > svg {
+    fill: var(--prim-blue);
+}
+
+a > svg {
+    width: 20px;
+    height: auto;
+    fill: var(--white);
+}
+
+button.more {
+    width: 20px;
+    height: auto;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+}
+
+button.more > svg {
+    width: 100%;
+    height: auto;
+    filter: invert(100%) sepia(96%) saturate(15%) hue-rotate(212deg) brightness(104%) contrast(104%);
+}
+
+div#options_popup {
+    position: absolute;
+    bottom: 132%;
+    right: 0px;
+    width: fit-content;
+    height: fit-content;
+    background-color: var(--raven_coat_glass);
+    border-radius: 6px;
+}
+
+div#options_popup button {
+    width: fit-content;
+    height: fit-content;
+    background-color: transparent;
+    border-radius: 0;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 5px;
+    width: 110px;
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--light-text);
+    outline: none;
+    border: none;
+    margin: 4px 8px 12px 8px;
+}
+
+div#options_popup button img {
+    width: 24px;
+}
+
+div#options_popup #logout > img {
+    filter: invert(15%) sepia(70%) saturate(6573%) hue-rotate(2deg) brightness(100%) contrast(126%);
+    transition: all 0.3s ease;
+}
+
+div#options_popup #logout > img:hover {
+    border: none;
+    padding: 0;
+    opacity: .5;
+    cursor: pointer;
+}
+
+div#options_popup button img {
+    filter: invert(100%) sepia(96%) saturate(15%) hue-rotate(212deg) brightness(104%) contrast(104%);
+}

@@ -1,0 +1,228 @@
+.modal {
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    padding: 5px 0;
+}
+
+.modal > * {
+    animation: modalopen 0.5s;
+}
+
+.xbutton {
+    font-size: 1.875rem;
+    color: var(--text);
+}
+
+.xbutton.alert {
+    color: var(--light-text);
+}
+
+.xbutton:hover {
+    cursor: pointer;
+    color: var(--prim-red);
+}
+
+@keyframes modalopen {
+    from {
+        opacity: 0
+    }
+
+    to {
+        opacity: 1
+    }
+}
+
+#alert-dialog {
+    width: 75%;
+    background-color: var(--bg-3);
+    color: var(--text);
+    height: fit-content;
+    border-radius: 10px;
+}
+
+#alert-dialog header.success,
+svg.success {
+    background-color: var(--dialog_success_bg);
+    color: var(--dialog_success);
+    fill: var(--dialog_success);
+}
+
+#alert-dialog header.warning,
+svg.warning {
+    background-color: var(--dialog_warning_bg);
+    color: var(--dialog_warning);
+    fill: var(--dialog_warning);
+}
+
+#alert-dialog header.info,
+svg.info {
+    background-color: var(--dialog_info_bg);
+    color: var(--dialog_info);
+    fill: var(--dialog_info);
+}
+
+#alert-dialog header.error,
+svg.error {
+    background-color: var(--dialog_error_bg);
+    color: var(--dialog_error);
+    fill: var(--dialog_error);
+}
+
+div#alert-dialog svg {
+    height: 15px;
+}
+
+@media screen and (min-width: 720px) {
+    #alert-dialog {
+        width: 45%;
+    }
+}  
+
+#alert-dialog main {
+    padding: 22px 12px 0px 12px;
+}
+
+#alert-dialog header {
+    padding: 4px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--input);
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+#alert-dialog button {
+    background-color: transparent;
+    padding: 4px 8px;
+    outline: none;
+    border: none;
+    border-radius: 4px;
+    color: var(--prim-blue);
+    font-size: 18px;
+    text-transform: uppercase;
+}
+
+#alert-dialog button:hover {
+    cursor: pointer;
+}
+
+#alert-dialog header:first-child {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#alert-dialog footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 6px;
+}
+
+#view-contact-dialog {
+    width: fit-content;
+}
+
+#view-contact-dialog header,
+#delete-contact-dialog header,
+#add-contact-dialog header,
+#add-convo-dialog header {
+    background-color: var(--input);
+    color: var(--text);
+    padding: 12px;
+    font-size: 18px;
+    font-weight: 500;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+#view-contact-dialog img { 
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+}
+
+#delete-contact-dialog,
+#add-convo-dialog {
+    background-color: var(--bg-3);
+    height: fit-content;
+    border-radius: 8px;
+}
+
+#delete-contact-dialog main {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#add-contact-dialog {
+    width: 25%;
+}
+
+#add-contact-dialog main {
+    display: flex;
+    flex-direction: column;
+}
+
+#add-convo-dialog {
+    width: 75%;
+    border-radius: 8px;
+}
+
+@media screen and (min-width: 640px) {
+    #add-convo-dialog {
+        width: 55%;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    #add-convo-dialog,
+    #delete-contact-dialog {
+        width: 30%;
+    }
+}
+
+#chat_options_dialog {
+    width: 100%;
+    background-color: var(--bg-3);
+    color: var(--text);
+    height: fit-content;
+    border-radius: 10px;
+}
+
+@media screen and (min-width: 640px) {
+    #chat_options_dialog {
+        width: 75%;
+    }
+}
+
+@media screen and (min-width: 900px) {
+    #chat_options_dialog {
+        width: 55%;
+    }
+}  
+
+#chat_options_dialog header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 16px;
+    font-weight: 500;
+    font-size: 18px;
+}
+
+#chat_options_dialog > footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: -20px;
+}

@@ -1,10 +1,19 @@
 #main_panel {
-    padding: 10px;
-    margin: auto 0 auto 10px;
-    width: 40%;
-    height: 95%;
-    background-color: var(--bg);
-    border-radius: 15px 0px 0px 15px;
+    width: 100%;
+    height: 92%;
+    margin-bottom: 50px;
+}
+
+@media screen and (min-width: 1024px) {
+    #main_panel {
+        width: 34%;
+        margin: 15px;
+        height: 95%;
+        display: flex;
+        flex-direction: column;
+        margin-left: 26px;
+        justify-content: space-between;
+    }
 }
 
 #panels {
@@ -14,37 +23,38 @@
 }
 
 h1 {
-    font-size: 16px;
-}
-
-@media screen and (min-width: 768px) {
-    h1 {
-        font-size: 2rem;
-    }
+    font-size: 2rem;
 }
 
 div.container {
     display: flex;
     flex-direction: row;
+    height: 100%;
 }
 
 div.contact_item, div.chat_item {
     background-color: inherit;
-    padding: 30px 15px;
+    padding: 30px 12px;
     height: 50px;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
+@media screen and (min-width: 1024px) {
+    div.contact_item, div.chat_item {
+        padding: 30px 15px;
+    }
+}
+
+svg.adminCrown {
+    fill: var(--away);
+}
+
 div.contact_item:hover, div.chat_item:hover {
     cursor: pointer;
     background-color: var(--sec-blue);
     color: var(--text-hover);
-}
-
-div.chat_item {
-    padding: 34px 18px;
 }
 
 div.skeleton-text {
@@ -74,20 +84,31 @@ div.contact_item img, div.chat_item img, ul.add_participants img {
 }
 
 div.contact_item span {
-    font-weight: bold;
-    padding-left: 20px;
+    padding-left: 8px;
+    text-overflow: ellipsis;
+}
+
+@media screen and (min-width: 1024px) {
+    div.contact_item span {
+        padding-left: 20px;
+    }
 }
 
 div.status { /* contact's online status*/
     border-radius: 50%;
     width: 12px;
     height: 12px;
-    margin-right: 15px;
+    margin-right: 12px;
 }
 
 div.img_and_name {
     display: flex;
     align-items: center;
+    overflow-x: hidden;
+}
+
+div.img_and_name.contacts > span {
+    display: inline;
 }
 
 div.status_online {
@@ -109,17 +130,41 @@ div.status_offline {
 div#contacts, div#conversations {
     overflow-y: scroll;
     max-height: inherit;
+    scrollbar-width: none;
 }
 
-div#contact_container, div#conversations_container {
+/* scrollbar-width: none; for browsers other than firefox */
+div#contacts::-webkit-scrollbar, div#conversations::-webkit-scrollbar {
+    display: none;
+}
+
+div#contact_container, div#conversations_container, div#settings_container {
     display: flex;
     flex-direction: column;
     height: 100%;
+    width: 100%;
+    background-color: var(--bg);
+}
+
+@media screen and (min-width: 1024px) {
+    div#contact_container, div#conversations_container, div#settings_container {
+        height: 88%;
+        border-radius: 16px;
+    }
+}
+
+div#settings_container {
+    padding: 20px;
 }
 
 div.main_panel_header {
     display: flex;
     justify-content: space-between;
+    padding: 20px;
+}
+
+div.main_panel_header h1 {
+    margin: 0;
 }
 
 button.options {
@@ -131,9 +176,10 @@ button.options:hover {
     cursor: pointer;
 }
 
-button.options > img {
-    width: 20px;
-    filter: var(--filter);
+svg.plus, svg.chat_options {
+    fill: var(--icon);
+    width: 25px;
+    height: 25px;
 }
 
 @media screen and (min-width: 768px) {
@@ -147,6 +193,8 @@ input.addContact {
     border: none;
     border-top: 1px solid var(--border);
     outline: none;
+    background-color: var(--bg-3);
+    color: var(--text);
 }
 
 input.addConversation {
@@ -156,6 +204,9 @@ input.addConversation {
     border-right: none;
     outline: none;
     margin-bottom: 8px;
+    width: 100%;
+    background-color: var(--bg-3);
+    color: var(--text);
 }
 
 button.addContact, button.addConversation {
@@ -163,6 +214,9 @@ button.addContact, button.addConversation {
     color: var(--light-text);
     background-color: var(--prim-blue);
     border: none;
+    width: 100%;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
 }
 
 button.addContact:hover, button.addConversation:hover {
@@ -182,10 +236,6 @@ div.time_and_badge {
 
 div.time_and_badge span {
     font-size: 14px;
-}
-
-span.chat_name {
-    font-weight: bold;
 }
 
 span.chat_msg {
@@ -254,9 +304,9 @@ ul.add_participants li {
     padding: 8px;
 }
 
-div.MuiPaper-root {
-    max-width: 600px;
-    min-width: 320px;
+ul.add_participants li .img_and_name {
+    display: flex;
+    gap: 8px;
 }
 
 button.trash_btn {
@@ -278,39 +328,123 @@ div.trash_and_status {
     align-items: center;
     flex-direction: row;
     justify-content: space-between;
-    width: 16%;
+}
+
+#delete-contact-dialog button {
+    padding: 6px 18px;
+    outline: none;
+    width: 50%;
+    height: 55px;
+    font-size: 14px;
 }
 
 .btn_confirm {
     color: var(--light-text);
-    background-color: var(--prim-blue);
-    border-radius: 5px;
-    padding: 6px 18px;
-    outline: none;
-    border: 1px solid;
-    width: 77%;
-    height: 55px;
-    margin-top:5%;
+    background-color: var(--sec-blue);
+    border: solid 1px var(--prim-blue);
+    border-bottom: 2px solid var(--prim-blue);
+    border-bottom-left-radius: 8px;
 }
 
 .btn_confirm:hover {
-    background-color: var(--sec-blue);
+    background-color: var(--prim-blue);
     cursor: pointer;
+    box-shadow: 0 1px 3px 0 var(--prim-blue), 0 1px 2px -1px var(--prim-blue);
 }
 
 .btn_deny {
     color: var(--light-text);
-    background-color: var(--prim-red);
-    border-radius: 5px;
-    padding: 6px 18px;
-    outline: none;
-    border: 1px solid;
-    width: 77%;
-    height: 55px;
-    margin-top:5%;
+    background-color: var(--sec-red);
+    border: solid 1px var(--prim-red);
+    border-bottom: 2px solid var(--prim-red);
+    border-bottom-right-radius: 8px;
 }
 
 .btn_deny:hover {
-    background-color: var(--sec-red);
+    background-color: var(--prim-red);
     cursor: pointer;
+    box-shadow: 0 1px 3px 0 var(--prim-red), 0 1px 2px -1px var(--prim-red);
+}
+
+div#search_mobile,
+div#search {
+    background-color: var(--bg);
+    align-items: center;
+    padding: 10px;
+}
+
+/* search box mobile screen */
+div#search_mobile {
+    display: flex;
+    border-top: 1px solid var(--separator_color);
+    border-bottom: 1px solid var(--separator_color);
+}
+
+@media screen and (min-width: 1024px) {
+    div#search_mobile {
+        display: none;
+    }
+}
+
+div#search_mobile {
+    height: 52px;
+}
+
+div#search_mobile svg {
+    height: 55%;
+    fill: var(--icon);
+}
+
+/* search box lg screen */
+div#search {
+    display: none;
+}
+
+@media screen and (min-width: 1024px) {
+    div#search {
+        display: flex;
+        border-radius: 16px;
+        height: 9%;
+        max-height: 80px;
+    }
+}
+
+div#search svg {
+    height: 65%;
+    max-height: 40px;
+    fill: var(--icon);
+}
+/* search box input all screen */
+input.searchBox {
+    margin-left: 8px;
+    padding: 10px 5px;
+    width: 98%;
+    outline: none;
+    border: none;
+    font-size: 14px;
+    background-color: inherit;
+    color: var(--text);
+    height: 100%;
+}
+
+input.searchBox::placeholder {
+    color: var(--text);
+}
+
+img.profile_img_mobile {
+    border-radius: 50%;
+    height: 35px;
+    width: auto;
+    margin-right: calc(100vw / 30);
+}
+
+@media screen and (min-width: 1024px) {
+    img.profile_img_mobile {
+        display: none;
+    }
+}
+
+div.img_and_title {
+    display: flex;
+    align-items: center;
 }

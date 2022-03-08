@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg width="48" height="48" viewBox="0 0 12.7 12.7" version="1.1" id="svg5" inkscape:version="1.1 (ce6663b3b7, 2021-05-25)" sodipodi:docname="moon.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+   <sodipodi:namedview id="namedview7" borderopacity="1" inkscape:pageshadow="0" inkscape:pageopacity="0" inkscape:pagecheckerboard="1" inkscape:document-units="px" showgrid="false" inkscape:zoom="2" inkscape:cx="-48.75" inkscape:cy="-7.25" inkscape:window-width="1296" inkscape:window-height="704" inkscape:window-x="70" inkscape:window-y="27" inkscape:window-maximized="1" inkscape:current-layer="layer1" />
+   <defs id="defs2">
+      <inkscape:path-effect effect="skeletal" id="path-effect8575" is_visible="true" lpeversion="1" pattern="M 0,4.9921384 C 0,2.236478 2.236478,0 4.9921384,0 c 2.7556603,0 4.9921383,2.236478 4.9921383,4.9921384 0,2.7556603 -2.236478,4.9921383 -4.9921383,4.9921383 C 2.236478,9.9842767 0,7.7477987 0,4.9921384 Z" copytype="single_stretched" prop_scale="1" scale_y_rel="false" spacing="0" normal_offset="0" tang_offset="0" prop_units="false" vertical_pattern="false" hide_knot="false" fuse_tolerance="0" />
+      <inkscape:path-effect effect="skeletal" id="path-effect8571" is_visible="true" lpeversion="1" pattern="M 0,4.9921384 C 0,2.236478 2.236478,0 4.9921384,0 c 2.7556603,0 4.9921383,2.236478 4.9921383,4.9921384 0,2.7556603 -2.236478,4.9921383 -4.9921383,4.9921383 C 2.236478,9.9842767 0,7.7477987 0,4.9921384 Z" copytype="single_stretched" prop_scale="1" scale_y_rel="false" spacing="0" normal_offset="0" tang_offset="0" prop_units="false" vertical_pattern="false" hide_knot="false" fuse_tolerance="0" />
+      <inkscape:path-effect effect="skeletal" id="path-effect8567" is_visible="true" lpeversion="1" pattern="M 0,4.9921384 C 0,2.236478 2.236478,0 4.9921384,0 c 2.7556603,0 4.9921383,2.236478 4.9921383,4.9921384 0,2.7556603 -2.236478,4.9921383 -4.9921383,4.9921383 C 2.236478,9.9842767 0,7.7477987 0,4.9921384 Z" copytype="single_stretched" prop_scale="1" scale_y_rel="false" spacing="0" normal_offset="0" tang_offset="0" prop_units="false" vertical_pattern="false" hide_knot="false" fuse_tolerance="0" />
+   </defs>
+   <g inkscape:label="Layer 1" inkscape:groupmode="layer" id="layer1">
+      <path style="stroke:#000000;stroke-width:0.189115px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="M 3.8506171,0.18214737 2.4508677,0.82285169 1.6275136,1.6136885 0.97431976,2.5306642 0.55583369,3.2617028 0.2961834,4.0105118 0.2044727,4.8300982 l -0.09732,0.712535 0.0541704,0.9106169 0.16809441,0.9642524 0.21625164,0.7494196 0.39132602,0.7775409 0.53524373,0.8437241 0.5798346,0.6930109 0.7389212,0.639858 0.8183035,0.513649 1.0360231,0.471363 1.1584738,0.467692 1.6078468,-0.05667 1.0588519,-0.07891 1.2215887,-0.319904 1.1373315,-0.958688 0.951698,-1.079321 0.792593,-1.8958603 C 12.462504,7.9906297 12.807852,7.0781785 12.048034,7.5062299 L 11.731079,7.6154303 11.051837,7.8460188 10.266521,8.0367045 8.7097498,8.192703 7.3731051,7.8238733 5.8441561,6.9299947 4.5226602,5.6228465 3.7801455,4.1779205 3.2359523,2.6843977 3.6009238,1.096363 Z" id="path8770" sodipodi:nodetypes="cccccccccccccccccccccccccccccccccccc" />
+   </g>
+</svg>
