@@ -12,8 +12,6 @@ import GoogleButton from "../GoogleButton.js";
 import FacebookButton from "../FacebookButton.js";
 import TwitterButton from "../TwitterButton.js";
 
-import logo from "../../assets/bg.png";
-
 import { io } from "socket.io-client";
 import SocketContext from "../../socketContext";
 
