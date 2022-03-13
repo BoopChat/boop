@@ -1,8 +1,8 @@
 #chat_panel {
     height: 100%;
     width: 100%;
-    background-color: var(--bg-2);
     position: fixed;
+    box-shadow: 0 20px 25px -5px var(--shadow), 0 8px 10px -6px var(--shadow);
 }
 
 @media screen and (min-width: 1024px) {
@@ -239,7 +239,7 @@ form.interactions input.textBox {
 
 @media screen and (min-width: 1024px) {
     form.interactions input.textBox {
-        width: 90%;
+        width: 92%;
     }
 }
 
@@ -261,7 +261,7 @@ form.interactions button.enterBtn {
         border: none;
         background-color: transparent;
         padding: 2px;
-        width: 4%;
+        width: 25px;
         display: block;
     }
 
