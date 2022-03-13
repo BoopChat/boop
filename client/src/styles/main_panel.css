@@ -144,6 +144,7 @@ div#contact_container, div#conversations_container, div#settings_container {
     height: 100%;
     width: 100%;
     background-color: var(--bg);
+    box-shadow: 0 20px 25px -5px var(--shadow), 0 8px 10px -6px var(--shadow);
 }
 
 @media screen and (min-width: 1024px) {
@@ -371,6 +372,7 @@ div#search {
     background-color: var(--bg);
     align-items: center;
     padding: 10px;
+    box-shadow: 0 20px 25px -5px var(--shadow), 0 8px 10px -6px var(--shadow);
 }
 
 /* search box mobile screen */

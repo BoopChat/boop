@@ -15,6 +15,7 @@ body {
 }
 
 .light {
+  --appbg: var(--gray7);
   --bg: var(--gray0);
   --bg-2: var(--gray1);
   --bg-3: var(--white);
@@ -50,6 +51,7 @@ body {
 }
 
 .dark {
+  --appbg: var(--gray6);
   --bg: var(--gray2);
   --bg-2: var(--gray4);
   --bg-3: var(--gray4);
@@ -88,7 +90,7 @@ body {
   --gray0: #f7f7f7;
   --gray1: #b2becd;
   --gray2: #4d4d4e;
-  --gray4: #303030; 
+  --gray4: #303030;
   --gray5: #050505;
   --sky-of-magritte: #0099ff;
   --brandeis-blue: #0066ec;
@@ -105,6 +107,8 @@ body {
   --raven_coat: rgba(2, 2, 5);
   --tender_twilight: #b8cfe55e;
   --buroi_black: #0d131a5e;
+  --gray6: #0d1117;
+  --gray7: #d0d5d6;
 }
 
 ul {
@@ -202,36 +206,6 @@ App
     height: 100vh;
     max-height: 1080px;
     width: 100%;
-    z-index: 1;
     display: flex;
-    flex-direction: row;
-    justify-items: center;
-}
-
-.App:after {
-    z-index: -1;
-    content: "";
-    position: absolute;
-    display: inline-block;
-    background-image: url('../assets/bg.png');
-    opacity: .85;
-    background-repeat: no-repeat;
-    background-size:cover;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-@media screen and (min-width: 900px) {
-  .App {
-    border-radius: 0.5rem;
-    -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-  }
-  #root {
-    display: -ms-grid;
-    display: grid;
-    place-items: center;
-  }
+    background-color: var(--appbg);
 }

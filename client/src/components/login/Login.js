@@ -100,7 +100,6 @@ const Login = () => {
     const LoginForm = () => {
         return (
             <div className="sign-in-container">
-                <img src={logo} alt=" " className="logo"/>
                 <header className="booptext">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" className="chat_logo">
                         <path d="M416 176C416 78.8 322.9 0 208 0S0 78.8 0 176c0 39.57 15.62 75.96 41.67 105.4c-16.39
