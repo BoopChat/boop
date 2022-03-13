@@ -5,7 +5,6 @@ div.sign-in-container h1 {
 }
 
 div.sign-in-container {
-    background: var(--bg);
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -16,34 +15,7 @@ div.sign-in-container {
     position: relative;
 }
 
-img.logo {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    position: absolute;
-    top: 9%;
-    object-fit: cover;
-    border: 1px rgba(168, 168, 168, 0.363) solid;
-}
-
-@media only screen and (min-width: 640px) {
-    div.sign-in-container {
-        width: 75%;
-        padding-left: 14%;
-        margin-left: auto;
-        clip-path: polygon(100% 0%, 33.94% 0%, 0% 101%, 101% 100%);
-    }
-
-    img.logo {
-        display: none;
-    }
-}
-
 @media only screen and (min-width: 768px) {
-    div.sign-in-container {
-        width: 60%;
-    }
-
     div.sign-in-container h1 {
         font-size: 32px;
     }
@@ -124,7 +96,7 @@ span.loader-text {
     font-size: 24px;
     font-weight: 600;
     color: var(--text);
-    margin: 30px;
+    margin-bottom: 30px;
     display: inline-block;
 }
 

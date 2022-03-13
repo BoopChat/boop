@@ -210,7 +210,7 @@ const Chat = ({ conversationId, title, participants, socket, closeChat, isDark }
             <header className="chat_title">
                 <div className="img_and_back">
                     <Arrow onClick={closeChat}/>
-                    <img src="https://picsum.photos/400" className="skeleton" alt="chat" />
+                    <img src={"https://picsum.photos/400?id=" + title} className="skeleton" alt="chat" />
                 </div>
                 <span>{title || "Untitled Chat"}</span>
                 <Options action={showChatOptions} />
@@ -218,7 +218,7 @@ const Chat = ({ conversationId, title, participants, socket, closeChat, isDark }
             { optionsDialog ?
                 <ChatOptionsDialog
                     onClose={onOptionsDialogClose}
-                    img="https://picsum.photos/400"
+                    img={"https://picsum.photos/400?id=" + title}
                     title={title}
                     participants={participants}
                     addUsers={() => setAddUsersDialog(true)}

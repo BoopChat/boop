@@ -212,7 +212,7 @@ const Conversations = ({ selectConversation, socket }) => {
                 {conversations?.filter(filterConversations).sort(sortConversations).map((chat, i) => (
                     <ConversationItem
                         name={chat.title}
-                        img={chat.imgUrl}
+                        img={chat.imgUrl ?? "https://picsum.photos/400?id=" + chat.title}
                         lastMsg={chat.lastMsg ?? ""}
                         lastDate={ConversationsController.evaluateDate(chat.lastDate)}
                         unread={chat.unread}
