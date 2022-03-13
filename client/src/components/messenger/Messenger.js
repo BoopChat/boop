@@ -1,9 +1,9 @@
 import { Route, Switch, useLocation } from "react-router";
-import { useState, React } from "react";
+import { React, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setUserInfo } from "../login/userSlice";
-import { io } from "socket.io-client";
+import { setUserInfo } from "../../redux-store/userSlice";
 import { SearchProvider } from "./hooks/SearchContext";
+import { setShowChat } from "../../redux-store/conversationSlice";
 
 import Conversations from "./Conversations";
 import Contacts from "./Contacts";
@@ -17,32 +17,20 @@ import useThemeSwitcher from "./hooks/useThemeSwitcher";
 
 import "../../styles/main_panel.css";
 
+import SocketContext from "../../socketContext";
+import { SocketController } from "./controllers/Socket";
+
 const Messenger = () => {
     const location = useLocation();
     const dispatch = useDispatch();
-
-    const [showChat, setShowChat] = useState(false);
-    const [currentConvo, setCurrentConvo] = useState({});
-    const changeConvo = (id, title, participants) => {
-        setCurrentConvo({ id, title, participants });
-        setShowChat(true);
-    };
-
     const { toggleTheme, themeIcon, isDark } = useThemeSwitcher();
-
     const userInfo = useSelector((state) => state.user.userInfo);
-    const token = useSelector((state) => state.user.token);
-
     const updateUser = (userInfo) => dispatch(setUserInfo(userInfo));
+    // Get currently selected conversation from global state.
+    const currentConvo = useSelector((state) => state.conversations.currentConversation);
 
-    const [socket] = useState(() => {
-        let soc = io({
-            auth: {
-                token,
-            },
-        });
-        return soc;
-    });
+    const socket = useContext(SocketContext);
+    SocketController.initListeners(socket);
 
     return (
         <div className="container">
@@ -55,26 +43,25 @@ const Messenger = () => {
                         <SearchBox id="search"/>
                         <Switch location={location} key={location.pathname}>
                             <Route path="/conversations">
-                                <Conversations selectConversation={changeConvo} socket={socket} />
+                                <Conversations />
                             </Route>
                             <Route path="/contacts" component={Contacts} />
                             <Route path="/settings">
                                 <Settings userInfo={userInfo} updateUser={updateUser} />
                             </Route>
                             <Route path="/">
-                                <Conversations selectConversation={changeConvo} socket={socket} />
+                                <Conversations />
                             </Route>
                         </Switch>
                     </SearchProvider>
                 </div>
-                <div id="chat_panel" className={showChat ? "" : "hidden"}>
+                <div id="chat_panel" className={ useSelector(state => state.conversations.showChat)? "" : "hidden"}>
                     {currentConvo.id ?
                         <Chat
                             conversationId={currentConvo.id}
                             title={currentConvo.title}
                             participants={currentConvo.participants}
-                            socket={socket}
-                            closeChat={() => setShowChat(false)}
+                            closeChat={() => dispatch(setShowChat(false))}
                             isDark={isDark}
                         />
                         : <></>

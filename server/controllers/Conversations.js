@@ -286,6 +286,14 @@ module.exports.leaveConversation = async (req, res) => {
         return res.status(404).send({ msg });
     }
 
+    // Retrieve the updated conversation with it's participants' info
+    let conversation = await getConvo(conversationId);
+    const participantIds = conversation.participants.map(({ id }) => Number(id))
+    // Update participant list for the remaining participants.
+    if (participantIds.length >= 1) {
+        global.io.to([...participantIds]).emit("leaveConversation", { conversation });
+    }
+
     //return a success msg
     let msg = "User successfully removed from the conversation!";
     logger.info(msg + `${userId} - ${conversationId}`);
@@ -295,7 +303,6 @@ module.exports.leaveConversation = async (req, res) => {
 module.exports.addUserToConversation = async (req, res) => {
     const { user: { id: userId } } = req;
     const { newParticipants, conversationId } = req.body;
-
     // verify all data required has been provided
     if (newParticipants?.length < 1) {
         logger.error(userId + " failed to provide new participants to add to the conversation");
@@ -318,9 +325,12 @@ module.exports.addUserToConversation = async (req, res) => {
         // retrieve the updated conversation with it's participants' info
         let conversation = await getConvo(conversationId);
 
-        // Emit the new conversation to all participants and the sender
-        const participantIds = conversation.participants.map(({ id }) => Number(id));
-        global.io.to([...participantIds, userId]).emit("newConversationParticipants", { conversation });
+        const newParticipantsIds = newParticipants.map( id => Number(id));
+        const participantIds = conversation.participants.map(({ id }) => Number(id))
+        // Send the new conversation emit to the new participants.
+        global.io.to([...newParticipantsIds]).emit("newConversation", { conversation });
+        // Send Update conversation to the current participants.
+        global.io.to([...participantIds]).emit("newConversationParticipants", { conversation });
 
         // return a success message
         const msg = "Conversation successfully updated";

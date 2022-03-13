@@ -1,7 +1,7 @@
 import "../../styles/login.css";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { logIn, setToken, setUserInfo } from "./userSlice";
+import { logIn, setToken, setUserInfo } from "../../redux-store/userSlice";
 import { useSelector } from "react-redux";
 import React from "react";
 
@@ -13,6 +13,9 @@ import FacebookButton from "../FacebookButton.js";
 import TwitterButton from "../TwitterButton.js";
 
 import logo from "../../assets/bg.png";
+
+import { io } from "socket.io-client";
+import SocketContext from "../../socketContext";
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -26,6 +29,7 @@ const Login = () => {
         facebook: false,
         twitter: false
     });
+    const [socket, setsocket] = useState(null);
 
     // Checks if the user has successfully logged in using a provider
     // Dispatches the logIn action to change the user's login state if true;
@@ -71,6 +75,13 @@ const Login = () => {
                 dispatch(setToken(token));
                 // Logs in the user.
                 dispatch(logIn());
+                // create socket
+                const socket = io({
+                    auth: {
+                        token
+                    }
+                });
+                setsocket(socket);
             }
             // indicate that the fetch for login status is complete
             setLoading((prev) => { return { ...prev, fetched: true }; });
@@ -118,7 +129,11 @@ const Login = () => {
         isLoading() ?
             <Loader text="Getting everything set for you"/> :
             (
-                isLoggedIn ? <Messenger/> : <LoginForm/>
+                isLoggedIn ?
+                    <SocketContext.Provider value={socket}>
+                        <Messenger />
+                    </SocketContext.Provider>
+                    : <LoginForm/>
             )
     );
 };

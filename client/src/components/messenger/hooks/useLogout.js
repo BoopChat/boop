@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { logOut } from "../../login/userSlice";
+import { logOut } from "../../../redux-store/userSlice";
 
 const useLogout = () => {
     // Used to send actions to the redux store to change its state

@@ -1,10 +1,5 @@
-let socket;
-
 export const ConversationsController = {
-    init: (soc) => {
-        socket = soc;
-    },
-    getConversations: async (token, updateConversations) => {
+    getConversations: async (token, socket) => {
         // make request for the conversations of user and wait for the json response
         try {
             const res = await fetch("/api/conversations", {
@@ -23,13 +18,6 @@ export const ConversationsController = {
             }
 
             const result = await res.json();
-            socket.on("newConversation", (convoObject) => {
-                updateConversations([convoObject.conversation]);
-                // send back the conversation to the server to join client to that socket rooms
-                socket.emit("joinConversations", [convoObject.conversation.id]);
-            });
-
-            socket.on("newConversationParticipants", ({ conversation }) => updateConversations([conversation]));
 
             // send back the conversations to the server to join client to the appropriate socket rooms
             socket.emit(
