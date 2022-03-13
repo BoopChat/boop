@@ -204,17 +204,18 @@ const Conversations = () => {
             <SearchBox id="search_mobile"/>
             <div id="conversations">
                 {
-                    useSelector((state) => state.conversations.conversations)?.filter(filterConversations).sort(sortConversations).map((chat, i) => (
-                        <ConversationItem
-                            name={chat.title}
-                            img={chat.imgUrl}
-                            lastMsg={chat.lastMsg ?? ""}
-                            lastDate={ConversationsController.evaluateDate(chat.lastDate)}
-                            unread={chat.unread}
-                            key={i}
-                            onClick={() => dispatch(setCurrentConversation(chat.id))}
-                        />
-                    ))}
+                    useSelector((state) => state.conversations.conversations)?.filter(filterConversations)
+                        .sort(sortConversations).map((chat, i) => (
+                            <ConversationItem
+                                name={chat.title}
+                                img={chat.imgUrl}
+                                lastMsg={chat.lastMsg ?? ""}
+                                lastDate={ConversationsController.evaluateDate(chat.lastDate)}
+                                unread={chat.unread}
+                                key={i}
+                                onClick={() => dispatch(setCurrentConversation(chat.id))}
+                            />
+                        ))}
             </div>
         </div>
     );

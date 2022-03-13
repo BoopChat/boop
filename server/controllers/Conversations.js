@@ -288,7 +288,7 @@ module.exports.leaveConversation = async (req, res) => {
 
     // Retrieve the updated conversation with it's participants' info
     let conversation = await getConvo(conversationId);
-    const participantIds = conversation.participants.map(({ id }) => Number(id))
+    const participantIds = conversation.participants.map(({ id }) => Number(id));
     // Update participant list for the remaining participants.
     if (participantIds.length >= 1) {
         global.io.to([...participantIds]).emit("leaveConversation", { conversation });
@@ -326,7 +326,7 @@ module.exports.addUserToConversation = async (req, res) => {
         let conversation = await getConvo(conversationId);
 
         const newParticipantsIds = newParticipants.map( id => Number(id));
-        const participantIds = conversation.participants.map(({ id }) => Number(id))
+        const participantIds = conversation.participants.map(({ id }) => Number(id));
         // Send the new conversation emit to the new participants.
         global.io.to([...newParticipantsIds]).emit("newConversation", { conversation });
         // Send Update conversation to the current participants.
