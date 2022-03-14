@@ -19,7 +19,6 @@ const ChooseAdminDialog = ({ onClose, participants, id }) => {
     const handleListChange = (e) => {
         // if checkbox is checked then add it to the list else remove it from the list
         setChoosen(e.target.value);
-        console.log(e.target);
     };
 
     return (

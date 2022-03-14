@@ -89,7 +89,6 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
                     result = await ConversationsController.leaveConversation(token, conversationId);
                 else {
                     // check if user is admin
-                    console.log(participants.filter(p => p.id === id)[0]);
                     const { Participant: { isAdmin } } = participants.filter(p => p.id === id)[0];
 
                     if (isAdmin) {
@@ -115,10 +114,16 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
             alertDialog.display({
                 title: result.success ? "Success" : "Error",
                 message: result.msg,
-                type: result.success ? AlertType.Success : AlertType.Error
+                type: result.success ? AlertType.Success : AlertType.Error,
+                cb: () => { // function to call after the dialog is closed
+                    // Remove conversation from UI on success
+                    if (result.success) {
+                        dispatch(removeConversation(conversationId));
+                        // close the chat window
+                        closeChat();
+                    }
+                }
             });
-            // Remove conversation from UI on success
-            if (result.success) dispatch(removeConversation(conversationId));
         }
     };
 
@@ -164,10 +169,16 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
                 alertDialog.display({
                     title: result.success ? "Success": "Error",
                     message: result.msg,
-                    type: result.success ? AlertType.Success : AlertType.Error
+                    type: result.success ? AlertType.Success : AlertType.Error,
+                    cb: () => { // function to call after the dialog is closed
+                        // Remove conversation from UI on success
+                        if (result.success) {
+                            dispatch(removeConversation(conversationId));
+                            // close the chat window
+                            closeChat();
+                        }
+                    }
                 });
-                // Remove conversation from UI on success
-                if (result.success) dispatch(removeConversation(conversationId));
             }
         }
     };
@@ -270,6 +281,7 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
                     title={alertDialog.title}
                     message={alertDialog.message}
                     type={alertDialog.type}
+                    cb={alertDialog.cb}
                 /> :<></>
             }
             <form className="interactions" onSubmit={handleSend}>
