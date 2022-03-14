@@ -151,7 +151,7 @@ const Conversations = () => {
                         .reduce((prevValue, curValue) => prevValue + curValue + ", ", "You, ")
                         .substring(0, 25);
                 }
-                const success = await ConversationsController.createConversation(
+                const { success, id } = await ConversationsController.createConversation(
                     token, list.map(i => i.id), title);
                 if (!success) {
                     alertDialog.display({
@@ -159,7 +159,7 @@ const Conversations = () => {
                         message: "An error occurred trying to create the conversation",
                         type: AlertType.Error
                     });
-                }
+                } else dispatch(setCurrentConversation(id));
             };
             runAsync();
         }

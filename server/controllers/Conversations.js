@@ -70,7 +70,7 @@ module.exports.addConversation = async (req, res) => {
         const participantIds = participants.map((id) => Number(id));
         // Emit the new conversation to all participants and the sender
         global.io.to([...participantIds, userId]).emit("newConversation", { conversation });
-        return res.status(201).send();
+        return res.status(201).send({ id: conversation.id });
     } catch (err) {
         await t.rollback();
 

@@ -11,25 +11,27 @@ export const conversationSlice = createSlice({
     reducers: {
         // Sets all conversations (UI conversation list)
         setConversations: (state, action) => {
-            state.conversations = action.payload;
+            state.conversations = action.payload ?? [];
         },
         // Removes a conversation (UI conversation list)
         removeConversation: (state, action) => {
-            state.conversations = state.conversations.filter( conversation => conversation.id !== action.payload);
+            state.conversations = state.conversations.filter(conversation => conversation.id !== action.payload);
         },
         // Adds a new conversation (UI conversation list)
         addConversation: (state, action) => {
-            state.conversations = [...state.conversations, action.payload];
+            // ensure no duplicates are added
+            state.conversations = state.conversations.find(convo => convo.id === action.payload.id)
+                ? state.conversations : [...state.conversations, action.payload];
         },
         // Updates a conversation (UI conversation list)
         updateConversation: (state, action) => {
             state.conversations = state.conversations.map((conversation) => {
-                return (conversation.id === action.payload.id ) ? action.payload : conversation;
+                return (conversation.id === action.payload.id) ? action.payload : conversation;
             });
         },
         // Sets the currently selected conversation (main chat window)
         setCurrentConversation: (state, action) => {
-            state.currentConversation = state.conversations.find( convo => convo.id === action.payload);
+            state.currentConversation = state.conversations.find(convo => convo.id === action.payload);
             state.showChat = true;
         },
         // Updates the currently selected conversation (main chat window)

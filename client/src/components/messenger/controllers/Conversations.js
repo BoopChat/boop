@@ -71,9 +71,10 @@ export const ConversationsController = {
                     title,
                 }),
             });
-            return res.status === 201;
+            const { id } = await res.json();
+            return { success: res.status === 201, id };
         } catch (e) {
-            return false;
+            return { success: false };
         }
     },
     leaveConversation: async (token, conversationId, successorId) => {

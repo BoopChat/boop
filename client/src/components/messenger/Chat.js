@@ -197,15 +197,14 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
 
     useEffect(() => {
         setMessages([]); // if switching conversations, clear the ui from previous messages
-        ChatController.init(socket);
-        ChatController.clear(); // clear previous listener if exist
+        ChatController.clear(socket); // clear previous listener if exist
         // as new messages come in from the server add them to messages list
         ChatController.listen((message) => {
             // if the new message is a message for the currently opened chat
             // if not simply ignore it in the ui
             if (message.newMessage.conversation.id === conversationId.toString())
                 addNewMessages([message.newMessage]);
-        });
+        }, socket);
 
         // get all messages (this will include any live messages caught by above code)
         const runAsync = async () => {

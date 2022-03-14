@@ -116,18 +116,3 @@ function getLoginService () {
   
   return configuredServices;
 }
-
-/**
- * Gets the configured login services
- */
-function getLoginService () {
-  const services = ["GOOGLE_CLIENT", "FACEBOOK_CLIENT", "TWITTER_CLIENT"];
-  const configuredServices = {};
-  for (const service of services) {
-    const providerName = service.split("_")[0].toLowerCase();
-    if (process.env[`${service}_SECRET`] && process.env[`${service}_ID`])
-      configuredServices[providerName] = true;
-  }
-  
-  return configuredServices;
-}
