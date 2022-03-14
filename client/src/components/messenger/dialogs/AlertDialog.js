@@ -11,19 +11,24 @@ const style = [
     { name: "error", icon: require("../../../assets/icons/exclamation").default }
 ];
 
-const AlertDialog = ({ handleClose, title, message, closeMessage="Okay", type }) => {
+const AlertDialog = ({ handleClose, title, message, closeMessage="Okay", type, cb }) => {
+    const close = () =>  {
+        if (cb)
+            cb();
+        handleClose();
+    };
 
     return (
-        <Modal onClose={handleClose} center>
+        <Modal onClose={close} center>
             <div id="alert-dialog">
                 <header className={style[type].name}>
                     <span>{title}</span>
                     { style[type].icon({ className: style[type].name }) }
-                    <span className="xbutton alert" onClick={handleClose}>&times;</span>
+                    <span className="xbutton alert" onClick={close}>&times;</span>
                 </header>
                 <main>{message}</main>
                 <footer>
-                    <button autoFocus onClick={handleClose}>{closeMessage}</button>
+                    <button autoFocus onClick={close}>{closeMessage}</button>
                 </footer>
             </div>
         </Modal>
@@ -35,7 +40,8 @@ const useAlertDialog = () => {
         open: false,
         title: "",
         message: "",
-        type: AlertType.Info
+        type: AlertType.Info,
+        cb: null
     });
 
     return {
@@ -46,7 +52,8 @@ const useAlertDialog = () => {
                 title: "",
                 message: "",
                 open: false,
-                type: AlertType.Info
+                type: AlertType.Info,
+                cb: null
             });
         }
     };

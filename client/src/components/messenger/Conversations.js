@@ -1,5 +1,5 @@
-import { useEffect, useState, React } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState, React, useContext } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { AlertDialog, useAlertDialog, AlertType } from "./dialogs/AlertDialog";
 import { useSearchContext } from "./hooks/SearchContext";
 
@@ -9,6 +9,9 @@ import { ConversationsController } from "./controllers/Conversations";
 import { ContactsController } from "./controllers/Contacts";
 import Modal from "./dialogs/Modal";
 import SearchBox from "./SearchBox";
+
+import { setConversations, setCurrentConversation } from "../../redux-store/conversationSlice";
+import SocketContext from "../../socketContext";
 
 const AddConversationDialog = ({ onClose, token }) => {
     const [details, setDetails] = useState({
@@ -97,27 +100,18 @@ const AddConversationDialog = ({ onClose, token }) => {
     );
 };
 
-const Conversations = ({ selectConversation, socket }) => {
+const Conversations = () => {
+    const dispatch = useDispatch();
     const [dialogOpen, setDialogOpen] = useState(false);
-    const [conversations, setConversations] = useState([]);
     const alertDialog = useAlertDialog();
     const { search } = useSearchContext();
+    const socket = useContext(SocketContext);
 
     // Get the token and userInfo from the users global state.
     const { token, userInfo: { displayName, imageUrl } } = useSelector((state) => state.user);
-
-    const updateConversations = (newConversation) => {
-        setConversations((conversations) => {
-            return newConversation.length > 0 ? [...newConversation, ...conversations] : [...newConversation];
-        });
-    };
-
     useEffect(() => {
-        // send a request to the server to get conversations and setup socket to listen
-        // for conversations changes
-        ConversationsController.init(socket);
         const runAsync = async () => {
-            const result = await ConversationsController.getConversations(token, updateConversations);
+            const result = await ConversationsController.getConversations(token, socket);
             if (!result.success) {
                 alertDialog.display({
                     title: "Error",
@@ -125,13 +119,13 @@ const Conversations = ({ selectConversation, socket }) => {
                     type: AlertType.Error
                 });
             }
-            setConversations(result.conversations);
+            dispatch(setConversations(result.conversations));
         };
         runAsync();
     }, []);
 
     const handleClickAdd = () => setDialogOpen(true);
-    const addConversation = (conversationDetails) => {
+    const addNewConversation = (conversationDetails) => {
         setDialogOpen(false); // close add dialog
         // ask the server to create a new conversation with the list participants (and title)
         if (conversationDetails) {
@@ -157,15 +151,15 @@ const Conversations = ({ selectConversation, socket }) => {
                         .reduce((prevValue, curValue) => prevValue + curValue + ", ", "You, ")
                         .substring(0, 25);
                 }
-                const success = await ConversationsController.createConversation(
-                    token, list.map(i => i.id), title, updateConversations);
+                const { success, id } = await ConversationsController.createConversation(
+                    token, list.map(i => i.id), title);
                 if (!success) {
                     alertDialog.display({
                         title: "Error",
                         message: "An error occurred trying to create the conversation",
                         type: AlertType.Error
                     });
-                }
+                } else dispatch(setCurrentConversation(id));
             };
             runAsync();
         }
@@ -205,21 +199,23 @@ const Conversations = ({ selectConversation, socket }) => {
                 <button className="options" title="create conversation" onClick={() => handleClickAdd()}>
                     <Plus/>
                 </button>
-                { dialogOpen ? <AddConversationDialog onClose={addConversation} token={token} /> : <></> }
+                { dialogOpen ? <AddConversationDialog onClose={addNewConversation} token={token} /> : <></> }
             </div>
             <SearchBox id="search_mobile"/>
             <div id="conversations">
-                {conversations?.filter(filterConversations).sort(sortConversations).map((chat, i) => (
-                    <ConversationItem
-                        name={chat.title}
-                        img={chat.imgUrl ?? "https://picsum.photos/400?id=" + chat.title}
-                        lastMsg={chat.lastMsg ?? ""}
-                        lastDate={ConversationsController.evaluateDate(chat.lastDate)}
-                        unread={chat.unread}
-                        key={i}
-                        onClick={() => selectConversation(chat.id, chat.title, chat.participants)}
-                    />
-                ))}
+                {
+                    useSelector((state) => state.conversations.conversations)?.filter(filterConversations)
+                        .sort(sortConversations).map((chat, i) => (
+                            <ConversationItem
+                                name={chat.title}
+                                img={chat.imgUrl ?? "https://picsum.photos/400?id=" + chat.title}
+                                lastMsg={chat.lastMsg ?? ""}
+                                lastDate={ConversationsController.evaluateDate(chat.lastDate)}
+                                unread={chat.unread}
+                                key={i}
+                                onClick={() => dispatch(setCurrentConversation(chat.id))}
+                            />
+                        ))}
             </div>
         </div>
     );

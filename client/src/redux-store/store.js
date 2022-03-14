@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-//adds user slice state to the global store
-import loginReducer from "../components/login/userSlice";
+// Adds slices of global state to the redux store
+import loginReducer from "./userSlice";
+import conversationSlice from "./conversationSlice";
 
 // global redux store. stores all reducer functions
 export default configureStore({
     reducer: {
         user: loginReducer,
+        conversations: conversationSlice,
     },
 });

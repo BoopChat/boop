@@ -1,7 +1,4 @@
-let socket;
-
 export const ChatController = {
-    init: (soc) => (socket = soc), // set the socket the controller should use
     getMessages: async (token, conversationId) => {
         if (conversationId) {
             try {
@@ -42,10 +39,8 @@ export const ChatController = {
             messages: []
         };
     },
-    listen: (updateMessages) => socket.on("newMessage", (msg) => updateMessages(msg)),
-    clear: () => {
-        socket?.off("newMessage");
-    },
+    listen: (updateMessages, socket) => socket.on("newMessage", (msg) => updateMessages(msg)),
+    clear: (socket) => socket?.off("newMessage"),
     evaluateElapsed: sent => {
         // convert timestamp into an elapsed message
         let diff = Date.now() - new Date(sent).getTime();

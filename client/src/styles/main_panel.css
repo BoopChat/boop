@@ -372,7 +372,6 @@ div#search {
     background-color: var(--bg);
     align-items: center;
     padding: 10px;
-    box-shadow: 0 20px 25px -5px var(--shadow), 0 8px 10px -6px var(--shadow);
 }
 
 /* search box mobile screen */
@@ -408,6 +407,7 @@ div#search {
         border-radius: 16px;
         height: 9%;
         max-height: 80px;
+        box-shadow: 0 20px 25px -5px var(--shadow), 0 8px 10px -6px var(--shadow);
     }
 }
 

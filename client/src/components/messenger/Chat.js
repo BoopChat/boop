@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef, React } from "react";
-import { useSelector } from "react-redux";
+import { useState, useEffect, useRef, React, useContext } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import "emoji-mart/css/emoji-mart.css";
 import { Picker, Emoji } from "emoji-mart";
 
@@ -14,18 +14,23 @@ import "../../styles/chat.css";
 import Options from "../../assets/icons/options.js";
 import Arrow from "../../assets/icons/arrow";
 
-const Chat = ({ conversationId, title, participants, socket, closeChat, isDark }) => {
+import { removeConversation } from "../../redux-store/conversationSlice";
+import SocketContext from "../../socketContext";
+
+const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState("");
     const [cursorPosition, setCursorPosition] = useState(0);
     const chatbox = useRef();
     const textbox = useRef();
+    const dispatch = useDispatch();
 
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [optionsDialog, setOptionsDialog] = useState(false);
     const [addUsersDialog, setAddUsersDialog] = useState(false);
     const [chooseAdminDialog, setChooseAdminDialog] = useState(false);
     const alertDialog = useAlertDialog();
+    const socket = useContext(SocketContext);
 
     // Get the token from the users global state.
     const token = useSelector((state) => state.user.token);
@@ -84,7 +89,6 @@ const Chat = ({ conversationId, title, participants, socket, closeChat, isDark }
                     result = await ConversationsController.leaveConversation(token, conversationId);
                 else {
                     // check if user is admin
-                    console.log(participants.filter(p => p.id === id)[0]);
                     const { Participant: { isAdmin } } = participants.filter(p => p.id === id)[0];
 
                     if (isAdmin) {
@@ -110,7 +114,15 @@ const Chat = ({ conversationId, title, participants, socket, closeChat, isDark }
             alertDialog.display({
                 title: result.success ? "Success" : "Error",
                 message: result.msg,
-                type: result.success ? AlertType.Success : AlertType.Error
+                type: result.success ? AlertType.Success : AlertType.Error,
+                cb: () => { // function to call after the dialog is closed
+                    // Remove conversation from UI on success
+                    if (result.success) {
+                        dispatch(removeConversation(conversationId));
+                        // close the chat window
+                        closeChat();
+                    }
+                }
             });
         }
     };
@@ -157,7 +169,15 @@ const Chat = ({ conversationId, title, participants, socket, closeChat, isDark }
                 alertDialog.display({
                     title: result.success ? "Success": "Error",
                     message: result.msg,
-                    type: result.success ? AlertType.Success : AlertType.Error
+                    type: result.success ? AlertType.Success : AlertType.Error,
+                    cb: () => { // function to call after the dialog is closed
+                        // Remove conversation from UI on success
+                        if (result.success) {
+                            dispatch(removeConversation(conversationId));
+                            // close the chat window
+                            closeChat();
+                        }
+                    }
                 });
             }
         }
@@ -177,15 +197,14 @@ const Chat = ({ conversationId, title, participants, socket, closeChat, isDark }
 
     useEffect(() => {
         setMessages([]); // if switching conversations, clear the ui from previous messages
-        ChatController.init(socket);
-        ChatController.clear(); // clear previous listener if exist
+        ChatController.clear(socket); // clear previous listener if exist
         // as new messages come in from the server add them to messages list
         ChatController.listen((message) => {
             // if the new message is a message for the currently opened chat
             // if not simply ignore it in the ui
             if (message.newMessage.conversation.id === conversationId.toString())
                 addNewMessages([message.newMessage]);
-        });
+        }, socket);
 
         // get all messages (this will include any live messages caught by above code)
         const runAsync = async () => {
@@ -261,6 +280,7 @@ const Chat = ({ conversationId, title, participants, socket, closeChat, isDark }
                     title={alertDialog.title}
                     message={alertDialog.message}
                     type={alertDialog.type}
+                    cb={alertDialog.cb}
                 /> :<></>
             }
             <form className="interactions" onSubmit={handleSend}>

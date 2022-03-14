@@ -1,6 +1,6 @@
 import "../styles/login_buttons.css";
 import { useDispatch } from "react-redux";
-import { logIn } from "./login/userSlice";
+import { logIn } from "../redux-store/userSlice";
 import React from "react";
 
 const FacebookButton = ({ text="Sign up with Facebook" }) => {
