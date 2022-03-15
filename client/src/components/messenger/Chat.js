@@ -6,7 +6,7 @@ import { Picker, Emoji } from "emoji-mart";
 import { ChatController } from "./controllers/Chat";
 import { ConversationsController } from "./controllers/Conversations";
 import { ChatOptionsDialog, optionsEnum } from "./dialogs/ChatOptionsDialog";
-import { AlertDialog, AlertType, useAlertDialog,  } from "./dialogs/AlertDialog";
+import { AlertType, useAlertDialogContext } from "./dialogs/AlertDialog";
 import ChooseUsersDialog from "./dialogs/ChooseUsersDialog";
 import ChooseAdminDialog from "./dialogs/ChooseAdminDialog";
 
@@ -14,11 +14,12 @@ import "../../styles/chat.css";
 import Options from "../../assets/icons/options.js";
 import Arrow from "../../assets/icons/arrow";
 
-import { removeConversation } from "../../redux-store/conversationSlice";
+import { removeConversation, updateLastMessage } from "../../redux-store/conversationSlice";
 import SocketContext from "../../socketContext";
 
 const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
     const [messages, setMessages] = useState([]);
+    const [firstLoad, setFirstLoad] = useState(false);
     const [text, setText] = useState("");
     const [cursorPosition, setCursorPosition] = useState(0);
     const chatbox = useRef();
@@ -29,7 +30,7 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
     const [optionsDialog, setOptionsDialog] = useState(false);
     const [addUsersDialog, setAddUsersDialog] = useState(false);
     const [chooseAdminDialog, setChooseAdminDialog] = useState(false);
-    const alertDialog = useAlertDialog();
+    const { display: displayDialog } = useAlertDialogContext();
     const socket = useContext(SocketContext);
 
     // Get the token from the users global state.
@@ -58,6 +59,13 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
 
     useEffect(() => textbox.current.selectionEnd = cursorPosition, [cursorPosition]);
 
+    const scrollChat = () => {
+        if (messages.length > 0) { // if there are no messages, there is no chatbox to scroll
+            // scroll to the bottom of the chat where new message has been rendered
+            chatbox.current.scrollTop = chatbox?.current?.scrollHeight;
+        }
+    };
+
     const handleSend = async (e) => {
         e.preventDefault();
         setShowEmojiPicker(false); // close the emoji picker
@@ -70,14 +78,13 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
             setText(""); // clear the text box
         else {
             // display error message
-            alertDialog.display({
+            displayDialog({
                 title: "Error",
                 message: result.msg,
                 type: AlertType.Error
             });
         }
-        // scroll to the bottom of the chat where new message has been rendered
-        chatbox.current.scrollTop = chatbox?.current?.scrollHeight;
+        scrollChat();
     };
 
     const onOptionsDialogClose = async action => {
@@ -111,7 +118,7 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
                 break;
         }
         if (result !== null) {
-            alertDialog.display({
+            displayDialog({
                 title: result.success ? "Success" : "Error",
                 message: result.msg,
                 type: result.success ? AlertType.Success : AlertType.Error,
@@ -137,15 +144,14 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
             // ask the server to add new participants to this conversation
             if (list?.length < 1) {
                 // display error message for no new participants
-                alertDialog.display(
-                    {
-                        title: "Error",
-                        message: "No new participants added",
-                        type: AlertType.Error
-                    });
+                displayDialog({
+                    title: "Error",
+                    message: "No new participants added",
+                    type: AlertType.Error
+                });
             } else {
                 const result = await ConversationsController.addUserToConversation(token, conversationId, list);
-                alertDialog.display({
+                displayDialog({
                     title: result.success ? "Success": "Error",
                     message: result.msg,
                     type: result.success ? AlertType.Success : AlertType.Error
@@ -162,11 +168,11 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
         if (btnClicked) {
             // ask the server to set the choosen user as an admin
             if (!choosen) { // display error message for no new admin
-                alertDialog.display({ title: "Error", message: "No new admin selected", type: AlertType.Error });
+                displayDialog({ title: "Error", message: "No new admin selected", type: AlertType.Error });
             } else {
                 // request that the user leave the conversation and send the id of the chosen successor
                 const result = await ConversationsController.leaveConversation(token, conversationId, Number(choosen));
-                alertDialog.display({
+                displayDialog({
                     title: result.success ? "Success": "Error",
                     message: result.msg,
                     type: result.success ? AlertType.Success : AlertType.Error,
@@ -192,6 +198,10 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
             if (!messages.slice(-messageList.length-1).find(({ id }) => id === msg.id))
                 add.push(msg);
         });
+        // update the last message of the conversation
+        // this will cause the new message to be shown as the last message with chat title in the conversation list
+        // as well as cause the conversation to appear at the top of the list (because it has the most recent activity)
+        if (add.length > 0) dispatch(updateLastMessage({ conversationId, lastMessage: add.slice(-1)[0] }));
         setMessages(prevMessages => prevMessages.length > 0 ? [...prevMessages, ...add] : add);
     };
 
@@ -210,7 +220,7 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
         const runAsync = async () => {
             const result = await ChatController.getMessages(token, conversationId);
             if (!result.success) {
-                alertDialog.display({
+                displayDialog({
                     title: "Error",
                     message: "Could not retrieve messages for this chat",
                     type: AlertType.Error
@@ -218,9 +228,18 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
             }
             const { messages } = result;
             addNewMessages(messages.reverse());
+            setFirstLoad(true);
         };
         runAsync();
     }, [conversationId]);
+
+    // scroll the chat to the bottom when loaded
+    useEffect(() => {
+        if (firstLoad) {
+            scrollChat();
+            setFirstLoad(false);
+        }
+    }, [firstLoad]);
 
     const showChatOptions = () => setOptionsDialog(true);
 
@@ -274,15 +293,6 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
             ) : (
                 <div></div>
             )}
-            { alertDialog.open ?
-                <AlertDialog
-                    handleClose={alertDialog.close}
-                    title={alertDialog.title}
-                    message={alertDialog.message}
-                    type={alertDialog.type}
-                    cb={alertDialog.cb}
-                /> :<></>
-            }
             <form className="interactions" onSubmit={handleSend}>
                 <input type="text" name="chat_box" placeholder="chat" value={text} onChange={handleText}
                     className="textBox" ref={textbox}/>

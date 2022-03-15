@@ -1,8 +1,25 @@
-import { React, useState } from "react";
+import React, { useState, useContext } from "react";
 
 import Modal from "./Modal";
 
 const AlertType = { Success: 0, Warning: 1, Info: 2, Error: 3 };
+
+const AlertDialogContext = React.createContext();
+const useAlertDialogContext = () => useContext(AlertDialogContext);
+
+const AlertDialogProvider = ({ children }) => {
+    const [messageDialog, setMessageDialog] = useState({});
+    const defaultArgs = { open: false, title: "", message: "", closeMessage: "Okay", type: AlertType.Info, cb: null };
+
+    const display = args => setMessageDialog({ ...defaultArgs, ...args, open: true });
+    const close = () => setMessageDialog({ ...defaultArgs, open: false });
+
+    return (
+        <AlertDialogContext.Provider value={{ display, close, messageDialog }}>
+            { children }
+        </AlertDialogContext.Provider>
+    );
+};
 
 const style = [
     { name: "success", icon: require("../../../assets/icons/check").default },
@@ -11,7 +28,10 @@ const style = [
     { name: "error", icon: require("../../../assets/icons/exclamation").default }
 ];
 
-const AlertDialog = ({ handleClose, title, message, closeMessage="Okay", type, cb }) => {
+const AlertDialog = () => {
+    const { messageDialog: { open, title, message, closeMessage, type, cb },
+        close: handleClose } = useAlertDialogContext();
+
     const close = () =>  {
         if (cb)
             cb();
@@ -19,7 +39,7 @@ const AlertDialog = ({ handleClose, title, message, closeMessage="Okay", type, c
     };
 
     return (
-        <Modal onClose={close} center>
+        open ? <Modal onClose={close} center>
             <div id="alert-dialog">
                 <header className={style[type].name}>
                     <span>{title}</span>
@@ -31,36 +51,13 @@ const AlertDialog = ({ handleClose, title, message, closeMessage="Okay", type, c
                     <button autoFocus onClick={close}>{closeMessage}</button>
                 </footer>
             </div>
-        </Modal>
+        </Modal> : <></>
     );
-};
-
-const useAlertDialog = () => {
-    const [messageDialog, setMessageDialog] = useState({
-        open: false,
-        title: "",
-        message: "",
-        type: AlertType.Info,
-        cb: null
-    });
-
-    return {
-        display: args => setMessageDialog({ ...args, open: true }),
-        ...messageDialog,
-        close: () => {
-            setMessageDialog({
-                title: "",
-                message: "",
-                open: false,
-                type: AlertType.Info,
-                cb: null
-            });
-        }
-    };
 };
 
 export {
     AlertDialog,
-    useAlertDialog,
+    useAlertDialogContext,
+    AlertDialogProvider,
     AlertType
 };

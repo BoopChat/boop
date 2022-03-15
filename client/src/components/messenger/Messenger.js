@@ -12,6 +12,7 @@ import Sidebar from "./Sidebar";
 import Chat from "./Chat";
 import SearchBox from "./SearchBox";
 import Navbar from "./Navbar";
+import { AlertDialogProvider, AlertDialog } from "./dialogs/AlertDialog";
 
 import useThemeSwitcher from "./hooks/useThemeSwitcher";
 
@@ -37,37 +38,40 @@ const Messenger = () => {
             <Sidebar username={userInfo.displayName} userPic={userInfo.imageUrl} toggleTheme={toggleTheme}
                 themeIcon={themeIcon}/>
             <Navbar toggleTheme={toggleTheme} themeIcon={themeIcon} isDark={isDark}/>
-            <div id="panels">
-                <div id="main_panel">
-                    <SearchProvider>
-                        <SearchBox id="search"/>
-                        <Switch location={location} key={location.pathname}>
-                            <Route path="/conversations">
-                                <Conversations />
-                            </Route>
-                            <Route path="/contacts" component={Contacts} />
-                            <Route path="/settings">
-                                <Settings userInfo={userInfo} updateUser={updateUser} />
-                            </Route>
-                            <Route path="/">
-                                <Conversations />
-                            </Route>
-                        </Switch>
-                    </SearchProvider>
+            <AlertDialogProvider>
+                <div id="panels">
+                    <div id="main_panel">
+                        <SearchProvider>
+                            <SearchBox id="search"/>
+                            <Switch location={location} key={location.pathname}>
+                                <Route path="/conversations">
+                                    <Conversations />
+                                </Route>
+                                <Route path="/contacts" component={Contacts} />
+                                <Route path="/settings">
+                                    <Settings userInfo={userInfo} updateUser={updateUser} />
+                                </Route>
+                                <Route path="/">
+                                    <Conversations />
+                                </Route>
+                            </Switch>
+                        </SearchProvider>
+                    </div>
+                    <AlertDialog/>
+                    <div id="chat_panel" className={useSelector(state => state.conversations.showChat)? "" : "hidden"}>
+                        {currentConvo.id ?
+                            <Chat
+                                conversationId={currentConvo.id}
+                                title={currentConvo.title}
+                                participants={currentConvo.participants}
+                                closeChat={() => dispatch(setShowChat(false))}
+                                isDark={isDark}
+                            />
+                            : <></>
+                        }
+                    </div>
                 </div>
-                <div id="chat_panel" className={ useSelector(state => state.conversations.showChat)? "" : "hidden"}>
-                    {currentConvo.id ?
-                        <Chat
-                            conversationId={currentConvo.id}
-                            title={currentConvo.title}
-                            participants={currentConvo.participants}
-                            closeChat={() => dispatch(setShowChat(false))}
-                            isDark={isDark}
-                        />
-                        : <></>
-                    }
-                </div>
-            </div>
+            </AlertDialogProvider>
         </div>
     );
 };

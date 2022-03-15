@@ -1,7 +1,7 @@
 import Plus from "../../assets/icons/plus";
 import ContactItem from "./ContactItem";
 import { ContactsController } from "./controllers/Contacts";
-import { AlertDialog, useAlertDialog, AlertType } from "./dialogs/AlertDialog";
+import { AlertType, useAlertDialogContext } from "./dialogs/AlertDialog";
 import Modal from "./dialogs/Modal";
 import SearchBox from "./SearchBox";
 import { useSearchContext } from "./hooks/SearchContext";
@@ -39,7 +39,7 @@ const AddContactDialog = ({ onClose }) => {
 const Contacts = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [contacts, setContacts] = useState([]);
-    const alertDialog = useAlertDialog();
+    const { display: displayDialog } = useAlertDialogContext();
     const { search } = useSearchContext();
 
     // Get the token and userInfo from the users global state.
@@ -50,7 +50,7 @@ const Contacts = () => {
             let contacts = await ContactsController.getContacts(token);
             setContacts(contacts.success ? contacts.contactList : []);
             if (!contacts.success) {
-                alertDialog.display({
+                displayDialog({
                     title: "Error",
                     message: "There was an error retrieving your contacts",
                     type: AlertType.Error
@@ -82,7 +82,7 @@ const Contacts = () => {
                 if (result.success) // add new contact to the back of the list
                     setContacts(contacts.length > 0 ? [...contacts, result.contact]: [result.contact]);
                 else // display error message
-                    alertDialog.display({
+                    displayDialog({
                         title: "Error",
                         message: result.msg,
                         type: AlertType.Error
@@ -90,7 +90,7 @@ const Contacts = () => {
             };
             runAsync();
         } else {
-            alertDialog.display({
+            displayDialog({
                 title: "Error",
                 message: "You need to enter an email to add a contact",
                 type: AlertType.Error
@@ -118,14 +118,6 @@ const Contacts = () => {
 
     return (
         <div id="contact_container">
-            { alertDialog.open ?
-                <AlertDialog
-                    handleClose={alertDialog.close}
-                    title={alertDialog.title}
-                    message={alertDialog.message}
-                    type={alertDialog.type}
-                /> :<></>
-            }
             <div className="main_panel_header">
                 <div className="img_and_title">
                     <img src={imageUrl} alt={displayName} className="profile_img_mobile"/>

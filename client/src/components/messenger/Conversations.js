@@ -1,6 +1,6 @@
 import { useEffect, useState, React, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { AlertDialog, useAlertDialog, AlertType } from "./dialogs/AlertDialog";
+import { AlertType, useAlertDialogContext } from "./dialogs/AlertDialog";
 import { useSearchContext } from "./hooks/SearchContext";
 
 import Plus from "../../assets/icons/plus";
@@ -19,7 +19,7 @@ const AddConversationDialog = ({ onClose, token }) => {
         title: "",
     });
     const [contacts, setContacts] = useState([]);
-    const alertDialog = useAlertDialog();
+    const { display: displayDialog } = useAlertDialogContext();
 
     const handleClose = btnClicked => {
         onClose({ ...details, btnClicked });
@@ -44,7 +44,7 @@ const AddConversationDialog = ({ onClose, token }) => {
             if (contacts.success)
                 setContacts(contacts.contactList);
             else {
-                alertDialog.display({
+                displayDialog({
                     title: "Error",
                     message: "There was an error retrieving your contacts",
                     type: AlertType.Error
@@ -57,14 +57,6 @@ const AddConversationDialog = ({ onClose, token }) => {
 
     return (
         <Modal onClose={() => handleClose(false)} center>
-            { alertDialog.open ?
-                <AlertDialog
-                    handleClose={alertDialog.close}
-                    title={alertDialog.title}
-                    message={alertDialog.message}
-                    type={alertDialog.type}
-                /> :<></>
-            }
             <div id="add-convo-dialog">
                 <header>Create a conversation</header>
                 <main>
@@ -103,17 +95,21 @@ const AddConversationDialog = ({ onClose, token }) => {
 const Conversations = () => {
     const dispatch = useDispatch();
     const [dialogOpen, setDialogOpen] = useState(false);
-    const alertDialog = useAlertDialog();
     const { search } = useSearchContext();
     const socket = useContext(SocketContext);
+    const { display: displayDialog } = useAlertDialogContext();
 
     // Get the token and userInfo from the users global state.
     const { token, userInfo: { displayName, imageUrl } } = useSelector((state) => state.user);
+
+    // get the currently selected conversation
+    const { id: currentlySelectedConvo } = useSelector(state => state.conversations.currentConversation);
+
     useEffect(() => {
         const runAsync = async () => {
             const result = await ConversationsController.getConversations(token, socket);
             if (!result.success) {
-                alertDialog.display({
+                displayDialog({
                     title: "Error",
                     message: "There was an error retrieving your conversations",
                     type: AlertType.Error
@@ -137,7 +133,7 @@ const Conversations = () => {
             const runAsync = async () => {
                 let { title, list } = conversationDetails;
                 if (list.length < 1) {
-                    alertDialog.display({
+                    displayDialog({
                         title: "Error",
                         message: "You need to add participants to the conversation",
                         type: AlertType.Error
@@ -154,7 +150,7 @@ const Conversations = () => {
                 const { success, id } = await ConversationsController.createConversation(
                     token, list.map(i => i.id), title);
                 if (!success) {
-                    alertDialog.display({
+                    displayDialog({
                         title: "Error",
                         message: "An error occurred trying to create the conversation",
                         type: AlertType.Error
@@ -179,18 +175,18 @@ const Conversations = () => {
         else return 0;
     };
 
-    const sortConversations = (a, b) => getRelevancy(b) - getRelevancy(a);
+    const sortConversations = (a, b) => {
+        if (search === "") { // sort by most recent activity
+            // get the timestamp of the most recent message from the conversation for comparison
+            // if conversation has no messages use the timestamp of the creation of the conversation
+            const timestampA = a.messages?.length > 0 ? a.messages[0].createdAt : a.createdAt;
+            const timestampB = b.messages?.length > 0 ? b.messages[0].createdAt : b.createdAt;
+            return (new Date(timestampB).getTime()) - (new Date(timestampA).getTime());
+        } else return getRelevancy(b) - getRelevancy(a); // sort by search relevance
+    };
 
     return (
         <div id="conversations_container">
-            { alertDialog.open ?
-                <AlertDialog
-                    handleClose={alertDialog.close}
-                    title={alertDialog.title}
-                    message={alertDialog.message}
-                    type={alertDialog.type}
-                /> :<></>
-            }
             <div className="main_panel_header">
                 <div className="img_and_title">
                     <img src={imageUrl} alt={displayName} className="profile_img_mobile"/>
@@ -209,11 +205,12 @@ const Conversations = () => {
                             <ConversationItem
                                 name={chat.title}
                                 img={chat.imgUrl ?? "https://picsum.photos/400?id=" + chat.title}
-                                lastMsg={chat.lastMsg ?? ""}
+                                lastMsg={ConversationsController.getLastMessage(chat)}
                                 lastDate={ConversationsController.evaluateDate(chat.lastDate)}
                                 unread={chat.unread}
                                 key={i}
                                 onClick={() => dispatch(setCurrentConversation(chat.id))}
+                                active={currentlySelectedConvo === chat.id}
                             />
                         ))}
             </div>
