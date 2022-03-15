@@ -101,6 +101,10 @@ const Conversations = () => {
 
     // Get the token and userInfo from the users global state.
     const { token, userInfo: { displayName, imageUrl } } = useSelector((state) => state.user);
+
+    // get the currently selected conversation
+    const { id: currentlySelectedConvo } = useSelector(state => state.conversations.currentConversation);
+
     useEffect(() => {
         const runAsync = async () => {
             const result = await ConversationsController.getConversations(token, socket);
@@ -206,6 +210,7 @@ const Conversations = () => {
                                 unread={chat.unread}
                                 key={i}
                                 onClick={() => dispatch(setCurrentConversation(chat.id))}
+                                active={currentlySelectedConvo === chat.id}
                             />
                         ))}
             </div>

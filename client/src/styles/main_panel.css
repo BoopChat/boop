@@ -51,7 +51,7 @@ svg.adminCrown {
     fill: var(--away);
 }
 
-div.contact_item:hover, div.chat_item:hover {
+div.contact_item:hover, div.chat_item:hover, div.chat_item.selected {
     cursor: pointer;
     background-color: var(--sec-blue);
     color: var(--text-hover);
