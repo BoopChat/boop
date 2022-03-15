@@ -19,6 +19,7 @@ import SocketContext from "../../socketContext";
 
 const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
     const [messages, setMessages] = useState([]);
+    const [firstLoad, setFirstLoad] = useState(false);
     const [text, setText] = useState("");
     const [cursorPosition, setCursorPosition] = useState(0);
     const chatbox = useRef();
@@ -58,6 +59,13 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
 
     useEffect(() => textbox.current.selectionEnd = cursorPosition, [cursorPosition]);
 
+    const scrollChat = () => {
+        if (messages.length > 0) { // if there are no messages, there is no chatbox to scroll
+            // scroll to the bottom of the chat where new message has been rendered
+            chatbox.current.scrollTop = chatbox?.current?.scrollHeight;
+        }
+    };
+
     const handleSend = async (e) => {
         e.preventDefault();
         setShowEmojiPicker(false); // close the emoji picker
@@ -76,10 +84,7 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
                 type: AlertType.Error
             });
         }
-        if (messages.length > 0) { // if there are no messages, there is no chatbox to scroll
-            // scroll to the bottom of the chat where new message has been rendered
-            chatbox.current.scrollTop = chatbox?.current?.scrollHeight;
-        }
+        scrollChat();
     };
 
     const onOptionsDialogClose = async action => {
@@ -223,9 +228,18 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
             }
             const { messages } = result;
             addNewMessages(messages.reverse());
+            setFirstLoad(true);
         };
         runAsync();
     }, [conversationId]);
+
+    // scroll the chat to the bottom when loaded
+    useEffect(() => {
+        if (firstLoad) {
+            scrollChat();
+            setFirstLoad(false);
+        }
+    }, [firstLoad]);
 
     const showChatOptions = () => setOptionsDialog(true);
 
