@@ -57,6 +57,10 @@ export const ConversationsController = {
             return diff > 23 * 60 * 60 * 1000 ? getDate() : getTime();
         } else return "";
     },
+    getLastMessage: chat => {
+        const { messages } = chat;
+        return messages?.length > 0 ? messages[0].content : "";
+    },
     createConversation: async (token, participants, title) => {
         // make request to create a conversation with participants and title
         try {

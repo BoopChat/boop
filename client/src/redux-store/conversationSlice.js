@@ -29,6 +29,11 @@ export const conversationSlice = createSlice({
                 return (conversation.id === action.payload.id) ? action.payload : conversation;
             });
         },
+        // updates the last message in the conversation, when a new message arrives after fetching the convo list
+        updateLastMessage: (state, action) => {
+            const index = state.conversations.findIndex(({ id }) => id === action.payload.conversationId);
+            state.conversations[index].messages[0] = action.payload.lastMessage;
+        },
         // Sets the currently selected conversation (main chat window)
         setCurrentConversation: (state, action) => {
             state.currentConversation = state.conversations.find(convo => convo.id === action.payload);
@@ -51,6 +56,7 @@ export const {
     addConversation,
     setShowChat,
     updateConversation,
+    updateLastMessage,
     setCurrentConversation,
     updateCurrentConversation
 } = conversationSlice.actions;

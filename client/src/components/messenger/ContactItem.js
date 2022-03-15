@@ -2,7 +2,7 @@ import { React, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { ContactsController } from "./controllers/Contacts";
-import { AlertDialog, useAlertDialog, AlertType } from "./dialogs/AlertDialog";
+import { AlertType, useAlertDialogContext } from "./dialogs/AlertDialog";
 import Modal from "./dialogs/Modal";
 
 import "../../styles/dialog.css";
@@ -47,7 +47,7 @@ const ContactItem = ({ img, username, status, id, triggerRefresh }) => {
     const handleClickContact = () => setImageDialogOpen(true);
     const closeContactImage = () => setImageDialogOpen(false);
 
-    const alertDialog = useAlertDialog();
+    const { display: displayDialog } = useAlertDialogContext();
 
     const token = useSelector((state) => state.user.token);
 
@@ -58,7 +58,7 @@ const ContactItem = ({ img, username, status, id, triggerRefresh }) => {
         if (confirm) { // if user confirmed to delete the contact
             const runAsync = async () => {
                 let result = await ContactsController.deleteContact(token, id);
-                alertDialog.display({
+                displayDialog({
                     title: result.success ? "Success" : "Error",
                     message: result.msg,
                     type: result.success ? AlertType.Success : AlertType.Error
@@ -79,15 +79,6 @@ const ContactItem = ({ img, username, status, id, triggerRefresh }) => {
                 <img onClick={handleClickContact} src={img} className="skeleton" alt=""/>
                 <span>{username}</span>
             </div>
-
-            { alertDialog.open ?
-                <AlertDialog
-                    handleClose={alertDialog.close}
-                    title={alertDialog.title}
-                    message={alertDialog.message}
-                    type={alertDialog.type}
-                /> :<></>
-            }
 
             <div className="trash_and_status">
                 <div className={"status status_" + status}></div>

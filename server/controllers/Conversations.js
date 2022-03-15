@@ -1,8 +1,6 @@
 const logger = require("../logger");
 const db = require("../models");
-const Conversation = db.Conversation;
-const Participant = db.Participant;
-const User = db.User;
+const { Conversation, Participant, User, Message } = db;
 
 // Attempting to create a conversation using a transaction
 module.exports.addConversation = async (req, res) => {
@@ -98,12 +96,12 @@ module.exports.getConversations = async (req, res) => {
             model: Conversation,
             as: "conversationList",
             // specify what atributes you want returned
-            attributes: ["id", "title", "imageUrl"],
+            attributes: ["id", "title", "imageUrl", "createdAt"],
             // Prevent the belongs-to-many mapping object (Participant)
             // from being returned
             through: { attributes: [] },
             // get each conversation's participants' info from the Users table
-            include: {
+            include: [{
                 model: User,
                 as: "participants",
                 // exclude the requesting user's info from the participants list
@@ -115,7 +113,13 @@ module.exports.getConversations = async (req, res) => {
                 // Prevents the entire belongs-to-many mapping object (Participant)
                 // from being returned
                 through: { attributes: ["isAdmin"] },
-            },
+            }, {
+                model: Message,
+                as: "messages",
+                attributes: ["id", "content", "senderId", "createdAt", "updatedAt"],
+                order: [["createdAt", "DESC"]],
+                limit: 1,
+            }]
         },
     });
 
@@ -359,7 +363,7 @@ module.exports.addUserToConversation = async (req, res) => {
  */
 const getConvo = async(conversationId) => {
     return await Conversation.findByPk(conversationId, {
-        attributes: ["id", "title", "imageUrl"],
+        attributes: ["id", "title", "imageUrl", "createdAt"],
         // get each participant's info from the Users table
         include: {
             model: User,
