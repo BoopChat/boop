@@ -139,7 +139,7 @@ const Contacts = () => {
                         triggerRefresh={refreshContactList}
                         key={i}
                     />
-                ) : <span>You have no contacts :(</span>}
+                ) : <span className="empty">You have no contacts :(</span>}
             </div>
         </div>
     );

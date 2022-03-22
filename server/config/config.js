@@ -6,9 +6,16 @@ module.exports = {
     "password": process.env.DB_PASSWORD,
     "database": process.env.DB_NAME,
     "host": process.env.DB_HOST,
+    "port": process.env.DB_PORT ?? 5432,
     "dialect": "postgres",
     "dialectOptions": {
-        "useUTC": true
+        "useUTC": true,
+        "ssl": process.env.NODE_ENV === "production" ? {
+            "require": true,
+            "rejectUnauthorized": false
+        } : {
+            "require": false
+        }
     },
     "timezone": "+00:00",
     "define": {
