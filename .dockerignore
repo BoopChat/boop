@@ -6,10 +6,12 @@ logs/
 .git
 .cache
 
-# Ignoring all the markdown and docker files
+# Ignoring all the markdown, docker kubernetes files
 *.md
 *yml
 Dockerfile
+boop-secret.yaml
+*yaml
 
 # dependencies
 node_modules/
