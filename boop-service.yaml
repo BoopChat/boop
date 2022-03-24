@@ -8,8 +8,6 @@ spec:
   selector:
     app: boop-app
   ports:
-    - name: boop-http-service
-      protocol: TCP
-      port: 80
+    - port: 80
       targetPort: 5000
-      nodePort: 30000
+  type: LoadBalancer
