@@ -21,7 +21,7 @@ spec:
         - containerPort: 5000
         env:
           - name: HOME_URL
-            value: ""
+            value: "https://boopchat.app"
           - name: NODE_ENV
             value: "production"
         envFrom:

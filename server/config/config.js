@@ -1,7 +1,7 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
-module.exports = {
+let dbConfig = {
     "username": process.env.DB_USERNAME,
     "password": process.env.DB_PASSWORD,
     "database": process.env.DB_NAME,
@@ -9,19 +9,22 @@ module.exports = {
     "port": process.env.DB_PORT ?? 5432,
     "dialect": "postgres",
     "dialectOptions": {
-        "useUTC": true,
-        "ssl": process.env.NODE_ENV === "production" ? {
-            "require": true,
-            "rejectUnauthorized": false
-        } : {
-            "require": false
-        }
+        "useUTC": true
     },
     "timezone": "+00:00",
     "define": {
         "timestamps": true
     }
 };
+
+if (process.env.NODE_ENV === "production") {
+    dbConfig.dialectOptions.ssl = {
+        "require": true,
+        "rejectUnauthorized": false
+    };
+}
+
+module.exports = dbConfig;
 
 module.exports.urls = {
     "facebookCallback":
