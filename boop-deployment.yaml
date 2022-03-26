@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: boop
-        image: registry.digitalocean.com/boop-images/boop:50d507e0ea
+        image: registry.digitalocean.com/boop-images/boop
         ports:
         - containerPort: 5000
         env:
