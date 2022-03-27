@@ -6,10 +6,12 @@ logs/
 .git
 .cache
 
-# Ignoring all the markdown and docker files
-*.md
-*yml
+# Ignoring all the markdown, docker and kubernetes files
+**/*.md
+**/*yml
 Dockerfile
+**/boop-secret.yaml
+*yaml
 
 # dependencies
 node_modules/
@@ -24,14 +26,11 @@ build/
 server/data/
 
 # misc
-.env
+**/.env
 .scss
 .css
 .DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+**/.env.sample
 
-package-lock.json
-yarn.lock
+**/package-lock.json
+**/yarn.lock

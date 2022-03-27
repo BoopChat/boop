@@ -206,7 +206,7 @@ const Conversations = () => {
                                 name={chat.title}
                                 img={chat.imgUrl ?? "https://picsum.photos/400?id=" + chat.title}
                                 lastMsg={ConversationsController.getLastMessage(chat)}
-                                lastDate={ConversationsController.evaluateDate(chat.lastDate)}
+                                lastDate={ConversationsController.getLastMessageDate(chat)}
                                 unread={chat.unread}
                                 key={i}
                                 onClick={() => dispatch(setCurrentConversation(chat.id))}

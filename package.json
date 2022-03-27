@@ -14,7 +14,7 @@
     "dev-quick-server": "npm run server-migration && npm run server-seed",
     "dev-quick-resume": "npm run docker-start && npm run dev"
   },
-  "dependencies": {
+  "devDependencies": {
     "concurrently": "^6.2.2"
   }
 }

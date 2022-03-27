@@ -154,6 +154,10 @@ div#contact_container, div#conversations_container, div#settings_container {
     }
 }
 
+div#contacts span.empty {
+    padding: 10px;
+}
+
 div#settings_container {
     padding: 20px;
 }

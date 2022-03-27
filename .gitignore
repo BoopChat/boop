@@ -21,6 +21,7 @@ server/data
 .env.development.local
 .env.test.local
 .env.production.local
+boop-secret.yaml
 
 *.log
 

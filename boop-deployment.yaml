@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: boop-deployment
+  labels:
+    app: boop-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: boop-app
+  template:
+    metadata:
+      labels:
+        app: boop-app
+    spec:
+      containers:
+      - name: boop
+        image: registry.digitalocean.com/boop-images/boop
+        ports:
+        - containerPort: 5000
+        env:
+          - name: HOME_URL
+            value: "https://boopchat.app"
+          - name: NODE_ENV
+            value: "production"
+        envFrom:
+        - secretRef:
+            name: boop-secrets
