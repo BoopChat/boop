@@ -8,13 +8,13 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
-      with:
-        node-version: '14'
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
 
-    - name: Install modules
-      run: npm ci && npm ci client && npm ci server
+      - name: Install modules
+        run: npm ci && npm ci --prefix client && npm ci --prefix server
 
-    - name: Run ESLint
-      run: npm run lint
+      - name: Run ESLint
+        run: npm run lint
