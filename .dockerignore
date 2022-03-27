@@ -6,7 +6,7 @@ logs/
 .git
 .cache
 
-# Ignoring all the markdown, docker kubernetes files
+# Ignoring all the markdown, docker and kubernetes files
 **/*.md
 **/*yml
 Dockerfile
