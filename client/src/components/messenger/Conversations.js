@@ -1,103 +1,28 @@
 import { useEffect, useState, React, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { AlertType, useAlertDialogContext } from "./dialogs/AlertDialog";
+import AddConversationDialog from "./dialogs/AddConversationDialog";
+import AddContactDialog from "./dialogs/AddContactDialog";
 import { useSearchContext } from "./hooks/SearchContext";
 
 import Plus from "../../assets/icons/plus";
 import ConversationItem from "./ConversationItem";
 import { ConversationsController } from "./controllers/Conversations";
 import { ContactsController } from "./controllers/Contacts";
-import Modal from "./dialogs/Modal";
 import SearchBox from "./SearchBox";
 
 import { setConversations, setCurrentConversation } from "../../redux-store/conversationSlice";
 import SocketContext from "../../socketContext";
 
-const AddConversationDialog = ({ onClose, token }) => {
-    const [details, setDetails] = useState({
-        list: [],
-        title: "",
-    });
-    const [contacts, setContacts] = useState([]);
-    const { display: displayDialog } = useAlertDialogContext();
-
-    const handleClose = btnClicked => {
-        onClose({ ...details, btnClicked });
-        setDetails({ // reset details
-            list: [],
-            title: "",
-        });
-    };
-    const handleListChange = (e) => {
-        // if checkbox is checked then add it to the list else remove it from the list
-        let newList = e.target.checked
-            ? [...details.list, { id: e.target.value, displayName: e.target.name }]
-            : details.list.filter(item => item.id !== e.target.value);
-        setDetails({ ...details, list: newList });
-    };
-    const handleTitleChange = (e) => setDetails({ ...details, title: e.target.value });
-
-    useEffect(() => {
-        // if this is the first time rendering, get user contacts from server
-        const runAsync = async () => {
-            let contacts = await ContactsController.getContacts(token);
-            if (contacts.success)
-                setContacts(contacts.contactList);
-            else {
-                displayDialog({
-                    title: "Error",
-                    message: "There was an error retrieving your contacts",
-                    type: AlertType.Error
-                });
-                setContacts([]);
-            }
-        };
-        runAsync();
-    }, []);
-
-    return (
-        <Modal onClose={() => handleClose(false)} center>
-            <div id="add-convo-dialog">
-                <header>Create a conversation</header>
-                <main>
-                    <input
-                        type="text"
-                        placeholder="Conversation Title"
-                        value={details.title}
-                        onChange={handleTitleChange}
-                        className="addConversation"
-                    />
-                    <ul className="add_participants">
-                        {contacts.map((contact) => (
-                            <li key={contact.contactId}>
-                                <div className="img_and_name">
-                                    <img src={contact.contactInfo.imageUrl} alt="contact_img" />
-                                    <span>{contact.contactInfo.displayName}</span>
-                                </div>
-                                <input
-                                    type="checkbox"
-                                    name={contact.contactInfo.displayName}
-                                    value={contact.contactId}
-                                    onChange={handleListChange}
-                                />
-                            </li>
-                        ))}
-                    </ul>
-                </main>
-                <footer>
-                    <button onClick={() => handleClose(true)} name="create" className="addConversation">Create</button>
-                </footer>
-            </div>
-        </Modal>
-    );
-};
-
 const Conversations = () => {
     const dispatch = useDispatch();
-    const [dialogOpen, setDialogOpen] = useState(false);
+    const [addContactDialogOpen, setAddContactDialogOpen] = useState(false);
+    const [addConversationDialogOpen, setAddConversationDialogOpen] = useState(false);
     const { search } = useSearchContext();
     const socket = useContext(SocketContext);
     const { display: displayDialog } = useAlertDialogContext();
+
+    const [contacts, setContacts] = useState([]);
 
     // Get the token and userInfo from the users global state.
     const { token, userInfo: { displayName, imageUrl } } = useSelector((state) => state.user);
@@ -120,9 +45,43 @@ const Conversations = () => {
         runAsync();
     }, []);
 
-    const handleClickAdd = () => setDialogOpen(true);
+    const addContact = ({ contact, error }) => {
+        setAddContactDialogOpen(false); // close add dialog
+
+        if (contact) {
+            setContacts([contact]);
+            // open the dialog to create a conversation by selecting participants from current contact list
+            // which at this point will only have 1 person
+            setAddConversationDialogOpen(true);
+        }
+
+        if (error) // if an error occured, display it
+            displayDialog({ title: "Error", message: error, type: AlertType.Error });
+    };
+
+    const handleClickAdd = async () => {
+        let result = await ContactsController.getContacts(token);
+
+        if (!result.success) {
+            displayDialog({
+                title: "Error",
+                message: "There was an error retrieving your contacts",
+                type: AlertType.Error
+            });
+            return;
+        }
+
+        // if contact list is empty, prompt the user to add a contact
+        if (result.contactList.length < 1)
+            setAddContactDialogOpen(true);
+        else { // open the dialog to create a conversation by selecting participants from current contact list
+            setContacts(result.contactList);
+            setAddConversationDialogOpen(true);
+        }
+    };
+
     const addNewConversation = (conversationDetails) => {
-        setDialogOpen(false); // close add dialog
+        setAddConversationDialogOpen(false); // close add dialog
         // ask the server to create a new conversation with the list participants (and title)
         if (conversationDetails) {
             // if user simply clicked outside of the dialog ie.
@@ -195,7 +154,9 @@ const Conversations = () => {
                 <button className="options" title="create conversation" onClick={() => handleClickAdd()}>
                     <Plus/>
                 </button>
-                { dialogOpen ? <AddConversationDialog onClose={addNewConversation} token={token} /> : <></> }
+                { addContactDialogOpen ? <AddContactDialog onAddAction={addContact} token={token} /> : <></> }
+                { addConversationDialogOpen ?
+                    <AddConversationDialog onClose={addNewConversation} contacts={contacts} /> : <></> }
             </div>
             <SearchBox id="search_mobile"/>
             <div id="conversations">

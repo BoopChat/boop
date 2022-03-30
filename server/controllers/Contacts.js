@@ -56,35 +56,40 @@ module.exports.addContact = async (req, res) => {
 
     //return a success message + the newly created contact's info
     logger.info(`Contact successfully created for ${userId} - ${contactInfo.displayName}`);
-    return res.status(201).send({ msg: "Contact successfully created!", contact: { contactInfo: contactInfo } });
+    return res.status(201).send({ msg: "Contact successfully created!", contact: { contactId, contactInfo } });
 };
 
 module.exports.getContacts = async (req, res) => {
     let userId = req.user.id;
 
-    //get user and all contacts
-    let user = await User.findByPk(userId, {
-        include: {
-            model: Contact,
-            as: "contactList",
-            // specify what attributes you want returned
-            attributes: ["contactId"],
-            // get each contact's info from the Users table
+    try {
+        //get user and all contacts
+        let user = await User.findByPk(userId, {
             include: {
-                model: User,
-                as: "contactInfo",
+                model: Contact,
+                as: "contactList",
                 // specify what attributes you want returned
-                attributes: ["displayName", "imageUrl", "lastActive"]
+                attributes: ["contactId"],
+                // get each contact's info from the Users table
+                include: {
+                    model: User,
+                    as: "contactInfo",
+                    // specify what attributes you want returned
+                    attributes: ["displayName", "imageUrl", "lastActive"]
+                }
             }
-        }
-    });
+        });
 
-    if (!user) {
-        logger.error("Couldn't get contacts for user [" + userId + "] because user not found");
-        return res.status(404).send("We couldn't get your contacts because you shouldn't be here");
-    } else {
-        logger.info("Returned contact list for: " + userId);
-        return res.status(200).send({ "contactList": user.contactList });
+        if (!user) {
+            logger.error("Couldn't get contacts for user [" + userId + "] because user not found");
+            return res.status(404).send("We couldn't get your contacts because you shouldn't be here");
+        } else {
+            logger.info("Returned contact list for: " + userId);
+            return res.status(200).send({ "contactList": user.contactList });
+        }
+    } catch (e) {
+        logger.error(e.message);
+        return res.status(500).send({ msg: "A critical error occurred while fetching contacts" });
     }
 };
 
