@@ -12,9 +12,11 @@
     "docker-start": "docker start /server_boop_db_1",
     "dev-quick-setup": "npm run install-all-deps && npm run server-docker-compose",
     "dev-quick-server": "npm run server-migration && npm run server-seed",
-    "dev-quick-resume": "npm run docker-start && npm run dev"
+    "dev-quick-resume": "npm run docker-start && npm run dev",
+    "lint": "eslint ."
   },
   "devDependencies": {
-    "concurrently": "^6.2.2"
+    "concurrently": "^6.2.2",
+    "eslint": "^7.32.0"
   }
 }

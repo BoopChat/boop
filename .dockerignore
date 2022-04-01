@@ -32,5 +32,4 @@ server/data/
 .DS_Store
 **/.env.sample
 
-**/package-lock.json
 **/yarn.lock

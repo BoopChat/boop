@@ -25,5 +25,4 @@ boop-secret.yaml
 
 *.log
 
-package-lock.json
 yarn.lock
