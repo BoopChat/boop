@@ -2,39 +2,13 @@ import Plus from "../../assets/icons/plus";
 import ContactItem from "./ContactItem";
 import { ContactsController } from "./controllers/Contacts";
 import { AlertType, useAlertDialogContext } from "./dialogs/AlertDialog";
-import Modal from "./dialogs/Modal";
+import AddContactDialog from "./dialogs/AddContactDialog";
 import SearchBox from "./SearchBox";
 import { useSearchContext } from "./hooks/SearchContext";
 
 import { React, useState, useEffect } from "react";
 
 import { useSelector } from "react-redux";
-
-const AddContactDialog = ({ onClose }) => {
-    const [email, setEmail] = useState("");
-
-    const handleClose = btnClicked => onClose(email, btnClicked);
-    const handleChange = (e) => setEmail(e.target.value);
-
-    return (
-        <Modal onClose={() => handleClose(false)} center>
-            <div id="add-contact-dialog">
-                <header>Add a contact by email</header>
-                <main>
-                    <input
-                        type="email"
-                        name="email"
-                        placeholder="email..."
-                        value={email}
-                        onChange={handleChange}
-                        className="addContact"
-                    />
-                    <button onClick={() => handleClose(true)} name="add" className="addContact">Add</button>
-                </main>
-            </div>
-        </Modal>
-    );
-};
 
 const Contacts = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -70,32 +44,14 @@ const Contacts = () => {
 
     const handleClickAdd = () => setDialogOpen(true);
 
-    const addContact = (email, btnClicked) => {
+    const addContact = ({ contact, error }) => {
         setDialogOpen(false); // close add dialog
 
-        if (!btnClicked) return; // user clicked outside the dialog (i.e. didnt click add)
+        if (contact) // add new contact to the back of the list
+            setContacts(contacts.length > 0 ? [...contacts, contact]: [contact]);
 
-        // ask the server to add the user with this email to user's contacts
-        if (email) {
-            const runAsync = async () => {
-                let result = await ContactsController.addContact(token, email);
-                if (result.success) // add new contact to the back of the list
-                    setContacts(contacts.length > 0 ? [...contacts, result.contact]: [result.contact]);
-                else // display error message
-                    displayDialog({
-                        title: "Error",
-                        message: result.msg,
-                        type: AlertType.Error
-                    });
-            };
-            runAsync();
-        } else {
-            displayDialog({
-                title: "Error",
-                message: "You need to enter an email to add a contact",
-                type: AlertType.Error
-            });
-        }
+        if (error) // if an error occured, display it
+            displayDialog({ title: "Error", message: error, type: AlertType.Error });
     };
 
     const filterContacts = ({ contactInfo: { displayName } }) => {
@@ -126,7 +82,7 @@ const Contacts = () => {
                 <button className="options" title="add contact" onClick={() => handleClickAdd()}>
                     <Plus/>
                 </button>
-                { dialogOpen ? <AddContactDialog onClose={addContact}/> : <></> }
+                { dialogOpen ? <AddContactDialog onAddAction={addContact} token={token}/> : <></> }
             </div>
             <SearchBox id="search_mobile"/>
             <div id="contacts">

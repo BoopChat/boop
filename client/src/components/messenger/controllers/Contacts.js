@@ -49,7 +49,7 @@ export const ContactsController = {
             if (res.status !== 201)
                 return { // contact was not added ... return reason why
                     success: false,
-                    msg: result.message
+                    msg: result.msg
                 };
             else // return new contact to add to the list ... add new contact to the back of the list
                 return {
