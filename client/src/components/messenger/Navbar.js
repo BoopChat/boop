@@ -8,10 +8,11 @@ import Arrow from "../../assets/icons/arrow";
 
 import useLogout from "./hooks/useLogout";
 
+import headset from "../../assets/icons/headset.svg";
 import logout from "../../assets/icons/logout.svg";
 import "../../styles/navbar.css";
 
-const OptionsNav = ({ toggleTheme, themeIcon, isDark }) => {
+const OptionsNav = ({ toggleTheme, themeIcon, isDark, accessSupport }) => {
     const { handleLogOut } = useLogout();
 
     return (
@@ -20,6 +21,11 @@ const OptionsNav = ({ toggleTheme, themeIcon, isDark }) => {
                 <img src={themeIcon} alt="toggle theme" />
                 {isDark ? "Light" : "Dark"}
             </button>
+
+            <button id="support" onClick={accessSupport} title="access support server">
+                <img src={headset} alt="support" /> Support
+            </button>
+
             <button id="logout" onClick={handleLogOut} title="logout">
                 <img src={logout} alt="logout" /> Logout
             </button>
@@ -27,7 +33,7 @@ const OptionsNav = ({ toggleTheme, themeIcon, isDark }) => {
     );
 };
 
-const Navbar = ({ toggleTheme, themeIcon, isDark }) => {
+const Navbar = ({ toggleTheme, themeIcon, isDark, accessSupport }) => {
     const [showOptions, setShowOptions] = useState(false);
 
     return (
@@ -37,7 +43,7 @@ const Navbar = ({ toggleTheme, themeIcon, isDark }) => {
                 <NavLink to="/contacts" activeClassName="active"> <Contacts/> </NavLink>
                 <NavLink to="/settings" activeClassName="active"> <Settings/> </NavLink>
                 <button className="more" onClick={() => setShowOptions(!showOptions)}>
-                    { showOptions && <OptionsNav toggleTheme={toggleTheme} themeIcon={themeIcon} isDark={isDark}/> }
+                    { showOptions && <OptionsNav toggleTheme={toggleTheme} themeIcon={themeIcon} isDark={isDark}  accessSupport={accessSupport}/> }
                     <Arrow/>
                 </button>
             </div>
