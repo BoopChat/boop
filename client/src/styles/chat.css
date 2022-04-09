@@ -226,7 +226,7 @@ form.interactions {
 }
 
 form.interactions input.textBox {
-    width: 92%;
+    width: 85%;
     padding: 8px;
     outline: none;
     margin-right: 4px;
@@ -235,6 +235,12 @@ form.interactions input.textBox {
     color: var(--text);
     border-radius: 4px;
     height: fit-content
+}
+
+@media screen and (min-width: 768px) {
+    form.interactions input.textBox {
+        width: 90%;
+    }
 }
 
 @media screen and (min-width: 1024px) {
@@ -253,23 +259,17 @@ form.interactions input:focus {
 }
 
 form.interactions button.enterBtn {
-    display: none;
+    border: none;
+    background-color: transparent;
+    padding: 2px;
+    width: 25px;
+    display: block;
 }
 
-@media screen and (min-width: 1024px) {
-    form.interactions button.enterBtn {
-        border: none;
-        background-color: transparent;
-        padding: 2px;
-        width: 25px;
-        display: block;
-    }
-
-    form.interactions button.enterBtn svg {
-        transform: rotate(90deg);
-        fill: var(--icon);
-        width: 100%;
-    }
+form.interactions button.enterBtn svg {
+    transform: rotate(90deg);
+    fill: var(--icon);
+    width: 100%;
 }
 
 form.interactions button.enterBtn:hover {
