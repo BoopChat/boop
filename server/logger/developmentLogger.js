@@ -7,14 +7,14 @@ const DevelopmentLogger = () => {
     return createLogger({
         level: "debug",
         format: combine(
-            timestamp({ format: "HH:mm:ss" }),
+            timestamp({ format: "YYYY-MM-DD @ HH:mm:ss" }),
             devFormat
         ),
         transports: [
             new transports.Console({
                 format: combine(
                     colorize(),
-                    timestamp({ format: "HH:mm:ss" }),
+                    timestamp({ format: "YYYY-MM-DD @ HH:mm:ss" }),
                     devFormat
                 )
             }),
