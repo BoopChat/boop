@@ -43,7 +43,15 @@ const Navbar = ({ toggleTheme, themeIcon, isDark, accessSupport }) => {
                 <NavLink to="/contacts" activeClassName="active"> <Contacts/> </NavLink>
                 <NavLink to="/settings" activeClassName="active"> <Settings/> </NavLink>
                 <button className="more" onClick={() => setShowOptions(!showOptions)}>
-                    { showOptions && <OptionsNav toggleTheme={toggleTheme} themeIcon={themeIcon} isDark={isDark}  accessSupport={accessSupport}/> }
+                    {
+                        showOptions &&
+                        <OptionsNav
+                            toggleTheme={toggleTheme}
+                            themeIcon={themeIcon}
+                            isDark={isDark}
+                            accessSupport={accessSupport}
+                        />
+                    }
                     <Arrow/>
                 </button>
             </div>
