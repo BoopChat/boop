@@ -34,11 +34,8 @@ const Messenger = () => {
     SocketController.initListeners(socket);
 
     const accessSupport = () => {
-        console.log("button clicked");
-        window.open("https://discord.gg/pxBjfESPDJ", "_blank", "noopener,noreferrer");
         const newWindow = window.open("https://discord.gg/pxBjfESPDJ", "_blank", "noopener,noreferrer");
         if (newWindow) newWindow.opener = null;
-        // window.location.href = "https://discord.gg/pxBjfESPDJ";
     };
 
     return (
