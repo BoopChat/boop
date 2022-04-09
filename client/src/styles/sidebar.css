@@ -78,7 +78,7 @@ a > svg {
     cursor: pointer;
 }
 
-#toggleTheme {
+#toggleTheme, #support {
     z-index: 2;
     background-color: transparent;
     border: none;
@@ -90,7 +90,7 @@ a > svg {
     margin-bottom: 8px;
 }
 
-#toggleTheme img {
+#toggleTheme img, #support img {
     filter: invert(100%) sepia(96%) saturate(15%) hue-rotate(212deg) brightness(104%) contrast(104%);
 }
 

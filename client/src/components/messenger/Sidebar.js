@@ -1,6 +1,7 @@
 import Chat from "../../assets/icons/chat";
 import Contacts from "../../assets/icons/contacts";
 import Settings from "../../assets/icons/settings";
+import headset from "../../assets/icons/headset.svg";
 import logout from "../../assets/icons/logout.svg";
 import "../../styles/sidebar.css";
 
@@ -78,7 +79,7 @@ const Profile = styled.div`
     padding: 14px 5px;
 `;
 
-const Sidebar = ({ username, userPic, toggleTheme, themeIcon }) => {
+const Sidebar = ({ username, userPic, toggleTheme, themeIcon, accessSupport }) => {
     const [click, setClick] = useState(false);
     const handleClick = () => setClick(!click);
 
@@ -107,6 +108,9 @@ const Sidebar = ({ username, userPic, toggleTheme, themeIcon }) => {
                 </SideItems>
                 <button id="toggleTheme" onClick={toggleTheme} title="toggle theme">
                     <img src={themeIcon} alt="toggle theme" />
+                </button>
+                <button id="support" onClick={accessSupport} title="access support server">
+                    <img src={headset} alt="support" />
                 </button>
                 <button id="logout" onClick={handleLogOut} title="logout">
                     <img src={logout} alt="logout" />
