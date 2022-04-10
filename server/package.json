@@ -13,7 +13,6 @@
     "express": "~4.16.1",
     "express-jwt": "^6.1.0",
     "http-errors": "~1.6.3",
-    "js-yaml": "^4.1.0",
     "jsonwebtoken": "^8.5.1",
     "morgan": "~1.9.1",
     "passport": "^0.4.1",
@@ -28,6 +27,7 @@
   },
   "devDependencies": {
     "eslint": "^7.32.0",
+    "js-yaml": "^4.1.0",
     "nodemon": "^2.0.12"
   }
 }

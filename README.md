@@ -16,6 +16,7 @@ along with their mentor David Fowler (Partner Software Architect at Microsoft).
   - [Getting Facebook Login to Work](#getting-facebook-login-to-work)
 - [💻 Using the client](#-using-the-client)
 - [🐋 Building a docker image](#-building-a-docker-image)
+- [☸ Deploying to Kubernetes Digital Ocean](#-deploying-to-kubernetes-digital-ocean)
 
 ## 🔻Downloading the project
 
@@ -228,9 +229,9 @@ The app should then be accessible on port 8080. From here you will need to run t
 
 1. Obtain your yaml key for `kubectl` from DigitalOcean in Kubernetes overview section, with the download config file button. This is required if your are using kubectl to manage the kubernetes cluster; this is not required for `doctl`.
 
-<i>If you are using a *nix system, the deploy-script.bash script can run the following commands automatically. Simply pass the path to the yaml key for kubectl as the first arg.</i>
+    <i>If you are using a *nix system, the deploy-script.bash script can run the following commands automatically. Simply pass the path to the yaml key for kubectl as the first arg.</i>
 
-2. Using the `boop-secret.yaml.sample` file, create a secret yaml file filling in the appropriate values. The secrets can be pushed to DigitalOcean with kubectl using the command `kubectl --kubeconfig="/path/to/your/yaml/key" apply -f /path/to/your/secret.yaml`.
+2. Use `npm run make-yaml-secrets` in the project root to create a secret yaml file (./boop-secret.yaml). The secrets can be pushed to DigitalOcean with kubectl using the command `kubectl --kubeconfig="/path/to/your/yaml/key" apply -f /path/to/your/secret.yaml`.
 
 3. The HOME_URL var in the boop-deployment.yaml file needs to be filled in with the url to be used for the app. You can then push the deployment to DigitalOcean using `kubectl --kubeconfig="/path/to/your/yaml/key" create -f ../path/to/boop-deployment.yaml`.
 
