@@ -6,7 +6,10 @@ const prodFormat = printf(({ level, message, timestamp }) => `[${timestamp}] ${l
 const ProductionLogger = () => {
     return createLogger({
         level: "http",
-        format: combine(timestamp(), prodFormat),
+        format: combine(
+            timestamp({ format: "YYYY-MM-DD @ HH:mm:ss" }),
+            prodFormat
+        ),
         transports: [
             new transports.File({ filename: "error.log", level: "error" }),
             new transports.File({ filename: "combined.log" }),

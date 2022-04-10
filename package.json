@@ -13,7 +13,8 @@
     "dev-quick-setup": "npm run install-all-deps && npm run server-docker-compose",
     "dev-quick-server": "npm run server-migration && npm run server-seed",
     "dev-quick-resume": "npm run docker-start && npm run dev",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "make-yaml-secrets": "cd server && node boop-secrets"
   },
   "devDependencies": {
     "concurrently": "^6.2.2",
