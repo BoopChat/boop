@@ -229,7 +229,7 @@ The app should then be accessible on port 8080. From here you will need to run t
 
 1. Obtain your yaml key for `kubectl` from DigitalOcean in Kubernetes overview section, with the download config file button. This is required if your are using kubectl to manage the kubernetes cluster; this is not required for `doctl`.
 
-    <i>If you are using a *nix system, the deploy-script.bash script can run the following commands automatically. Simply pass the path to the yaml key for kubectl as the first arg.</i>
+    <i>If you are using a *nix system, the deploy-script.bash script can run the following commands automatically. Simply pass the path to the yaml key for kubectl as the first arg (in project root: `./deploy-script.bash <path to yaml key>`).</i>
 
 2. Use `npm run make-yaml-secrets` in the project root to create a secret yaml file (./boop-secret.yaml). The secrets can be pushed to DigitalOcean with kubectl using the command `kubectl --kubeconfig="/path/to/your/yaml/key" apply -f /path/to/your/secret.yaml`.
 
