@@ -33,11 +33,16 @@ const Messenger = () => {
     const socket = useContext(SocketContext);
     SocketController.initListeners(socket);
 
+    const accessSupport = () => {
+        const newWindow = window.open("https://discord.gg/pxBjfESPDJ", "_blank", "noopener,noreferrer");
+        if (newWindow) newWindow.opener = null;
+    };
+
     return (
         <div className="container">
             <Sidebar username={userInfo.displayName} userPic={userInfo.imageUrl} toggleTheme={toggleTheme}
-                themeIcon={themeIcon}/>
-            <Navbar toggleTheme={toggleTheme} themeIcon={themeIcon} isDark={isDark}/>
+                themeIcon={themeIcon} accessSupport={accessSupport}/>
+            <Navbar toggleTheme={toggleTheme} themeIcon={themeIcon} isDark={isDark} accessSupport={accessSupport}/>
             <AlertDialogProvider>
                 <div id="panels">
                     <div id="main_panel">
