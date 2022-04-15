@@ -106,7 +106,7 @@ function onListening() {
 /**
  * Gets the configured login services
  */
-async function getLoginService () {
+function getLoginService () {
   logger.info("Starting login service configuration");
 
   const services = ["GOOGLE_CLIENT", "FACEBOOK_CLIENT", "TWITTER_CLIENT"];
@@ -120,7 +120,7 @@ async function getLoginService () {
       providerNames.push(providerName.toLowerCase());
   }
 
-  if(providerNames.length === 0) {
+  if (providerNames.length === 0) {
     logger.error("Atleast one OAuth login service has to be configured");
     process.exit(1);
   } else if (providerNames.length >= 1) {
