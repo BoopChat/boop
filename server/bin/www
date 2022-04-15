@@ -7,6 +7,7 @@
 var app = require("../app");
 var http = require("http");
 const socketio = require("socket.io");
+const logger = require("../logger").setup();
 
 /**
  * Get port from environment and store in Express.
@@ -19,8 +20,7 @@ app.set("port", port);
  * Configured Login services
  */
 global.configuredServices = getLoginService();
-if (Object.keys(global.configuredServices).length === 0)
-  throw new Error("Atleast one OAuth login service has to be configured");
+  
 
 /**
  * Create HTTP server.
@@ -80,11 +80,11 @@ function onError(error) {
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case "EACCES":
-      console.error(bind + " requires elevated privileges");
+      logger.error(bind + " requires elevated privileges");
       process.exit(1);
       break;
     case "EADDRINUSE":
-      console.error(bind + " is already in use");
+      logger.error(bind + " is already in use");
       process.exit(1);
       break;
     default:
@@ -97,21 +97,34 @@ function onError(error) {
  */
 
 function onListening() {
+    logger.info("Setting up server event listener");
     const addr = server.address();
     const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
-    console.log("Boop server listening on " + bind);
+    logger.info("Boop server listening on " + bind);
 }
 
 /**
  * Gets the configured login services
  */
-function getLoginService () {
+async function getLoginService () {
+  logger.info("Starting login service configuration");
+
   const services = ["GOOGLE_CLIENT", "FACEBOOK_CLIENT", "TWITTER_CLIENT"];
   const configuredServices = {};
+  const providerNames = [];
+
   for (const service of services) {
     const providerName = service.split("_")[0].toLowerCase();
     if (process.env[`${service}_SECRET`] && process.env[`${service}_ID`])
       configuredServices[providerName] = true;
+      providerNames.push(providerName.toLowerCase());
+  }
+
+  if(providerNames.length === 0) {
+    logger.error("Atleast one OAuth login service has to be configured");
+    process.exit(1);
+  } else if (providerNames.length >= 1) {
+    logger.info(`Configured ${providerNames.join(", ")} as${(providerNames.length === 1) ? " a" : ""} login service${(providerNames.length > 1) && "s"}`);
   }
   
   return configuredServices;

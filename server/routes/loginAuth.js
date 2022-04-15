@@ -2,7 +2,7 @@ const router = require("express").Router();
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const dayjs = require("dayjs");
-const logger = require("../logger");
+const logger = require("../logger").setup();
 
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET)
     require("./loginStrategies/googleStrategy");

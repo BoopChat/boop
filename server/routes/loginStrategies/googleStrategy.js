@@ -1,6 +1,6 @@
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const passport = require("passport");
-const logger = require("../../logger");
+const logger = require("../../logger").setup();
 const loginUtils = require("../loginStrategies/loginUtils");
 const { googleCallback } = require("../../config/config").urls;
 

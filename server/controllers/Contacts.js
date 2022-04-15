@@ -1,4 +1,4 @@
-const logger = require("../logger");
+const logger = require("../logger").setup();
 const db = require("../models");
 const Contact = db.Contact;
 const SigninOption = db.SigninOption;

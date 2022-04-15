@@ -1,4 +1,4 @@
-const logger = require("../logger");
+const logger = require("../logger").setup();
 const db = require("../models");
 const Participant = db.Participant;
 const Message = db.Message;
