@@ -130,7 +130,7 @@ function getLoginService () {
         logger.info(
             `Configured ${providerNames.join(", ")} ` +
             `as${(providerNames.length === 1) ? " a" : ""} ` +
-            `login service${(providerNames.length > 1) && "s"}`
+            `login service${(providerNames.length > 1) ? "s" : ""}`
         );
     }
 
