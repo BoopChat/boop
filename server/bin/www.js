@@ -127,7 +127,11 @@ function getLoginService () {
         logger.error("Atleast one OAuth login service has to be configured");
         process.exit(1);
     } else if (providerNames.length >= 1) {
-        logger.info(`Configured ${providerNames.join(", ")} as${(providerNames.length === 1) ? " a" : ""} login service${(providerNames.length > 1) && "s"}`);
+        logger.info(
+            `Configured ${providerNames.join(", ")} ` +
+            `as${(providerNames.length === 1) ? " a" : ""} ` +
+            `login service${(providerNames.length > 1) && "s"}`
+        );
     }
 
     return configuredServices;
