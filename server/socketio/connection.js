@@ -1,4 +1,4 @@
-const logger = require("../logger");
+const logger = require("../logger").setup();
 const jwt = require("jsonwebtoken");
 const db = require("../models");
 const User = db.User;

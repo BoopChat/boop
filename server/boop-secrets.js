@@ -1,4 +1,4 @@
-const logger = require("./logger");
+const logger = require("./logger").setup();
 
 const yaml = require("js-yaml");
 const fs   = require("fs");

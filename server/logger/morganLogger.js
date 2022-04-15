@@ -1,6 +1,6 @@
 const morgan = require("morgan");
 
-let logger = require("./");
+let logger = require("./").setup(true);
 
 // Build the morgan middleware
 const morganLogger = morgan(

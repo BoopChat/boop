@@ -1,15 +1,26 @@
 const prodLogger = require("./productionLogger");
 const devLogger = require("./developmentLogger");
 
-let logger = null;
+process.env.TZ = "UTC";
 
-switch (process.env.NODE_ENV) {
-    case "production":
-        logger = prodLogger();
-        break;
-    case "development":
-    default: // node env not set assume dev
-        logger = devLogger();
-}
+module.exports.setup = (isInitial=false) => {
+    let logger = null;
 
-module.exports = logger;
+    switch (process.env.NODE_ENV) {
+        case "production":
+            logger = prodLogger();
+            break;
+        case "development":
+        default: // node env not set assume dev
+            logger = devLogger();
+    }
+
+    if (isInitial){
+        // put the following log here so that it's the 1st thing that gets logged
+        logger.info("Starting server setup...");
+
+        logger.info(`Using ${(process.env.NODE_ENV === "production") ? "production" : "development"} logger`);
+    }
+
+    return logger;
+};
