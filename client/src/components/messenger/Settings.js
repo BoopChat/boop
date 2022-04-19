@@ -1,15 +1,26 @@
 import edit_icon from "../../assets/icons/icons8-edit.svg";
 
 import { useState, React } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setUserInfo } from "../../redux-store/userSlice";
 
-const Settings = ({ userInfo, updateUser }) => {
-    // The data is updated locally, but changes are not pushed to the server for now
+import { SettingsController } from "./controllers/Settings";
+import { AlertType, useAlertDialogContext } from "./dialogs/AlertDialog";
+
+const Settings = () => {
+    // Updating the image url is still not yet implemented
+
+    const dispatch = useDispatch();
+    const token = useSelector((state) => state.user.token);
+    const { userInfo } = useSelector((state) => state.user);
+    const updateUser = (updatedInfo) => dispatch(setUserInfo({ ...updatedInfo }));
+
+    const { display: displayDialog } = useAlertDialogContext();
 
     const [Name, setName] = useState({
         firstname: userInfo.firstName,
         lastname: userInfo.lastName,
         editing: false, // determines whether name is being edited
-        editLock: false,
     });
 
     const handleNameChange = (e) => {
@@ -20,7 +31,6 @@ const Settings = ({ userInfo, updateUser }) => {
     const [displayName, setDisplayName] = useState({
         displayname: userInfo.displayName,
         editing: false, // determines whether displayname is being edited
-        editLock: false, // locks if user has entered invalid data
     });
 
     const handleDNameChange = (e) => {
@@ -28,30 +38,69 @@ const Settings = ({ userInfo, updateUser }) => {
         setDisplayName({ ...displayName, [name]: value });
     };
 
-    const handleEditName = () => {
+    const handleEditName = async () => {
         if (!Name.editing)
             setName({ ...Name, editing: true });
         else {
-            if (!Name.editLock) { // ignore validation for now
-                // commit changes
-                updateUser({
-                    ...userInfo,
-                    firstName: Name.firstname,
-                    lastName: Name.lastname,
+            if (Name.firstname.length < 1 || Name.lastname.length < 1) {
+                displayDialog({
+                    title: "Error",
+                    message: "First name or Last name should not be empty",
+                    type: AlertType.Error
                 });
+                return;
+            }
+
+            const { success, msg } = await SettingsController.updateUser({
+                userInfo: { firstName: Name.firstname, lastName: Name.lastname }, token });
+
+            if (success) {
+                updateUser({ ...userInfo,   firstName: Name.firstname, lastName: Name.lastname });
                 setName({ ...Name, editing: false });
+                displayDialog({
+                    title: "Success",
+                    message: msg,
+                    type: AlertType.Success
+                });
+            } else {
+                displayDialog({
+                    title: "Error",
+                    message: msg || "An Error occurred updating your name",
+                    type: AlertType.Error
+                });
             }
         }
     };
 
-    const handleEditDName = () => {
+    const handleEditDName = async () => {
         if (!displayName.editing)
             setDisplayName({ ...displayName, editing: true });
         else {
-            if (!displayName.editLock) { // ignore validation for now
-                // commit changes
+            if (displayName.displayname.length < 1) {
+                displayDialog({
+                    title: "Error",
+                    message: "Display name cannot be empty",
+                    type: AlertType.Error
+                });
+                return;
+            }
+            const { success, msg } = await SettingsController.updateUser({
+                userInfo: { displayName: displayName.displayname }, token });
+
+            if (success) {
                 updateUser({ ...userInfo,  displayName: displayName.displayname });
                 setDisplayName({ ...displayName, editing: false });
+                displayDialog({
+                    title: "Success",
+                    message: msg,
+                    type: AlertType.Success
+                });
+            } else {
+                displayDialog({
+                    title: "Error",
+                    message: msg || "An Error occurred updating your display name",
+                    type: AlertType.Error
+                });
             }
         }
     };
@@ -100,7 +149,7 @@ const Settings = ({ userInfo, updateUser }) => {
                             type="text"
                             onChange={(e) => handleDNameChange(e)}
                         />
-                        :   <span>{displayName.displayname}</span>
+                        :   <span>{userInfo.displayName}</span>
                     }
                 </div>
                 <button title="edit display name" className="edit" onClick={() => handleEditDName()}>
