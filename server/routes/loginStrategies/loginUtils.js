@@ -2,6 +2,7 @@
 const db = require("../../models");
 const SigninOption = db.SigninOption;
 const User = db.User;
+const dayjs = require("dayjs");
 
 module.exports.getSigninOption = async function({ email, serviceName, firstName, lastName, imageUrl }){
     // try to find the signinOption
@@ -64,4 +65,15 @@ module.exports.getSigninOption = async function({ email, serviceName, firstName,
 
     //return the user with the signinOption if the signinOption was found
     return { "msg": "User successfully retieved!", "user": user };
+};
+
+module.exports.createCookie = (user, res) => {
+    // Creates a cookie with the user's login information
+    res.cookie("loginCookie", user, {
+        secure: false,
+        httpOnly: true,
+        expires: dayjs().add(1, "month").toDate(),
+        sameSite: "Lax"
+    });
+    return res;
 };

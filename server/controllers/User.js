@@ -1,6 +1,7 @@
 const logger = require("../logger").setup();
 const db = require("../models");
 const User = db.User;
+const { createCookie } = require("../routes/loginStrategies/loginUtils");
 
 // Update user editable info
 module.exports.updateUser = async (req, res) => {
@@ -25,8 +26,14 @@ module.exports.updateUser = async (req, res) => {
     // save the update
     User.update(updatedUserInfo, { where: { id } })
         .then(user => {
-            res.status(200).send({ msg: "Successfully updated your info" });
+            // update the local values for req.user (doesn't update the global value for req.user)
+            req.user.firstName = userInfo.firstName ?? originalUserInfo.firstName;
+            req.user.lastName = userInfo.lastName ?? originalUserInfo.lastName;
+            req.user.displayName = userInfo.displayName ?? originalUserInfo.displayName;
+
             logger.info("User info for " + user + " updated successfully");
+            // update the cookie with the new local req.user info and send back a success message
+            createCookie(JSON.stringify(req.user), res).status(200).send({ msg: "Successfully updated your info" });
         }).catch(err => {
             let msg = err.message || "Some error occurred while updating user info";
             logger.error(msg + " for " + id);
