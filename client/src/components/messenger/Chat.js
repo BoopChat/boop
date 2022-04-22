@@ -203,6 +203,7 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
         // as well as cause the conversation to appear at the top of the list (because it has the most recent activity)
         if (add.length > 0) dispatch(updateLastMessage({ conversationId, lastMessage: add.slice(-1)[0] }));
         setMessages(prevMessages => prevMessages.length > 0 ? [...prevMessages, ...add] : add);
+        // TODO use the socket to mark the new unread messages (add) as read
     };
 
     useEffect(() => {
@@ -236,7 +237,9 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
     // scroll the chat to the bottom when loaded
     useEffect(() => {
         if (firstLoad) {
-            scrollChat();
+            let lastMessageId = ChatController.getLastReadMessageId(messages, id);
+            if (lastMessageId !== -1) // if an id was found scroll to that position ... if not don't scroll
+                chatbox.current.scrollTop = chatbox.current.getElementById(lastMessageId).offsetTop - 5;
             setFirstLoad(false);
         }
     }, [firstLoad]);
@@ -275,7 +278,7 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
                 <ul className="chat_section" ref={chatbox}>
                     {messages.map(msg =>
                         <li
-                            key={msg.id}
+                            key={msg.id} id={msg.id}
                             className={"message " + (msg.senderId === id ? "author" : "friend") + "_message"}
                         >
                             <div className="info">
@@ -286,7 +289,11 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
                                 <img alt="user avatar" src={msg.sender?.imageUrl} title={msg.sender?.displayName}/>
                                 <span className="time">{ChatController.evaluateElapsed(msg.createdAt)}</span>
                             </div>
-                            <p>{msg.content}</p>
+                            <p>{msg.content}
+                                <div className={"msg_status " +
+                                    ChatController.determineRead(msg.readBy, participants)}>
+                                </div>
+                            </p>
                         </li>
                     )}
                 </ul>

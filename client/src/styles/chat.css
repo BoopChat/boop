@@ -194,24 +194,30 @@ li.message.author_message p {
     color: var(--light-text);
 }
 
-li.friend_message p:after, li.author_message p:after {
-    content: '';
+li.friend_message p div.msg_status, li.author_message p div.msg_status {
     position: absolute;
-    width: 15px;
-    height: 15px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
-    background-color: var(--bg);
     top: 18px;
 }
 
-li.friend_message p:after {
+li.friend_message p div.msg_status {
     border: 2px solid var(--light-text);
     left: -8px;
 }
 
-li.author_message p:after {
+li.author_message p div.msg_status {
     border: 2px solid var(--light-text);
     right: -8px;
+}
+
+div.msg_status.allRead {
+    background-color: var(--online);
+}
+
+div.msg_status.noneRead {
+    background-color: var(--away);
 }
 
 form.interactions {

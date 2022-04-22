@@ -88,4 +88,20 @@ export const ChatController = {
             };
         }
     },
+    determineRead: (list, participants) => {
+        // if the number of person who have read the message is equal the number of participants in the chat
+        // then everyone has read the message
+        if (list?.length === participants?.length)
+            return "allRead";
+        else return "noneRead";
+    },
+    getLastReadMessageId: (messages, userId) => {
+        // start from the bottom of the chat and go up until you find the last message the user has read
+        // optimize this later
+        for (let i = messages.length - 1; i > -1; i--) {
+            if (messages[i].readBy?.includes(userId))
+                return messages[i].id;
+        }
+        return -1; // user has not read any messages in this chat (or chat empty)
+    }
 };
