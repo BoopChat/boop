@@ -149,8 +149,9 @@ const Settings = () => {
                             type="text"
                             onChange={(e) => handleDNameChange(e)}
                         />
-                        :   <span>{userInfo.displayName}</span>
+                        :   <span className="displayname">{userInfo.displayName}</span>
                     }
+                    <span>#{userInfo.id}</span>
                 </div>
                 <button title="edit display name" className="edit" onClick={() => handleEditDName()}>
                     <img src={edit_icon} alt="edit"/>

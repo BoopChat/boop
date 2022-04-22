@@ -57,6 +57,10 @@ div.contact_item:hover, div.chat_item:hover, div.chat_item.selected {
     color: var(--text-hover);
 }
 
+div.chat_item:hover {
+    background-color: var(--online);
+}
+
 div.skeleton-text {
     width: 75%;
     height: 4px;
@@ -269,6 +273,12 @@ div.setting_item {
 span.attribute {
     font-weight: 900;
     display: block;
+    margin-bottom: 8px;
+    color: var(--text);
+}
+
+span.displayname {
+    font-weight: 600;
 }
 
 button.edit {
@@ -285,15 +295,22 @@ button.edit img {
     filter: var(--filter);
 }
 
+div.setting_item {
+    color: var(--text-fade);
+}
+
 div.setting_item input {
-    padding: 5px;
-    margin-top: 5px;
+    padding: 8px;
+    margin-top: 2px;
+    margin-bottom: 8px;
     margin-right: 5px;
+    border: none;
+    border-radius: 4px;
 }
 
 div.setting_item input:focus {
-    outline: var(--sec-blue) 2px solid;
-    border:none;
+    outline: var(--sec-blue) 1px solid;
+    border: none;
 }
 
 div.setting_item img.profile_img {

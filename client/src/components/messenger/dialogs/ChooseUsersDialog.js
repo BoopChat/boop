@@ -43,7 +43,8 @@ const ChooseUsersDialog = ({ onClose, token, filterContacts }) => {
                 <main>
                     <ul className="add_participants">
                         {contacts.map((contact) => (
-                            <li key={contact.contactId}>
+                            <li key={contact.contactId}
+                                title={contact.contactInfo.displayName + "#" + contact.contactId}>
                                 <div className="img_and_name">
                                     <img src={contact.contactInfo.imageUrl} alt="contact_img" />
                                     <span>{contact.contactInfo.displayName}</span>
