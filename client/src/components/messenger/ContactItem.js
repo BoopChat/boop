@@ -76,7 +76,10 @@ const ContactItem = ({ img, username, status, id, triggerRefresh }) => {
             { confirmDialogOpen ? <ConfirmDialog onClose={deleteContact} username={username} id={id}/>  : <></> }
             <div className="img_and_name contacts">
                 <img onClick={handleClickContact} src={img} className="skeleton" alt=""/>
-                <span>{username + "#" + id}</span>
+                <div>
+                    <span className="displayName">{username}</span>
+                    <span className="id">{"#" + id}</span>
+                </div>
             </div>
 
             <div className="trash_and_status">
