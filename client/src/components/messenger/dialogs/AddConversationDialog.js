@@ -42,7 +42,10 @@ const AddConversationDialog = ({ onClose, contacts }) => {
                                 title={contact.contactInfo.displayName + "#" + contact.contactId}>
                                 <div className="img_and_name">
                                     <img src={contact.contactInfo.imageUrl} alt="contact_img" />
-                                    <span>{contact.contactInfo.displayName}</span>
+                                    <div>
+                                        <span className="displayName">{contact.contactInfo.displayName}</span>
+                                        <span className="id">{"#" + contact.contactId}</span>
+                                    </div>
                                 </div>
                                 <input
                                     type="checkbox"
