@@ -484,3 +484,14 @@ span.info {
     cursor: pointer;
     color: var(--prim-blue);
 }
+
+span.error {
+    color: var(--prim-red);
+    font-size: 12px;
+    text-transform: capitalize;
+}
+
+div.editInput {
+    display: flex;
+    flex-direction: column;
+}

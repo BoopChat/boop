@@ -17,6 +17,8 @@ const Settings = () => {
 
     const { display: displayDialog } = useAlertDialogContext();
 
+    const [errors, setErrors] = useState({ firstname: "", lastname: "", displayname: "" });
+
     const [Name, setName] = useState({
         firstname: userInfo.firstName,
         lastname: userInfo.lastName,
@@ -26,6 +28,10 @@ const Settings = () => {
     const handleNameChange = (e) => {
         const { name, value } = e.target;
         setName({ ...Name, [name]: value });
+        const { reason, valid } = SettingsController.validateName(value);
+        if (valid)
+            setErrors({ ...errors, [name]: "" });
+        else setErrors({ ...errors, [name]: reason });
     };
 
     const [displayName, setDisplayName] = useState({
@@ -36,18 +42,26 @@ const Settings = () => {
     const handleDNameChange = (e) => {
         const { name, value } = e.target;
         setDisplayName({ ...displayName, [name]: value });
+
+        const { reason, valid } = SettingsController.validateDisplayName(value);
+        if (valid)
+            setErrors({ ...errors, [name]: "" });
+        else setErrors({ ...errors, [name]: reason });
     };
 
     const handleEditName = async () => {
         if (!Name.editing)
             setName({ ...Name, editing: true });
         else {
-            if (Name.firstname.length < 1 || Name.lastname.length < 1) {
-                displayDialog({
-                    title: "Error",
-                    message: "First name or Last name should not be empty",
-                    type: AlertType.Error
-                });
+            let result = SettingsController.validateName(Name.firstname);
+            if (!result.valid) {
+                displayDialog({ title: "Error", message: "First " + result.reason, type: AlertType.Error });
+                return;
+            }
+
+            result = SettingsController.validateName(Name.lastname);
+            if (!result.valid) {
+                displayDialog({ title: "Error", message: "Last " + result.reason, type: AlertType.Error });
                 return;
             }
 
@@ -76,14 +90,12 @@ const Settings = () => {
         if (!displayName.editing)
             setDisplayName({ ...displayName, editing: true });
         else {
-            if (displayName.displayname.length < 1) {
-                displayDialog({
-                    title: "Error",
-                    message: "Display name cannot be empty",
-                    type: AlertType.Error
-                });
+            let result = SettingsController.validateDisplayName(Name.firstname);
+            if (!result.valid) {
+                displayDialog({ title: "Error", message: result.reason, type: AlertType.Error });
                 return;
             }
+
             const { success, msg } = await SettingsController.updateUser({
                 userInfo: { displayName: displayName.displayname }, token });
 
@@ -113,20 +125,16 @@ const Settings = () => {
                     <span className="attribute">Name</span>
                     {Name.editing ? (
                         <div>
-                            <input
-                                value={Name.firstname}
-                                placeholder="First Name"
-                                name="firstname"
-                                type="text"
-                                onChange={(e) => handleNameChange(e)}
-                            />
-                            <input
-                                value={Name.lastname}
-                                placeholder="Last Name"
-                                name="lastname"
-                                type="text"
-                                onChange={(e) => handleNameChange(e)}
-                            />
+                            <div className="editInput">
+                                <span className="error">{errors.firstname}</span>
+                                <input value={Name.firstname} placeholder="First Name" name="firstname" type="text"
+                                    onChange={(e) => handleNameChange(e)}/>
+                            </div>
+                            <div className="editInput">
+                                <span className="error">{errors.lastname}</span>
+                                <input value={Name.lastname} placeholder="Last Name" name="lastname" type="text"
+                                    onChange={(e) => handleNameChange(e)}/>
+                            </div>
                         </div>
                     ) : <span>
                         {Name.firstname + " " + Name.lastname}
@@ -142,13 +150,16 @@ const Settings = () => {
                 <div>
                     <span className="attribute">Display Name</span>
                     {displayName.editing ?
-                        <input
-                            value={displayName.displayname}
-                            placeholder="Display Name"
-                            name="displayname"
-                            type="text"
-                            onChange={(e) => handleDNameChange(e)}
-                        />
+                        <div className="editInput">
+                            <span className="error">{errors.displayname}</span>
+                            <input
+                                value={displayName.displayname}
+                                placeholder="Display Name"
+                                name="displayname"
+                                type="text"
+                                onChange={(e) => handleDNameChange(e)}
+                            />
+                        </div>
                         :   <span className="displayname">{userInfo.displayName}</span>
                     }
                     <span>#{userInfo.id}</span>

@@ -113,7 +113,7 @@ export const ContactsController = {
         }
     },
     validateDisplayName: name => {
-        const matches = name.match(/([0-9a-zA-z@._'-]+)#(\d+)/);
+        const matches = name.match(/^([0-9a-zA-z@._'#-]+)#(\d+)$/);
         if (!matches)
             return { valid: false };
         else return {
