@@ -23,7 +23,7 @@ module.exports.addContact = async (req, res) => {
             displayName: req.body.contactDisplayName
         },
         // specify what attributes you want returned
-        attributes: ["displayName", "imageUrl", "lastActive"]
+        attributes: ["id", "displayName", "imageUrl", "lastActive"]
     });
 
     // return an error message if the contact isn't a valid user
