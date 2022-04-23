@@ -4,6 +4,7 @@ const Participant = db.Participant;
 const Message = db.Message;
 const User = db.User;
 const Conversation = db.Conversation;
+const { Op, fn, col } = require("sequelize");
 
 // get all messages from a conversation
 module.exports.getMessages = async (req, res) => {
@@ -26,12 +27,29 @@ module.exports.getMessages = async (req, res) => {
         return res.status(404).send({ msg: "You are not a participant in this conversation" });
     }
 
+    // mark unread messages as read
+    await Message.update(
+        {
+            readBy: fn("array_append", col("read_by"), isParticipant.userId)
+        },
+        {
+            where: {
+                conversationId: conversationId,
+                [Op.not]: {
+                    readBy: {
+                        [Op.contains]: [isParticipant.userId],
+                    },
+                },
+            }
+        }
+    );
+
     //get all messages from the conversation
     let messages = await Message.findAll({
         where: {
             conversationId: conversationId,
         },
-        attributes: ["id", "content", "senderId", "createdAt", "updatedAt"],
+        attributes: ["id", "content", "senderId", "createdAt", "updatedAt", "readBy"],
         order: [["createdAt", "DESC"]],
         include: [
             {

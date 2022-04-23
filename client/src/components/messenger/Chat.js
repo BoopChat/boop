@@ -239,7 +239,7 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
         if (firstLoad) {
             let lastMessageId = ChatController.getLastReadMessageId(messages, id);
             if (lastMessageId !== -1) // if an id was found scroll to that position ... if not don't scroll
-                chatbox.current.scrollTop = chatbox.current.getElementById(lastMessageId).offsetTop - 5;
+                chatbox.current.scrollTop = document.getElementById(lastMessageId).offsetTop - 5;
             setFirstLoad(false);
         }
     }, [firstLoad]);
