@@ -87,13 +87,21 @@ div.contact_item img, div.chat_item img, ul.add_participants img {
     width: 35px;
 }
 
-div.contact_item span {
+div.contact_item span.displayName {
     padding-left: 8px;
     text-overflow: ellipsis;
 }
 
+div.img_and_name span.displayName {
+    font-weight: 500;
+}
+
+div.img_and_name span.id {
+    color: var(--text-fade);
+}
+
 @media screen and (min-width: 1024px) {
-    div.contact_item span {
+    div.contact_item span.displayName {
         padding-left: 20px;
     }
 }

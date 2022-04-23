@@ -32,7 +32,10 @@ const ChatOptionsDialog = ({ onClose, img, title, participants, addUsers }) => {
                                 title={participant.displayName + "#" + participant.id}>
                                 <div className="img_and_name">
                                     <img src={participant.imageUrl} alt="participant_img" />
-                                    <span>{participant.displayName}</span>
+                                    <div>
+                                        <span className="displayName">{participant.displayName}</span>
+                                        <span className="id">{"#" + participant.id}</span>
+                                    </div>
                                 </div>
                                 <div>{ participant.Participant.isAdmin ?
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="28"

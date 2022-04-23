@@ -9,28 +9,28 @@ import "../../styles/dialog.css";
 import trash from "../../assets/icons/trash.svg";
 
 
-const ViewContactDialog = ({ onClose, img, username }) => {
+const ViewContactDialog = ({ onClose, img, username, id }) => {
 
     const handleClose = () => onClose();
 
     return (
         <Modal onClose={handleClose} center>
             <div id="view-contact-dialog">
-                <header>{username}</header>
+                <header>{username + "#" + id}</header>
                 <img src={img} alt="user"/>
             </div>
         </Modal>
     );
 };
 
-const ConfirmDialog = ({ onClose, username }) => {
+const ConfirmDialog = ({ onClose, username, id }) => {
 
     const handleClose = confirm => onClose(confirm);
 
     return (
         <Modal onClose={() => handleClose(false)} center>
             <div id="delete-contact-dialog">
-                <header><b>Delete contact</b> {username} ?</header>
+                <header><b>Delete contact</b> {username + "#" + id} ?</header>
                 <main>
                     <button className="btn_confirm" onClick={() => handleClose(true)}>Yes</button>
                     <button className="btn_deny" onClick={() => handleClose(false)}>Cancel</button>
@@ -72,11 +72,14 @@ const ContactItem = ({ img, username, status, id, triggerRefresh }) => {
     return (
         <div className="contact_item" title={username + "#" + id}>
             { imageDialogOpen ?
-                <ViewContactDialog onClose={closeContactImage} img={img} username={username}/> : <></> }
-            { confirmDialogOpen ? <ConfirmDialog onClose={deleteContact} username={username}/>  : <></> }
+                <ViewContactDialog onClose={closeContactImage} img={img} username={username} id={id}/> : <></> }
+            { confirmDialogOpen ? <ConfirmDialog onClose={deleteContact} username={username} id={id}/>  : <></> }
             <div className="img_and_name contacts">
                 <img onClick={handleClickContact} src={img} className="skeleton" alt=""/>
-                <span>{username}</span>
+                <div>
+                    <span className="displayName">{username}</span>
+                    <span className="id">{"#" + id}</span>
+                </div>
             </div>
 
             <div className="trash_and_status">
