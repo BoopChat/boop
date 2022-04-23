@@ -8,6 +8,24 @@ node_modules/
 # testing
 coverage/
 
+.expo/
+.expo-shared/
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+*swp
+
+config.json
+.env*
+
+# macOS
+.DS_Store
+
 # production
 build/
 server/data
@@ -22,6 +40,7 @@ server/data
 .env.test.local
 .env.production.local
 boop-secret.yaml
+*kubeconfig*.yaml
 
 *.log
 
