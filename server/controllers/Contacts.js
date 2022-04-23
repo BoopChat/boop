@@ -1,38 +1,39 @@
 const logger = require("../logger").setup();
 const db = require("../models");
 const Contact = db.Contact;
-const SigninOption = db.SigninOption;
 const User = db.User;
 
 // Create and Save a new Contact
 module.exports.addContact = async (req, res) => {
     let userId = req.user.id;
 
-    // Validate request (need to add check to ensure user exists) +
-    // (prevent user from adding self as contact????)
-    if (!req.body.contactEmail) {
-        logger.error(userId + " tried adding a contact with an email");
+    // Validate request
+    if (!req.body.contactDisplayName || !req.body.contactId) {
+        logger.error(userId + " tried adding a contact without a display name or id");
         res.status(400).send({
-            msg: "Cannot add a contact without their email"
+            msg: "Cannot add a contact without their display name and id"
         });
         return;
     }
 
-    //get user's id so it can be used as the contactId
-    let contactData = await SigninOption.findOne({
+    // try to retrive contact's info
+    let contactData = await User.findOne({
         where: {
-            email: req.body.contactEmail
-        }
+            id: req.body.contactId,
+            displayName: req.body.contactDisplayName
+        },
+        // specify what attributes you want returned
+        attributes: ["displayName", "imageUrl", "lastActive"]
     });
 
     // return an error message if the contact isn't a valid user
     if (!contactData) {
-        logger.error(userId + " tried adding invalid user: " + req.body.contactEmail);
-        return res.status(404).send({ msg: `${req.body.contactEmail} is not a valid user.` });
+        logger.error(`${userId} tried adding invalid user: ${req.body.contactDisplayName}#${req.body.id}`);
+        return res.status(404).send({ msg: `${req.body.contactDisplayName}#${req.body.id} is not a valid user.` });
     }
 
     //get the userId for the contact
-    var contactId = contactData.userId;
+    var contactId = contactData.id;
 
     // creating the requested contact association
     await Contact.create({
@@ -44,19 +45,9 @@ module.exports.addContact = async (req, res) => {
         res.status(500).send({ msg });
     });
 
-    // retrieve the contact's info
-    let contactInfo = await User.findByPk(contactId, {
-        // specify what attributes you want returned
-        attributes: ["displayName", "imageUrl", "lastActive"]
-    }).catch(err => { //catch any errors
-        let msg = err.message || "Some error occurred while retieving the Contact's info";
-        logger.error(msg + `${userId} - ${contactId}`);
-        res.status(500).send({ msg });
-    });
-
     //return a success message + the newly created contact's info
-    logger.info(`Contact successfully created for ${userId} - ${contactInfo.displayName}`);
-    return res.status(201).send({ msg: "Contact successfully created!", contact: { contactId, contactInfo } });
+    logger.info(`Contact successfully created for ${userId} - ${contactData.displayName}#${contactData.id}`);
+    return res.status(201).send({ msg: "Contact successfully created!", contact: { contactId, contactData } });
 };
 
 module.exports.getContacts = async (req, res) => {
