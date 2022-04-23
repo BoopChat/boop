@@ -47,8 +47,14 @@ const Contacts = () => {
     const addContact = ({ contact, error }) => {
         setDialogOpen(false); // close add dialog
 
-        if (contact) // add new contact to the back of the list
+        if (contact) { // add new contact to the back of the list
             setContacts(contacts.length > 0 ? [...contacts, contact]: [contact]);
+            displayDialog({
+                title: "Success",
+                message: contact.contactInfo.displayName + " added successfully",
+                type: AlertType.Success
+            });
+        }
 
         if (error) // if an error occured, display it
             displayDialog({ title: "Error", message: error, type: AlertType.Error });
