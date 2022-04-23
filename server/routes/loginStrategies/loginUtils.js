@@ -3,6 +3,7 @@ const db = require("../../models");
 const SigninOption = db.SigninOption;
 const User = db.User;
 const dayjs = require("dayjs");
+const crypto = require("crypto");
 
 module.exports.getSigninOption = async function({ email, serviceName, firstName, lastName, imageUrl }){
     // try to find the signinOption
@@ -31,8 +32,13 @@ module.exports.getSigninOption = async function({ email, serviceName, firstName,
     if (!signinOption) {
         //try to create the new user and associate it with a new signinOption
         // with the input serviceName and email
+
+        let today = Date.now();
+        let hash = crypto.createHash("md5").update(`${email}${today}`).digest("hex");
+        let name = `Booper${hash}`;
+
         let user = await User.create({
-            displayName: email,
+            displayName: name,
             firstName: firstName,
             lastName: lastName,
             imageUrl: imageUrl,
