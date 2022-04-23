@@ -479,3 +479,8 @@ div.img_and_title {
     display: flex;
     align-items: center;
 }
+
+span.info {
+    cursor: pointer;
+    color: var(--prim-blue);
+}

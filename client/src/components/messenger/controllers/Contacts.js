@@ -32,7 +32,7 @@ export const ContactsController = {
         let diff = Date.now() - (new Date(lastActive)).getTime();
         return diff > (15 * 1000) ? "offline": "online";
     },
-    addContact: async (token, email) => {
+    addContact: async (token, displayName, id) => {
         try {
             const res = await fetch("/api/contacts", {
                 method: "POST",
@@ -41,7 +41,8 @@ export const ContactsController = {
                     "Authorization": `Bearer ${token}`,
                 },
                 body: JSON.stringify({
-                    contactEmail: email
+                    contactDisplayName: displayName,
+                    contactId: id
                 })
             });
 
@@ -110,5 +111,15 @@ export const ContactsController = {
                 success: false
             };
         }
+    },
+    validateDisplayName: name => {
+        const matches = name.match(/([0-9a-zA-z@._'-]+)#(\d+)/);
+        if (!matches)
+            return { valid: false };
+        else return {
+            valid: true,
+            displayName: matches[1],
+            id: matches[2]
+        };
     }
 };
