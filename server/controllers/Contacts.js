@@ -17,7 +17,7 @@ module.exports.addContact = async (req, res) => {
     }
 
     // try to retrive contact's info
-    let contactData = await User.findOne({
+    let contactInfo = await User.findOne({
         where: {
             id: req.body.contactId,
             displayName: req.body.contactDisplayName
@@ -27,13 +27,13 @@ module.exports.addContact = async (req, res) => {
     });
 
     // return an error message if the contact isn't a valid user
-    if (!contactData) {
+    if (!contactInfo) {
         logger.error(`${userId} tried adding invalid user: ${req.body.contactDisplayName}#${req.body.id}`);
         return res.status(404).send({ msg: `${req.body.contactDisplayName}#${req.body.id} is not a valid user.` });
     }
 
     //get the userId for the contact
-    var contactId = contactData.id;
+    var contactId = contactInfo.id;
 
     // creating the requested contact association
     await Contact.create({
@@ -46,8 +46,8 @@ module.exports.addContact = async (req, res) => {
     });
 
     //return a success message + the newly created contact's info
-    logger.info(`Contact successfully created for ${userId} - ${contactData.displayName}#${contactData.id}`);
-    return res.status(201).send({ msg: "Contact successfully created!", contact: { contactId, contactData } });
+    logger.info(`Contact successfully created for ${userId} - ${contactInfo.displayName}#${contactInfo.id}`);
+    return res.status(201).send({ msg: "Contact successfully created!", contact: { contactId, contactInfo } });
 };
 
 module.exports.getContacts = async (req, res) => {
