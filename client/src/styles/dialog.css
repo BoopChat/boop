@@ -151,10 +151,39 @@ div#alert-dialog svg {
 }
 
 #delete-contact-dialog,
-#add-convo-dialog {
+#add-convo-dialog,
+#message-info-dialog {
     background-color: var(--bg-3);
     height: fit-content;
     border-radius: 8px;
+}
+
+#message-info-dialog p {
+    text-align: center;
+    padding: 18px 12px;
+    margin: 0;
+}
+
+div.circle_icon {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+}
+
+div.circle_icon.participants_read {
+    background-color: var(--online);
+}
+
+div.circle_icon.participants_unread {
+    background-color: var(--away);
+}
+
+div.participant_group_title {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 12px;
+    padding: 8px 4px;
+    border-bottom: 1px solid var(--separator_color);
 }
 
 #delete-contact-dialog main {
@@ -210,7 +239,8 @@ div#alert-dialog svg {
     }
 }  
 
-#chat_options_dialog header {
+#chat_options_dialog header,
+#message-info-dialog header {
     width: 100%;
     display: flex;
     justify-content: space-between;

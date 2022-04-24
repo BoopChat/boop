@@ -9,6 +9,7 @@ import { ChatOptionsDialog, optionsEnum } from "./dialogs/ChatOptionsDialog";
 import { AlertType, useAlertDialogContext } from "./dialogs/AlertDialog";
 import ChooseUsersDialog from "./dialogs/ChooseUsersDialog";
 import ChooseAdminDialog from "./dialogs/ChooseAdminDialog";
+import MessageInfoDialog from "./dialogs/MessageInfoDialog";
 
 import "../../styles/chat.css";
 import Options from "../../assets/icons/options.js";
@@ -30,6 +31,7 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
     const [optionsDialog, setOptionsDialog] = useState(false);
     const [addUsersDialog, setAddUsersDialog] = useState(false);
     const [chooseAdminDialog, setChooseAdminDialog] = useState(false);
+    const [messageInfoDialog, setMessageInfoDialog] = useState({ show: false });
     const { display: displayDialog } = useAlertDialogContext();
     const socket = useContext(SocketContext);
 
@@ -92,7 +94,7 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
         let result = null;
         switch (action) {
             case optionsEnum.leave:
-                if (participants.length === 1) // if 1 on 1 conversation, simply leave
+                if (participants.length === 2) // if 1 on 1 conversation, simply leave
                     result = await ConversationsController.leaveConversation(token, conversationId);
                 else {
                     // check if user is admin
@@ -237,14 +239,16 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
     // scroll the chat to the bottom when loaded
     useEffect(() => {
         if (firstLoad) {
-            let lastMessageId = ChatController.getLastReadMessageId(messages, id);
+            let lastMessageId = ChatController.getLastReadMessageIndex(messages, id);
             if (lastMessageId !== -1) // if an id was found scroll to that position ... if not don't scroll
-                chatbox.current.scrollTop = document.getElementById(lastMessageId).offsetTop - 5;
+                Array.from(chatbox.current.children)[lastMessageId].scrollIntoView(true);
             setFirstLoad(false);
         }
     }, [firstLoad]);
 
     const showChatOptions = () => setOptionsDialog(true);
+
+    const showMessageInfo = message => setMessageInfoDialog({ show: true, message });
 
     return (
         <div className="chat_container">
@@ -274,11 +278,16 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
                 <ChooseAdminDialog onClose={onChooseAdminDialogClose} participants={participants} id={id}/>
                 : <></>
             }
+            { messageInfoDialog.show ?
+                <MessageInfoDialog onClose={() => setMessageInfoDialog({ ...messageInfoDialog, show: false })}
+                    participants={participants} message={messageInfoDialog.message} />
+                : <></>
+            }
             {messages && messages.length > 0 ? (
                 <ul className="chat_section" ref={chatbox}>
                     {messages.map(msg =>
                         <li
-                            key={msg.id} id={msg.id}
+                            key={msg.id}
                             className={"message " + (msg.senderId === id ? "author" : "friend") + "_message"}
                         >
                             <div className="info">
@@ -290,8 +299,8 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
                                 <span className="time">{ChatController.evaluateElapsed(msg.createdAt)}</span>
                             </div>
                             <p>{msg.content}
-                                <div className={"msg_status " +
-                                    ChatController.determineRead(msg.readBy, participants)}>
+                                <div onClick={() => showMessageInfo(msg)}
+                                    className={"msg_status " + ChatController.determineRead(msg.readBy, participants)}>
                                 </div>
                             </p>
                         </li>
