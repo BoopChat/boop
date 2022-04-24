@@ -17,6 +17,7 @@ along with their mentor David Fowler (Partner Software Architect at Microsoft).
 - [💻 Using the client](#-using-the-client)
 - [🐋 Building a docker image](#-building-a-docker-image)
 - [☸ Deploying to Kubernetes Digital Ocean](#-deploying-to-kubernetes-digital-ocean)
+- [☸ Redeploying to Kubernetes Digital Ocean](#-redeploying-to-kubernetes-digital-ocean)
 
 ## 🔻Downloading the project
 
@@ -66,6 +67,7 @@ The ERD for the database can be found [here](https://dbdiagram.io/d/612bbd55825b
 ### 📄 Setting up Environment Variables
 
 1. Make a .env file at the root of the server directory, with your values for the variables in server/env.sample. 
+2. Make a .env.production file at the root of the server directory, with your values for the variables in server/env.production.sample
 
 ### Getting the server to work
 
@@ -227,12 +229,30 @@ The app should then be accessible on port 8080. From here you will need to run t
 
 ## ☸ Deploying to Kubernetes Digital Ocean
 
-1. Obtain your yaml key for `kubectl` from DigitalOcean in Kubernetes overview section, with the download config file button. This is required if your are using kubectl to manage the kubernetes cluster; this is not required for `doctl`.
+1. Make sure your env variables in server/.env.production have the correct values.
+   
+2. Obtain your yaml key for `kubectl` from DigitalOcean in Kubernetes overview section, with the download config file button. This is required if your are using kubectl to manage the kubernetes cluster; this is not required for `doctl`.
 
     <i>If you are using a *nix system, the deploy-script.bash script can run the following commands automatically. Simply pass the path to the yaml key for kubectl as the first arg (in project root: `./deploy-script.bash <path to yaml key>`).</i>
 
-2. Use `npm run make-yaml-secrets` in the project root to create a secret yaml file (./boop-secret.yaml). The secrets can be pushed to DigitalOcean with kubectl using the command `kubectl --kubeconfig="/path/to/your/yaml/key" apply -f /path/to/your/secret.yaml`.
+3. Use `npm run make-yaml-secrets` in the project root to create a secret yaml file (./boop-secret.yaml). The secrets can be pushed to DigitalOcean with kubectl using the command `kubectl --kubeconfig="/path/to/your/yaml/key" apply -f /path/to/your/secret.yaml`.
 
-3. The HOME_URL var in the boop-deployment.yaml file needs to be filled in with the url to be used for the app. You can then push the deployment to DigitalOcean using `kubectl --kubeconfig="/path/to/your/yaml/key" create -f ../path/to/boop-deployment.yaml`.
+4. The HOME_URL var in the boop-deployment.yaml file needs to be filled in with the url to be used for the app. You can then push the deployment to DigitalOcean using `kubectl --kubeconfig="/path/to/your/yaml/key" create -f ../path/to/boop-deployment.yaml`.
 
-4. To create the service to expose the created pods to the outside world, use the boop-service.yaml. The command to push is `kubectl --kubeconfig="/path/to/your/yaml/key" apply -f /path/to/boop-service.yaml`.
+5. To create the service to expose the created pods to the outside world, use the boop-service.yaml. The command to push is `kubectl --kubeconfig="/path/to/your/yaml/key" apply -f /path/to/boop-service.yaml`.
+
+## ☸ Redeploying to Kubernetes Digital Ocean
+
+If you want to update the env variables used after previously deploying to Kubernetes Digital Ocean:
+
+1. Update the env values in your server/.env.production file
+   
+    <i>If you are using a *nix system, the redeploy-script.bash script can run the following commands automatically. Simply pass the path to the yaml key for kubectl as the first arg (in project root: `./redeploy-script.bash <path to yaml key>`).</i>
+
+2. Delete the current deployment using `kubectl --kubeconfig="/path/to/your/yaml/key" delete deployment boop-deployment`
+
+3. Use `npm run make-yaml-secrets` in the project root to create a secret yaml file (./boop-secret.yaml) with the updated env values. The secrets can be pushed to DigitalOcean with kubectl using the command `kubectl --kubeconfig="/path/to/your/yaml/key" apply -f /path/to/your/secret.yaml`.
+
+4. The HOME_URL var in the boop-deployment.yaml file needs to be filled in with the url to be used for the app. You can then push the deployment to DigitalOcean using `kubectl --kubeconfig="/path/to/your/yaml/key" create -f ../path/to/boop-deployment.yaml`.
+
+5. To create the service to expose the created pods to the outside world, use the boop-service.yaml. The command to push is `kubectl --kubeconfig="/path/to/your/yaml/key" apply -f /path/to/boop-service.yaml`.

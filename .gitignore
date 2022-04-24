@@ -21,7 +21,7 @@ web-build/
 *swp
 
 config.json
-.env
+.env*
 
 # macOS
 .DS_Store
@@ -30,17 +30,12 @@ config.json
 build/
 server/data
 
+# kubernetes
+boop-secret.yaml
+*kubeconfig*.yaml
+
 # misc
-.env
 .scss
 .css
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-boop-secret.yaml
-
 *.log
-
 yarn.lock
