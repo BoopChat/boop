@@ -313,6 +313,7 @@ button.edit:hover {
 
 button.edit img {
     filter: var(--filter);
+    width: 20px;
 }
 
 div.setting_item {
