@@ -298,11 +298,11 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
                                 <img alt="user avatar" src={msg.sender?.imageUrl} title={msg.sender?.displayName}/>
                                 <span className="time">{ChatController.evaluateElapsed(msg.createdAt)}</span>
                             </div>
-                            <p>{msg.content}
+                            <div className="message_content">{msg.content}
                                 <div onClick={() => showMessageInfo(msg)}
                                     className={"msg_status " + ChatController.determineRead(msg.readBy, participants)}>
                                 </div>
-                            </p>
+                            </div>
                         </li>
                     )}
                 </ul>
