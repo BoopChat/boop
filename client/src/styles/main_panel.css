@@ -342,6 +342,16 @@ div.setting_item input:focus {
     border: none;
 }
 
+#editDisplayName {
+    display: flex;
+    align-items: center;
+}
+
+#editDisplayName input {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
 div.setting_item img.profile_img {
     border-radius: 50%;
     height: 55px;

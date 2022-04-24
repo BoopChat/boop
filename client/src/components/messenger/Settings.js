@@ -161,20 +161,22 @@ const Settings = () => {
             <div className="setting_item">
                 <div>
                     <span className="attribute">Display Name</span>
-                    {displayName.editing ?
-                        <div className="editInput">
-                            <span className="error">{errors.displayname}</span>
-                            <input
-                                value={displayName.displayname}
-                                placeholder="Display Name"
-                                name="displayname"
-                                type="text"
-                                onChange={(e) => handleDNameChange(e)}
-                            />
-                        </div>
-                        :   <span className="displayname">{userInfo.displayName}</span>
-                    }
-                    <span>#{userInfo.id}</span>
+                    <div id="editDisplayName">
+                        {displayName.editing ?
+                            <div className="editInput">
+                                <span className="error">{errors.displayname}</span>
+                                <input
+                                    value={displayName.displayname}
+                                    placeholder="Display Name"
+                                    name="displayname"
+                                    type="text"
+                                    onChange={(e) => handleDNameChange(e)}
+                                />
+                            </div>
+                            :   <span className="displayname">{userInfo.displayName}</span>
+                        }
+                        <span>#{userInfo.id}</span>
+                    </div>
                 </div>
                 <div className="edit">
                     <button title="copy display name to clipboard" className="edit" onClick={copyToClipboard}>
