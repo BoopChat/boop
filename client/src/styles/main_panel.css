@@ -313,6 +313,9 @@ button.edit:hover {
 
 button.edit img {
     filter: var(--filter);
+}
+
+button.edit img, button.edit svg {
     width: 20px;
 }
 
@@ -327,6 +330,11 @@ div.setting_item input {
     margin-right: 5px;
     border: none;
     border-radius: 4px;
+    outline: var(--border) 1px solid;
+}
+
+div.setting_item input:hover {
+    outline: var(--border-hover) 1px solid;
 }
 
 div.setting_item input:focus {
@@ -511,4 +519,8 @@ div.editInput {
 
 svg.green {
     fill: var(--online);
+}
+
+svg.red {
+    fill: var(--prim-red);
 }

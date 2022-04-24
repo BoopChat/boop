@@ -1,5 +1,6 @@
 import edit_icon from "../../assets/icons/icons8-edit.svg";
 import copy_icon from "../../assets/icons/copy.svg";
+import ClipboardCheck from "../../assets/icons/clipboardCheck.js";
 import Check from "../../assets/icons/check";
 
 import { useState, React } from "react";
@@ -150,9 +151,11 @@ const Settings = () => {
                     </span>
                     }
                 </div>
-                <button title="edit name" className="edit" onClick={() => handleEditName()}>
-                    <img src={edit_icon} alt="edit"/>
-                </button>
+                <button title="edit name" className="edit" onClick={() => handleEditName()}>{
+                    Name.editing ?
+                        <Check className={errors.firstname.length > 0 || errors.lastname.length > 0 ? "red" : "green"}/>
+                        : <img src={edit_icon} alt="edit"/>
+                }</button>
             </div>
 
             <div className="setting_item">
@@ -175,11 +178,13 @@ const Settings = () => {
                 </div>
                 <div className="edit">
                     <button title="copy display name to clipboard" className="edit" onClick={copyToClipboard}>
-                        { showCheck ? <Check className="green"/> : <img src={copy_icon} alt="copy" /> }
+                        { showCheck ? <ClipboardCheck className="green"/> : <img src={copy_icon} alt="copy" /> }
                     </button>
-                    <button title="edit display name" className="edit" onClick={() => handleEditDName()}>
-                        <img src={edit_icon} alt="edit"/>
-                    </button>
+                    <button title="edit display name" className="edit" onClick={() => handleEditDName()}>{
+                        displayName.editing ?
+                            <Check className={errors.displayname.length > 0 ? "red" : "green"}/>
+                            : <img src={edit_icon} alt="edit"/>
+                    }</button>
                 </div>
             </div>
 
