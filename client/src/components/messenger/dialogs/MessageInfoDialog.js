@@ -1,6 +1,7 @@
 import React from "react";
 
 import Modal from "./Modal";
+import { ChatController } from "../controllers/Chat";
 
 const MessageInfoDialog = ({ onClose, participants, message }) => {
     const getUnreadParticipants = participant => {
@@ -20,6 +21,21 @@ const MessageInfoDialog = ({ onClose, participants, message }) => {
                 </header>
                 <p>{ message.content }</p>
                 <main>
+                    <section>
+                        <div className="participant_group_title">
+                            <span>Sent {ChatController.evaluateElapsed(message.createdAt)} by</span>
+                        </div>
+                        { participants
+                            .filter(participant => participant.id === message.senderId)
+                            .map(participant => (
+                                <div className="contact_item" key={participant.id}>
+                                    <div className="img_and_name">
+                                        <img src={participant.imageUrl} alt="participant" />
+                                        <span>{participant.displayName}</span>
+                                    </div>
+                                </div>
+                            ))}
+                    </section>
                     <section>
                         <div className="participant_group_title">
                             <span>Read by</span>
