@@ -89,7 +89,7 @@ div.contact_item img, div.chat_item img, ul.add_participants img {
 
 div.contact_item span.displayName {
     padding-left: 8px;
-    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 div.img_and_name span.displayName {
@@ -117,6 +117,13 @@ div.img_and_name {
     display: flex;
     align-items: center;
     overflow-x: hidden;
+    width: 84%;
+}
+
+div.img_and_name > div {
+    width: 80%;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 div.img_and_name.contacts > span {
@@ -253,6 +260,7 @@ div.time_and_badge {
 
 div.time_and_badge span {
     font-size: 14px;
+    white-space: nowrap;
 }
 
 span.chat_msg {
@@ -289,10 +297,14 @@ span.displayname {
     font-weight: 600;
 }
 
+div.edit {
+    align-self: flex-end;
+}
+
 button.edit {
     border: none;
     background-color: inherit;
-    align-self: flex-end;
+    margin: 0 4px;
 }
 
 button.edit:hover {
@@ -494,4 +506,8 @@ span.error {
 div.editInput {
     display: flex;
     flex-direction: column;
+}
+
+svg.green {
+    fill: var(--online);
 }
