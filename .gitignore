@@ -30,18 +30,12 @@ config.json
 build/
 server/data
 
-# misc
-.env
-.scss
-.css
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+# kubernetes
 boop-secret.yaml
 *kubeconfig*.yaml
 
+# misc
+.scss
+.css
 *.log
-
 yarn.lock
