@@ -35,7 +35,6 @@ module.exports.getMessages = async (req, res) => {
         updated[1].sort((a, b) => a.dataValues.createdAt - b.dataValues.createdAt);
         firstMarked = updated[1][0].id;
         updated[1].forEach((message) => readMessages.push(message.dataValues));
-        
         // Emit newly read messages to specific conversationId
         global.io.to(conversationId).emit("readMessages", { readMessages });
     }
