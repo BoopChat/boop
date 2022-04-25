@@ -41,6 +41,8 @@ export const ChatController = {
     },
     listen: (updateMessages, socket) => socket.on("newMessage", (msg) => updateMessages(msg)),
     clear: (socket) => socket?.off("newMessage"),
+    listenRead: (updateMessagesRead, socket) => socket.on("readMessages", (readMessages) => updateMessagesRead(readMessages)),
+    clearRead: (socket) => socket?.off("readMessages"),
     evaluateElapsed: sent => {
         // convert timestamp into an elapsed message
         let diff = Date.now() - new Date(sent).getTime();

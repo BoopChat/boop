@@ -246,6 +246,36 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
         }
     }, [firstLoad]);
 
+    // update readBy array for open chat if someone reads a message
+    useEffect(() => {
+        ChatController.clearRead(socket); // clear previous listener if exist
+
+        ChatController.listenRead((readMessages) => {
+            // if the new message info is for the currently opened chat
+            // if not simply ignore it in the ui
+            if (readMessages.readMessages[0].conversationId === conversationId.toString()) {
+                // store the readMessage info in a map so it's easily searchable by id (acts as key)
+                let readMap = new Map();
+
+                readMessages.readMessages.forEach( (readMessage) => {
+                    readMap.set(readMessage.id, readMessage);
+                });
+
+                // update the readBy array for any messages that were in readMap, else leave message as is
+                setMessages(
+                    messages.map(
+                        (msg) =>
+                            (
+                                readMap.has(msg.id) ?
+                                    { ...msg, readBy: readMap.get(msg.id).readBy } :
+                                    msg
+                            )
+                    )
+                );
+            }
+        }, socket);
+    });
+
     const showChatOptions = () => setOptionsDialog(true);
 
     const showMessageInfo = message => setMessageInfoDialog({ show: true, message });

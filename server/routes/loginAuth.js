@@ -21,7 +21,7 @@ const createCookie = (user, res) => {
     return res;
 };
 
-router.get("/google", passport.authenticate("google", { scope: ["email", "profile"] }));
+router.get("/google", passport.authenticate("google", { scope: ["email", "profile"], prompt: "select_account" }));
 
 // after successful login with google strategy, user db record will be sent here in the req.user property.
 router.get("/google/callback", passport.authenticate("google", { session: false }), (req, res) => {
