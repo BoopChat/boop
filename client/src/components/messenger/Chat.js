@@ -130,7 +130,7 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
                     if (result.success) {
                         dispatch(removeConversation(conversationId));
                         // close the chat window
-                        closeChat();
+                        cleanUp();
                     }
                 }
             });
@@ -184,7 +184,7 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
                         if (result.success) {
                             dispatch(removeConversation(conversationId));
                             // close the chat window
-                            closeChat();
+                            cleanUp();
                         }
                     }
                 });
@@ -226,14 +226,14 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
 
         // update readBy array for open chat if someone reads a message
         ChatController.clearRead(socket); // clear previous listener if exist
-        ChatController.listenRead((readMessages) => {
+        ChatController.listenRead(({ readMessages }) => {
             // if the new message info is for the currently opened chat
             // if not simply ignore it in the ui
-            if (readMessages.readMessages[0].conversationId === conversationId.toString()) {
+            if (readMessages[0].conversationId === conversationId.toString()) {
                 // store the readMessage info in a map so it's easily searchable by id (acts as key)
                 let readMap = new Map();
 
-                readMessages.readMessages.forEach( (readMessage) => {
+                readMessages.forEach( (readMessage) => {
                     readMap.set(readMessage.id, readMessage);
                 });
 
@@ -279,6 +279,13 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
         }
     }, [firstLoad]);
 
+    const cleanUp = () => {
+        // about to close the chat (in mobile mode) so clear the socket listeners
+        ChatController.clear(socket);
+        ChatController.clearRead(socket);
+        closeChat();
+    };
+
     const showChatOptions = () => setOptionsDialog(true);
 
     const showMessageInfo = message => setMessageInfoDialog({ show: true, message });
@@ -287,7 +294,7 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
         <div className="chat_container">
             <header className="chat_title">
                 <div className="img_and_back">
-                    <Arrow onClick={closeChat}/>
+                    <Arrow onClick={cleanUp}/>
                     <img src={"https://picsum.photos/400?id=" + title} className="skeleton" alt="chat" />
                 </div>
                 <span>{title || "Untitled Chat"}</span>

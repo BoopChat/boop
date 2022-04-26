@@ -3,7 +3,7 @@ import { React, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setUserInfo } from "../../redux-store/userSlice";
 import { SearchProvider } from "./hooks/SearchContext";
-import { setShowChat } from "../../redux-store/conversationSlice";
+import { setShowChat, updateCurrentConversation } from "../../redux-store/conversationSlice";
 
 import Conversations from "./Conversations";
 import Contacts from "./Contacts";
@@ -38,6 +38,11 @@ const Messenger = () => {
         if (newWindow) newWindow.opener = null;
     };
 
+    const closeChat = () => {
+        dispatch(setShowChat(false));
+        dispatch(updateCurrentConversation(-1));
+    };
+
     return (
         <div className="container">
             <Sidebar username={userInfo.displayName} userPic={userInfo.imageUrl} toggleTheme={toggleTheme}
@@ -69,7 +74,7 @@ const Messenger = () => {
                                 conversationId={currentConvo.id}
                                 title={currentConvo.title}
                                 participants={currentConvo.participants}
-                                closeChat={() => dispatch(setShowChat(false))}
+                                closeChat={closeChat}
                                 isDark={isDark}
                             />
                             : <></>
