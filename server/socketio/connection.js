@@ -74,7 +74,8 @@ global.io.on("connection", (socket) => {
 
         if (updated[0] > 0){
             // Emit newly read message to specific conversationId
-            global.io.to(updated[1][0].conversationId).emit("readMessages", { readMessages: [updated[1][0].dataValues] });
+            global.io.to(updated[1][0].conversationId)
+                .emit("readMessages", { readMessages: [updated[1][0].dataValues] });
         }
     });
 });
