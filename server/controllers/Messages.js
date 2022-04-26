@@ -90,6 +90,7 @@ module.exports.addMessage = async (req, res) => {
         senderId: userId,
         conversationId: conversationId,
         content: req.body.content,
+        readBy: [userId]
     }).catch((err) => {
         //catch any errors
         let msg = err.message || "Some error occurred while creating the message.";

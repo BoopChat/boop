@@ -216,7 +216,10 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
             // if not simply ignore it in the ui
             if (message.newMessage.conversation.id === conversationId.toString()){
                 addNewMessages([message.newMessage]);
-                socket.emit("markAsRead", message.newMessage.id);
+
+                if (!message.newMessage.readBy.includes(id)){
+                    socket.emit("markAsRead", message.newMessage.id);
+                }
             }
         }, socket);
 
