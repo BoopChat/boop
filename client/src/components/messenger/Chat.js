@@ -205,7 +205,6 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
         // as well as cause the conversation to appear at the top of the list (because it has the most recent activity)
         if (add.length > 0) dispatch(updateLastMessage({ conversationId, lastMessage: add.slice(-1)[0] }));
         setMessages(prevMessages => prevMessages.length > 0 ? [...prevMessages, ...add] : add);
-        // TODO use the socket to mark the new unread messages (add) as read
     };
 
     useEffect(() => {
@@ -215,8 +214,10 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
         ChatController.listen((message) => {
             // if the new message is a message for the currently opened chat
             // if not simply ignore it in the ui
-            if (message.newMessage.conversation.id === conversationId.toString())
+            if (message.newMessage.conversation.id === conversationId.toString()){
                 addNewMessages([message.newMessage]);
+                socket.emit("markAsRead", message.newMessage.id);
+            }
         }, socket);
 
         // get all messages (this will include any live messages caught by above code)

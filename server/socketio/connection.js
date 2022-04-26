@@ -2,6 +2,7 @@ const logger = require("../logger").setup();
 const jwt = require("jsonwebtoken");
 const db = require("../models");
 const User = db.User;
+const Message = db.Message;
 const Sequelize = require("sequelize");
 
 // Authentication middle was for socket io connection
@@ -50,4 +51,30 @@ global.io.on("connection", (socket) => {
 
     // user disconnected, stop updating their last active
     socket.on("disconnect", () => clearInterval(updater));
+
+    socket.on("markAsRead", async (messageId) => {
+
+        // mark newly received message as read
+        let updated = await Message.update(
+            {
+                readBy: Sequelize.fn("array_append", Sequelize.col("read_by"), user.id)
+            },
+            {
+                where: {
+                    id: messageId,
+                    [Sequelize.Op.not]: {
+                        readBy: {
+                            [Sequelize.Op.contains]: [user.id],
+                        },
+                    },
+                },
+                returning: true
+            }
+        );
+
+        if (updated[0] > 0){
+            // Emit newly read message to specific conversationId
+            global.io.to(updated[1][0].conversationId).emit("readMessages", { readMessages: [updated[1][0].dataValues] });
+        }
+    });
 });

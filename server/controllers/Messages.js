@@ -104,6 +104,7 @@ module.exports.addMessage = async (req, res) => {
         createdAt: newMessage.createdAt,
         updatedAt: newMessage.updatedAt,
         conversation: { id: newMessage.conversationId },
+        readBy: newMessage.readBy,
         sender: { displayName: req.user.displayName, imageUrl: req.user.imageUrl }
     };
 
