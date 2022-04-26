@@ -20,6 +20,7 @@ import SocketContext from "../../socketContext";
 
 const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
     const [messages, setMessages] = useState([]);
+    const [scrollToId, setScrollToId] = useState(-1);
     const [firstLoad, setFirstLoad] = useState(false);
     const [text, setText] = useState("");
     const [cursorPosition, setCursorPosition] = useState(0);
@@ -223,37 +224,8 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
             }
         }, socket);
 
-        // get all messages (this will include any live messages caught by above code)
-        const runAsync = async () => {
-            const result = await ChatController.getMessages(token, conversationId);
-            if (!result.success) {
-                displayDialog({
-                    title: "Error",
-                    message: "Could not retrieve messages for this chat",
-                    type: AlertType.Error
-                });
-            }
-            const { messages } = result;
-            addNewMessages(messages.reverse());
-            setFirstLoad(true);
-        };
-        runAsync();
-    }, [conversationId]);
-
-    // scroll the chat to the bottom when loaded
-    useEffect(() => {
-        if (firstLoad) {
-            let lastMessageId = ChatController.getLastReadMessageIndex(messages, id);
-            if (lastMessageId !== -1) // if an id was found scroll to that position ... if not don't scroll
-                Array.from(chatbox.current.children)[lastMessageId].scrollIntoView(true);
-            setFirstLoad(false);
-        }
-    }, [firstLoad]);
-
-    // update readBy array for open chat if someone reads a message
-    useEffect(() => {
+        // update readBy array for open chat if someone reads a message
         ChatController.clearRead(socket); // clear previous listener if exist
-
         ChatController.listenRead((readMessages) => {
             // if the new message info is for the currently opened chat
             // if not simply ignore it in the ui
@@ -266,8 +238,8 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
                 });
 
                 // update the readBy array for any messages that were in readMap, else leave message as is
-                setMessages(
-                    messages.map(
+                setMessages(prevMessages =>
+                    prevMessages.map(
                         (msg) =>
                             (
                                 readMap.has(msg.id) ?
@@ -278,7 +250,34 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
                 );
             }
         }, socket);
-    });
+
+        // get all messages (this will include any live messages caught by above code)
+        const runAsync = async () => {
+            const result = await ChatController.getMessages(token, conversationId);
+            if (!result.success) {
+                displayDialog({
+                    title: "Error",
+                    message: "Could not retrieve messages for this chat",
+                    type: AlertType.Error
+                });
+            }
+            const { messages, firstMarked } = result;
+            setScrollToId(firstMarked);
+            addNewMessages(messages.reverse());
+            setFirstLoad(true);
+        };
+        runAsync();
+    }, [conversationId]);
+
+    // scroll the chat to the bottom when loaded
+    useEffect(() => {
+        if (firstLoad) {
+            let lastMessageIndex = ChatController.getLastReadMessageIndex(messages, scrollToId);
+            if (lastMessageIndex !== -1) // if an index was found scroll to that position ... if not don't scroll
+                Array.from(chatbox.current.children)[lastMessageIndex].scrollIntoView(true);
+            setFirstLoad(false);
+        }
+    }, [firstLoad]);
 
     const showChatOptions = () => setOptionsDialog(true);
 
