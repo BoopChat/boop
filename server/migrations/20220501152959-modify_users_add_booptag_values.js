@@ -13,7 +13,7 @@ module.exports = {
                 where: { booptag: null },
                 // specify what attributes you want returned
                 attributes: ["id", "booptag", "firstName", "lastName", "imageUrl", "createdAt"],
-                // get each contact's info from the Users table
+                // get each users's info from the SigninOptions table
                 include: {
                     model: SigninOption,
                     as: "signinOptions",
