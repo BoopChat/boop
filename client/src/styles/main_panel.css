@@ -96,7 +96,7 @@ div.img_and_name span.displayName {
     font-weight: 500;
 }
 
-div.img_and_name span.id {
+div.img_and_name span.booptag {
     color: var(--text-fade);
 }
 

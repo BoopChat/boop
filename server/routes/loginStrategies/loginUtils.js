@@ -34,11 +34,13 @@ module.exports.getSigninOption = async function({ email, serviceName, firstName,
         // with the input serviceName and email
 
         let today = Date.now();
-        let hash = crypto.createHash("md5").update(`${email}${today}`).digest("hex");
-        let name = `Booper${hash}`;
+        let booptag = crypto.createHash("md5")
+            .update(`${email}${serviceName}${firstName}${lastName}${imageUrl}${today}`)
+            .digest("hex");
 
         let user = await User.create({
-            displayName: name,
+            displayName: `Booper${Math.floor(Math.random() * 100000)}`,
+            booptag: booptag,
             firstName: firstName,
             lastName: lastName,
             imageUrl: imageUrl,

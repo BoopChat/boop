@@ -20,7 +20,7 @@ export const SettingsController = {
         name = name.trim();
         if (name.length < 1)
             return { valid: false, reason: "Display name cannot be blank" };
-        if (!name.match(/^[0-9a-zA-z@._'#-]+$/))
+        if (!name.match(/^[0-9a-zA-Z@._'#-]+$/))
             return { valid: false, reason: "Display name contains characters that are not allowed" };
         return { valid: true };
     },
@@ -28,9 +28,8 @@ export const SettingsController = {
         name = name.trim();
         if (name.length < 1)
             return { valid: false, reason: "Name cannot be blank" };
-        if (!name.match(/^[a-zA-z'-]+$/))
+        if (!name.match(/^[a-zA-Z'-]+$/))
             return { valid: false, reason: "Name contains characters that are not allowed" };
-        console.log(name);
         return { valid: true };
     }
 };

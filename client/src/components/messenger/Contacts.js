@@ -96,12 +96,13 @@ const Contacts = () => {
                     <ContactItem
                         img={contact.contactInfo.imageUrl}
                         username={contact.contactInfo.displayName}
+                        booptag={contact.contactInfo.booptag}
                         status={ContactsController.evaluateStatus(contact.contactInfo.lastActive)}
                         id={contact.contactId}
                         triggerRefresh={refreshContactList}
                         key={i}
                     />
-                ) : <span className="empty">You have don&apos;t any contacts :(</span>}
+                ) : <span className="empty">You don&apos;t have any contacts :(</span>}
             </div>
         </div>
     );

@@ -29,12 +29,12 @@ const ChatOptionsDialog = ({ onClose, img, title, participants, addUsers }) => {
                     <section className="participants">{
                         participants.map((participant, key) =>
                             <div className="contact_item" key={key}
-                                title={participant.displayName + "#" + participant.id}>
+                                title={`${participant.displayName} (${participant.booptag}`}>
                                 <div className="img_and_name">
                                     <img src={participant.imageUrl} alt="participant_img" />
                                     <div>
                                         <span className="displayName">{participant.displayName}</span>
-                                        <span className="id">{"#" + participant.id}</span>
+                                        <span className="booptag">{`(${participant.booptag})`}</span>
                                     </div>
                                 </div>
                                 <div>{ participant.Participant.isAdmin ?

@@ -1,6 +1,4 @@
 import edit_icon from "../../assets/icons/icons8-edit.svg";
-import copy_icon from "../../assets/icons/copy.svg";
-import ClipboardCheck from "../../assets/icons/clipboardCheck.js";
 import Check from "../../assets/icons/check";
 
 import { useState, React } from "react";
@@ -9,6 +7,7 @@ import { setUserInfo } from "../../redux-store/userSlice";
 
 import { SettingsController } from "./controllers/Settings";
 import { AlertType, useAlertDialogContext } from "./dialogs/AlertDialog";
+import Clipboard from "../Clipboard";
 
 const Settings = () => {
     // Updating the image url is still not yet implemented
@@ -21,7 +20,6 @@ const Settings = () => {
     const { display: displayDialog } = useAlertDialogContext();
 
     const [errors, setErrors] = useState({ firstname: "", lastname: "", displayname: "" });
-    const [showCheck, setShowCheck] = useState(false);
 
     const [Name, setName] = useState({
         firstname: userInfo.firstName,
@@ -121,12 +119,6 @@ const Settings = () => {
         }
     };
 
-    const copyToClipboard = () => {
-        navigator.clipboard.writeText(userInfo.displayName + "#" + userInfo.id);
-        setShowCheck(true);
-        setTimeout(() => setShowCheck(false), 1500);
-    };
-
     return (
         <div id="settings_container">
             <h1>Settings</h1>
@@ -175,19 +167,22 @@ const Settings = () => {
                             </div>
                             :   <span className="displayname">{userInfo.displayName}</span>
                         }
-                        <span>#{userInfo.id}</span>
                     </div>
                 </div>
                 <div className="edit">
-                    <button title="copy display name to clipboard" className="edit" onClick={copyToClipboard}>
-                        { showCheck ? <ClipboardCheck className="green"/> : <img src={copy_icon} alt="copy" /> }
-                    </button>
                     <button title="edit display name" className="edit" onClick={() => handleEditDName()}>{
                         displayName.editing ?
                             <Check className={errors.displayname.length > 0 ? "red" : "green"}/>
                             : <img src={edit_icon} alt="edit"/>
                     }</button>
                 </div>
+            </div>
+            <div className="setting_item">
+                <div>
+                    <span className="attribute">Booptag</span>
+                    <span>{userInfo.booptag}</span>
+                </div>
+                <Clipboard name="booptag" value={userInfo.booptag} />
             </div>
 
             <div className="setting_item">

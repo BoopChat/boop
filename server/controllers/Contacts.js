@@ -8,10 +8,10 @@ module.exports.addContact = async (req, res) => {
     let userId = req.user.id;
 
     // Validate request
-    if (!req.body.contactDisplayName || !req.body.contactId) {
-        logger.error(userId + " tried adding a contact without a display name or id");
+    if (!req.body.contactBooptag) {
+        logger.error(userId + " tried adding a contact without a booptag");
         res.status(400).send({
-            msg: "Cannot add a contact without their display name and id"
+            msg: "Cannot add a contact without their booptag"
         });
         return;
     }
@@ -19,17 +19,16 @@ module.exports.addContact = async (req, res) => {
     // try to retrive contact's info
     let contactInfo = await User.findOne({
         where: {
-            id: req.body.contactId,
-            displayName: req.body.contactDisplayName
+            booptag: req.body.contactBooptag
         },
         // specify what attributes you want returned
-        attributes: ["id", "displayName", "imageUrl", "lastActive"]
+        attributes: ["id", "displayName", "imageUrl", "lastActive", "booptag"]
     });
 
     // return an error message if the contact isn't a valid user
     if (!contactInfo) {
-        logger.error(`${userId} tried adding invalid user: ${req.body.contactDisplayName}#${req.body.id}`);
-        return res.status(404).send({ msg: `${req.body.contactDisplayName}#${req.body.id} is not a valid user.` });
+        logger.error(`${userId} tried adding invalid user: ${req.body.contactBooptag}`);
+        return res.status(404).send({ msg: `${req.body.contactBooptag} is not a valid user.` });
     }
 
     //get the userId for the contact
@@ -46,7 +45,7 @@ module.exports.addContact = async (req, res) => {
     });
 
     //return a success message + the newly created contact's info
-    logger.info(`Contact successfully created for ${userId} - ${contactInfo.displayName}#${contactInfo.id}`);
+    logger.info(`Contact successfully created for ${userId} - ${contactInfo.displayName} (${contactInfo.booptag})`);
     return res.status(201).send({ msg: "Contact successfully created!", contact: { contactId, contactInfo } });
 };
 
@@ -66,7 +65,7 @@ module.exports.getContacts = async (req, res) => {
                     model: User,
                     as: "contactInfo",
                     // specify what attributes you want returned
-                    attributes: ["displayName", "imageUrl", "lastActive"]
+                    attributes: ["displayName", "imageUrl", "lastActive", "booptag"]
                 }
             }
         });

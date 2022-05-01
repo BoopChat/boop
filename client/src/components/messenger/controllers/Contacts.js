@@ -32,7 +32,7 @@ export const ContactsController = {
         let diff = Date.now() - (new Date(lastActive)).getTime();
         return diff > (15 * 1000) ? "offline": "online";
     },
-    addContact: async (token, displayName, id) => {
+    addContact: async (token, booptag) => {
         try {
             const res = await fetch("/api/contacts", {
                 method: "POST",
@@ -41,8 +41,7 @@ export const ContactsController = {
                     "Authorization": `Bearer ${token}`,
                 },
                 body: JSON.stringify({
-                    contactDisplayName: displayName,
-                    contactId: id
+                    contactBooptag: booptag
                 })
             });
 
@@ -112,14 +111,14 @@ export const ContactsController = {
             };
         }
     },
-    validateDisplayName: name => {
-        const matches = name.match(/^([0-9a-zA-z@._'#-]+)#(\d+)$/);
-        if (!matches)
-            return { valid: false };
-        else return {
-            valid: true,
-            displayName: matches[1],
-            id: matches[2]
-        };
+    validateBooptag: booptag => {
+        let trimmedBooptag = booptag.trim();
+        if (trimmedBooptag.length < 1)
+            return { valid: false, reason: "Booptag cannot be blank" };
+        if (trimmedBooptag.length !== 32)
+            return { valid: false, reason: "Booptag must be 32 characters long" };
+        if (!trimmedBooptag.match(/^[0-9a-fA-F]+$/))
+            return { valid: false, reason: "Booptag contains characters that are not allowed" };
+        return { valid: true, trimmedBooptag };
     }
 };
