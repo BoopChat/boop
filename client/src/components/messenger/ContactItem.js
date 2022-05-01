@@ -80,8 +80,13 @@ const ContactItem = ({ img, username, status, id, booptag, triggerRefresh }) => 
     return (
         <div className="contact_item" title={`${username} (${booptag})`}>
             { imageDialogOpen ?
-                <ViewContactDialog onClose={closeContactImage} img={img} username={username} booptag={booptag}/> : <></> }
-            { confirmDialogOpen ? <ConfirmDialog onClose={deleteContact} username={username} booptag={booptag}/>  : <></> }
+                <ViewContactDialog onClose={closeContactImage} img={img} username={username} booptag={booptag}/> :
+                <></>
+            }
+            { confirmDialogOpen ?
+                <ConfirmDialog onClose={deleteContact} username={username} booptag={booptag}/>  :
+                <></>
+            }
             <div className="img_and_name contacts">
                 <img onClick={handleClickContact} src={img} className="skeleton" alt=""/>
                 <div>

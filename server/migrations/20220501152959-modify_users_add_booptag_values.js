@@ -27,7 +27,10 @@ module.exports = {
                 await User.update(
                     {
                         booptag: crypto.createHash("md5")
-                            .update(`${user.signinOptions[0].email}${user.signinOptions[0].serviceName}${user.firstName}${user.lastName}${user.imageUrl}${user.createdAt}`)
+                            .update(
+                                ""+user.signinOptions[0].email+user.signinOptions[0].serviceName+user.firstName+
+                                user.lastName+user.imageUrl+user.createdAt
+                            )
                             .digest("hex")
                     },
                     {
@@ -70,7 +73,9 @@ module.exports = {
                     allowNull: true,
                     unique: false
                 }
-            );
+            ).catch((err) => {
+                console.error("Unable to update Users table booptag column: ", err);
+            });
         } catch (err){
             console.error("Unable to update Users table: ", err);
         }
