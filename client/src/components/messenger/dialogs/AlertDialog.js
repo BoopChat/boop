@@ -39,7 +39,7 @@ const AlertDialog = () => {
     };
 
     return (
-        open ? <Modal onClose={close} center>
+        open ? <Modal onClose={close} important center>
             <div id="alert-dialog">
                 <header className={style[type].name}>
                     <span>{title}</span>

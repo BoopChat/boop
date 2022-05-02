@@ -1,7 +1,7 @@
 import copy_icon from "../assets/icons/copy.svg";
 import ClipboardCheck from "../assets/icons/clipboardCheck.js";
 
-import { useState, React } from "react";
+import React, { useState } from "react";
 
 const Clipboard = ({ name, value }) => {
 
@@ -15,10 +15,8 @@ const Clipboard = ({ name, value }) => {
     };
 
     return (
-        <button className="edit">
-            <button title={`copy ${name} to clipboard`} className="edit" onClick={copyToClipboard}>
-                { showCheck ? <ClipboardCheck className="green"/> : <img src={copy_icon} alt="copy" /> }
-            </button>
+        <button title={`copy ${name} to clipboard`} id="clipboard" onClick={copyToClipboard}>
+            { showCheck ? <ClipboardCheck className="green"/> : <img src={copy_icon} alt="copy" /> }
         </button>
     );
 

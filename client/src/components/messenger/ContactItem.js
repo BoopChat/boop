@@ -3,33 +3,11 @@ import { useSelector } from "react-redux";
 
 import { ContactsController } from "./controllers/Contacts";
 import { AlertType, useAlertDialogContext } from "./dialogs/AlertDialog";
+import ViewContactDialog from "./dialogs/ViewContactDialog";
 import Modal from "./dialogs/Modal";
-import Clipboard from "../Clipboard";
 
 import "../../styles/dialog.css";
 import trash from "../../assets/icons/trash.svg";
-
-
-const ViewContactDialog = ({ onClose, img, username, booptag }) => {
-
-    const handleClose = () => onClose();
-
-    return (
-        <Modal onClose={handleClose} center>
-            <div id="view-contact-dialog">
-                <header>{`${username} (${booptag})`}</header>
-                <img src={img} alt="user"/>
-                <div className="setting_item">
-                    <div>
-                        <span className="attribute">Booptag</span>
-                        <span>{booptag}</span>
-                    </div>
-                    <Clipboard name="booptag" value={booptag} />
-                </div>
-            </div>
-        </Modal>
-    );
-};
 
 const ConfirmDialog = ({ onClose, username, booptag }) => {
 
@@ -89,10 +67,7 @@ const ContactItem = ({ img, username, status, id, booptag, triggerRefresh }) => 
             }
             <div className="img_and_name contacts">
                 <img onClick={handleClickContact} src={img} className="skeleton" alt=""/>
-                <div>
-                    <span className="displayName">{username}</span>
-                    <span className="booptag">{`(${booptag})`}</span>
-                </div>
+                <span className="displayName">{username}</span>
             </div>
 
             <div className="trash_and_status">

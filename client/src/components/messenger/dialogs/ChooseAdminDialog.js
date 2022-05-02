@@ -31,10 +31,7 @@ const ChooseAdminDialog = ({ onClose, participants, id }) => {
                             <li key={participant.id} title={`${participant.displayName} (${participant.booptag})`}>
                                 <div className="img_and_name">
                                     <img src={participant.imageUrl} alt="contact_img" />
-                                    <div>
-                                        <span className="displayName">{participant.displayName}</span>
-                                        <span className="booptag">{`(${participant.booptag})`}</span>
-                                    </div>
+                                    <span className="displayName">{participant.displayName}</span>
                                 </div>
                                 <input
                                     type="radio"

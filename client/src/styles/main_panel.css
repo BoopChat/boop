@@ -98,6 +98,7 @@ div.img_and_name span.displayName {
 
 div.img_and_name span.booptag {
     color: var(--text-fade);
+    font-size: 12px;
 }
 
 @media screen and (min-width: 1024px) {
@@ -301,21 +302,21 @@ div.edit {
     align-self: flex-end;
 }
 
-button.edit {
+button.edit, button#clipboard {
     border: none;
     background-color: inherit;
     margin: 0 4px;
 }
 
-button.edit:hover {
+button.edit:hover, button#clipboard {
     cursor: pointer;
 }
 
-button.edit img {
+button.edit img, button#clipboard img {
     filter: var(--filter);
 }
 
-button.edit img, button.edit svg {
+button.edit img, button.edit svg, button#clipboard img {
     width: 20px;
 }
 
@@ -534,3 +535,7 @@ svg.green {
 svg.red {
     fill: var(--prim-red);
 }
+
+svg.addContact {
+    margin-right: 10px;
+};

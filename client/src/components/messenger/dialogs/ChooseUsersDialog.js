@@ -47,10 +47,7 @@ const ChooseUsersDialog = ({ onClose, token, filterContacts }) => {
                                 title={`${contact.contactInfo.displayName} (${contact.contactInfo.booptag})`}>
                                 <div className="img_and_name">
                                     <img src={contact.contactInfo.imageUrl} alt="contact_img" />
-                                    <div>
-                                        <span className="displayName">{contact.contactInfo.displayName}</span>
-                                        <span className="booptag">{`(${contact.contactInfo.booptag})`}</span>
-                                    </div>
+                                    <span className="displayName">{contact.contactInfo.displayName}</span>
                                 </div>
                                 <input
                                     type="checkbox"

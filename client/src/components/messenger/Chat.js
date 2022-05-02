@@ -280,7 +280,7 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
                         >
                             <div className="info">
                                 <span className="user" title={`${msg.sender?.displayName} (${msg.sender?.booptag})`}>
-                                    {`${msg.sender?.displayName} (${msg.sender?.booptag})`}</span>
+                                    {msg.sender?.displayName}</span>
                                 <span className="time">{ChatController.evaluateElapsed(msg.createdAt)}</span>
                             </div>
                             <div className="avatar">

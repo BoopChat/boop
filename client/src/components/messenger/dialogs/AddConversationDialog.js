@@ -39,13 +39,10 @@ const AddConversationDialog = ({ onClose, contacts }) => {
                     <ul className="add_participants">
                         {contacts.map((contact) => (
                             <li key={contact.contactId}
-                                title={`${contact.contactInfo.displayName} (${contact.contactInfo.booptag}`}>
+                                title={`${contact.contactInfo.displayName} (${contact.contactInfo.booptag})`}>
                                 <div className="img_and_name">
                                     <img src={contact.contactInfo.imageUrl} alt="contact_img" />
-                                    <div>
-                                        <span className="displayName">{contact.contactInfo.displayName}</span>
-                                        <span className="booptag">{`(${contact.contactInfo.booptag}`}</span>
-                                    </div>
+                                    <span className="displayName">{contact.contactInfo.displayName}</span>
                                 </div>
                                 <input
                                     type="checkbox"
