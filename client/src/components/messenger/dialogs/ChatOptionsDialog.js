@@ -42,7 +42,7 @@ const ChatOptionsDialog = ({ onClose, img, title, participants, addUsers }) => {
     const handleClose = value => onClose(value);
 
     const isInContacts = participant =>
-        !((participant.id === id) || contacts.find(contact => contact.contactId === participant.id));
+        (participant.id === id) || contacts.find(contact => contact.contactId === participant.id);
 
     const addContact = (booptag) => {
         const runAsync = async () => {
@@ -89,7 +89,7 @@ const ChatOptionsDialog = ({ onClose, img, title, participants, addUsers }) => {
                                     <img src={participant.imageUrl} alt="participant_img" />
                                     <span className="displayName">{participant.displayName}</span>
                                 </div>
-                                <div>{ isInContacts(participant) ?
+                                <div>{ !isInContacts(participant) ?
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" width="20"
                                         height="20" className="green addContact"
                                         onClick={() => addContact(participant.booptag)}>
