@@ -112,6 +112,9 @@ export const ContactsController = {
         }
     },
     validateBooptag: booptag => {
+        if (booptag === null || booptag === undefined)
+            return { valid: false, reason: "Booptag does not exist" };
+
         let trimmedBooptag = booptag.trim();
         if (trimmedBooptag.length < 1)
             return { valid: false, reason: "Booptag cannot be blank" };

@@ -17,6 +17,8 @@ export const SettingsController = {
         }
     },
     validateDisplayName: name => {
+        if (name === null || name === undefined) return { valid: false, reason: "Display name does not exist" };
+
         name = name.trim();
         if (name.length < 1)
             return { valid: false, reason: "Display name cannot be blank" };
@@ -25,6 +27,8 @@ export const SettingsController = {
         return { valid: true };
     },
     validateName: name => {
+        if (name === null || name === undefined) return { valid: false, reason: "Name does not exist" };
+
         name = name.trim();
         if (name.length < 1)
             return { valid: false, reason: "Name cannot be blank" };
