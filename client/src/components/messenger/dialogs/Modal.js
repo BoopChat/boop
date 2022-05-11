@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 
 import "../../../styles/dialog.css";
 
-const Modal = ({ children, onClose, center }) => {
+const Modal = ({ children, onClose, center, important }) => {
     const modal = useRef();
 
     const shouldClose = e => {
@@ -11,7 +11,8 @@ const Modal = ({ children, onClose, center }) => {
     };
 
     return (
-        <div className="modal" style={center ? { alignItems: "center" } : {}} onClick={shouldClose} ref={modal}>
+        <div className={"modal" + (important ? " high": "")} style={center ? { alignItems: "center" } : {}}
+            onClick={shouldClose} ref={modal}>
             { children }
         </div>
     );

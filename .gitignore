@@ -8,21 +8,34 @@ node_modules/
 # testing
 coverage/
 
+.expo/
+.expo-shared/
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+*swp
+
+config.json
+.env*
+
+# macOS
+.DS_Store
+
 # production
 build/
 server/data
 
+# kubernetes
+boop-secret.yaml
+*kubeconfig*.yaml
+
 # misc
-.env
 .scss
 .css
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-boop-secret.yaml
-
 *.log
-
 yarn.lock
