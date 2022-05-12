@@ -109,7 +109,7 @@ module.exports.getConversations = async (req, res) => {
                 //     [db.Sequelize.Op.not]: [{ id: userId }],
                 // },
                 // specify what atributes you want returned
-                attributes: ["displayName", "imageUrl", "id"],
+                attributes: ["displayName", "imageUrl", "id", "booptag"],
                 // Prevents the entire belongs-to-many mapping object (Participant)
                 // from being returned
                 through: { attributes: ["isAdmin"] },
@@ -369,7 +369,7 @@ const getConvo = async(conversationId) => {
             model: User,
             as: "participants",
             // specify what atributes you want returned
-            attributes: ["displayName", "imageUrl", "id"],
+            attributes: ["displayName", "imageUrl", "id", "booptag"],
             // Prevents the entire belongs-to-many mapping object (Participant)
             // from being returned
             through: { attributes: ["isAdmin"] },

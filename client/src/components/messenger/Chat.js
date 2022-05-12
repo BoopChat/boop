@@ -331,11 +331,13 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
                             className={"message " + (msg.senderId === id ? "author" : "friend") + "_message"}
                         >
                             <div className="info">
-                                <span className="user" title={msg.sender?.displayName}>{msg.sender?.displayName}</span>
+                                <span className="user" title={`${msg.sender?.displayName} (${msg.sender?.booptag})`}>
+                                    {msg.sender?.displayName}</span>
                                 <span className="time">{ChatController.evaluateElapsed(msg.createdAt)}</span>
                             </div>
                             <div className="avatar">
-                                <img alt="user avatar" src={msg.sender?.imageUrl} title={msg.sender?.displayName}/>
+                                <img alt="user avatar" src={msg.sender?.imageUrl}
+                                    title={`${msg.sender?.displayName} (${msg.sender?.booptag})`}/>
                                 <span className="time">{ChatController.evaluateElapsed(msg.createdAt)}</span>
                             </div>
                             <div className="message_content">{msg.content}

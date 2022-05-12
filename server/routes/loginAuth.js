@@ -1,8 +1,8 @@
 const router = require("express").Router();
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
-const dayjs = require("dayjs");
 const logger = require("../logger").setup();
+const { createCookie } = require("./loginStrategies/loginUtils");
 
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET)
     require("./loginStrategies/googleStrategy");
@@ -10,16 +10,6 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET)
 if (process.env.FACEBOOK_CLIENT_ID && process.env.FACEBOOK_CLIENT_SECRET)
     require("./loginStrategies/facebookStrategy");
 
-const createCookie = (user, res) => {
-    // Creates a cookie with the user's login information
-    res.cookie("loginCookie", user, {
-        secure: false,
-        httpOnly: true,
-        expires: dayjs().add(1, "month").toDate(),
-        sameSite: "Lax"
-    });
-    return res;
-};
 
 router.get("/google", passport.authenticate("google", { scope: ["email", "profile"], prompt: "select_account" }));
 
