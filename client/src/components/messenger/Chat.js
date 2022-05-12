@@ -95,7 +95,7 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
         let result = null;
         switch (action) {
             case optionsEnum.leave:
-                if (participants.length === 2) // if 1 on 1 conversation, simply leave
+                if (participants.length <= 2) // if 1 on 1 or solo conversation, simply leave
                     result = await ConversationsController.leaveConversation(token, conversationId);
                 else {
                     // check if user is admin
@@ -295,7 +295,7 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
             <header className="chat_title">
                 <div className="img_and_back">
                     <Arrow onClick={cleanUp}/>
-                    <img src={"https://picsum.photos/400?id=" + title} className="skeleton" alt="chat" />
+                    <img src={"https://picsum.photos/400?id=" + conversationId} className="skeleton" alt="chat" />
                 </div>
                 <span>{title || "Untitled Chat"}</span>
                 <Options action={showChatOptions} />
@@ -303,7 +303,7 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
             { optionsDialog ?
                 <ChatOptionsDialog
                     onClose={onOptionsDialogClose}
-                    img={"https://picsum.photos/400?id=" + title}
+                    img={"https://picsum.photos/400?id=" + conversationId}
                     title={title}
                     participants={participants}
                     addUsers={() => setAddUsersDialog(true)}

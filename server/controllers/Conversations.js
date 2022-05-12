@@ -206,7 +206,32 @@ module.exports.leaveConversation = async (req, res) => {
         let deletedConversationRow = await Conversation.destroy({
             where: {
                 id: conversationId,
+            }
+        }).catch((err) => {
+            //catch any errors
+            let msg = err.message || "Some error occurred while deleting the conversation.";
+            logger.error(msg + `${userId} - ${conversationId}`);
+            res.status(500).send({ msg });
+        });
+
+        // delete associated participant (has to be done manually because participant's soft delete breaks cascade)
+        await Participant.destroy({
+            where: {
+                conversationId: conversationId,
             },
+            force: true
+        }).catch((err) => {
+            //catch any errors
+            let msg = err.message || "Some error occurred while deleting the conversation.";
+            logger.error(msg + `${userId} - ${conversationId}`);
+            res.status(500).send({ msg });
+        });
+
+        // delete associated messages (has to be done manually because participant's soft delete breaks cascade)
+        await Message.destroy({
+            where: {
+                conversationId: conversationId,
+            }
         }).catch((err) => {
             //catch any errors
             let msg = err.message || "Some error occurred while deleting the conversation.";

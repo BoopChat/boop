@@ -25,14 +25,14 @@ const Conversations = () => {
     const [contacts, setContacts] = useState([]);
 
     // Get the token and userInfo from the users global state.
-    const { token, userInfo: { displayName, imageUrl } } = useSelector((state) => state.user);
+    const { token, userInfo: { displayName, imageUrl, id: userId } } = useSelector((state) => state.user);
 
     // get the currently selected conversation
     const { id: currentlySelectedConvo } = useSelector(state => state.conversations.currentConversation);
 
     useEffect(() => {
         const runAsync = async () => {
-            const result = await ConversationsController.getConversations(token, socket);
+            const result = await ConversationsController.getConversations(token, socket, userId);
             if (!result.success) {
                 displayDialog({
                     title: "Error",
@@ -99,13 +99,6 @@ const Conversations = () => {
                     });
                     return;
                 }
-                if (title.length < 1) {
-                    // create a title from the chosen participants' names
-                    title = list
-                        .map((i) => i.displayName)
-                        .reduce((prevValue, curValue) => prevValue + curValue + ", ", "You, ")
-                        .substring(0, 25);
-                }
                 const { success, id } = await ConversationsController.createConversation(
                     token, list.map(i => i.id), title);
                 if (!success) {
@@ -165,7 +158,7 @@ const Conversations = () => {
                         .sort(sortConversations).map((chat, i) => (
                             <ConversationItem
                                 name={chat.title}
-                                img={chat.imgUrl ?? "https://picsum.photos/400?id=" + chat.title}
+                                img={chat.imgUrl ?? "https://picsum.photos/400?id=" + chat.id}
                                 lastMsg={ConversationsController.getLastMessage(chat)}
                                 lastDate={ConversationsController.getLastMessageDate(chat)}
                                 unread={chat.unread}
