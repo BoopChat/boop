@@ -1,6 +1,7 @@
 import { Route, Switch, useLocation } from "react-router";
 import { React, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { setUserInfo } from "../../redux-store/userSlice";
 import { SearchProvider } from "./hooks/SearchContext";
 import { setShowChat, updateCurrentConversation } from "../../redux-store/conversationSlice";
 
@@ -25,6 +26,7 @@ const Messenger = () => {
     const dispatch = useDispatch();
     const { toggleTheme, themeIcon, isDark } = useThemeSwitcher();
     const userInfo = useSelector((state) => state.user.userInfo);
+    const updateUser = (userInfo) => dispatch(setUserInfo(userInfo));
     // Get currently selected conversation from global state.
     const currentConvo = useSelector((state) => state.conversations.currentConversation);
 
@@ -57,7 +59,7 @@ const Messenger = () => {
                                 </Route>
                                 <Route path="/contacts" component={Contacts} />
                                 <Route path="/settings">
-                                    <Settings />
+                                    <Settings userInfo={userInfo} updateUser={updateUser} />
                                 </Route>
                                 <Route path="/">
                                     <Conversations />

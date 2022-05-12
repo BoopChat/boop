@@ -57,10 +57,6 @@ div.contact_item:hover, div.chat_item:hover, div.chat_item.selected {
     color: var(--text-hover);
 }
 
-div.chat_item:hover {
-    background-color: var(--online);
-}
-
 div.skeleton-text {
     width: 75%;
     height: 4px;
@@ -87,22 +83,13 @@ div.contact_item img, div.chat_item img, ul.add_participants img {
     width: 35px;
 }
 
-div.contact_item span.displayName {
+div.contact_item span {
     padding-left: 8px;
-    white-space: nowrap;
-}
-
-div.img_and_name span.displayName {
-    font-weight: 500;
-}
-
-div.img_and_name span.booptag {
-    color: var(--text-fade);
-    font-size: 12px;
+    text-overflow: ellipsis;
 }
 
 @media screen and (min-width: 1024px) {
-    div.contact_item span.displayName {
+    div.contact_item span {
         padding-left: 20px;
     }
 }
@@ -118,13 +105,6 @@ div.img_and_name {
     display: flex;
     align-items: center;
     overflow-x: hidden;
-    width: 84%;
-}
-
-div.img_and_name > div {
-    width: 80%;
-    text-overflow: ellipsis;
-    overflow: hidden;
 }
 
 div.img_and_name.contacts > span {
@@ -261,7 +241,6 @@ div.time_and_badge {
 
 div.time_and_badge span {
     font-size: 14px;
-    white-space: nowrap;
 }
 
 span.chat_msg {
@@ -290,67 +269,31 @@ div.setting_item {
 span.attribute {
     font-weight: 900;
     display: block;
-    margin-bottom: 8px;
-    color: var(--text);
 }
 
-span.displayname {
-    font-weight: 600;
-}
-
-div.edit {
+button.edit {
+    border: none;
+    background-color: inherit;
     align-self: flex-end;
 }
 
-button.edit, button#clipboard {
-    border: none;
-    background-color: inherit;
-    margin: 0 4px;
-}
-
-button.edit:hover, button#clipboard {
+button.edit:hover {
     cursor: pointer;
 }
 
-button.edit img, button#clipboard img {
+button.edit img {
     filter: var(--filter);
 }
 
-button.edit img, button.edit svg, button#clipboard img {
-    width: 20px;
-}
-
-div.setting_item {
-    color: var(--text-fade);
-}
-
 div.setting_item input {
-    padding: 8px;
-    margin-top: 2px;
-    margin-bottom: 8px;
+    padding: 5px;
+    margin-top: 5px;
     margin-right: 5px;
-    border: none;
-    border-radius: 4px;
-    outline: var(--border) 1px solid;
-}
-
-div.setting_item input:hover {
-    outline: var(--border-hover) 1px solid;
 }
 
 div.setting_item input:focus {
-    outline: var(--sec-blue) 1px solid;
-    border: none;
-}
-
-#editDisplayName {
-    display: flex;
-    align-items: center;
-}
-
-#editDisplayName input {
-    margin-top: 0;
-    margin-bottom: 0;
+    outline: var(--sec-blue) 2px solid;
+    border:none;
 }
 
 div.setting_item img.profile_img {
@@ -511,31 +454,3 @@ div.img_and_title {
     display: flex;
     align-items: center;
 }
-
-span.info {
-    cursor: pointer;
-    color: var(--prim-blue);
-}
-
-span.error {
-    color: var(--prim-red);
-    font-size: 12px;
-    text-transform: capitalize;
-}
-
-div.editInput {
-    display: flex;
-    flex-direction: column;
-}
-
-svg.green {
-    fill: var(--online);
-}
-
-svg.red {
-    fill: var(--prim-red);
-}
-
-svg.addContact {
-    margin-right: 10px;
-};

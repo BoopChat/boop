@@ -136,7 +136,7 @@ li.message .avatar {
 }
 
 li.message.friend_message .avatar {
-    padding: 10px 8px 0 0;
+    padding: 10px 0px 0 8px
 }
 
 li.message.author_message .avatar {

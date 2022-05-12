@@ -51,7 +51,7 @@ module.exports.getMessages = async (req, res) => {
                 model: User,
                 as: "sender",
                 // specify what atributes you want returned
-                attributes: ["displayName", "imageUrl", "booptag"],
+                attributes: ["displayName", "imageUrl"],
             },
             {
                 model: Conversation,
@@ -105,7 +105,8 @@ module.exports.addMessage = async (req, res) => {
         createdAt: newMessage.createdAt,
         updatedAt: newMessage.updatedAt,
         conversation: { id: newMessage.conversationId },
-        sender: { displayName: req.user.displayName, imageUrl: req.user.imageUrl, booptag: req.user.booptag }
+        readBy: newMessage.readBy,
+        sender: { displayName: req.user.displayName, imageUrl: req.user.imageUrl }
     };
 
     //return a success message + the newly created msg;

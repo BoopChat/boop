@@ -47,14 +47,8 @@ const Contacts = () => {
     const addContact = ({ contact, error }) => {
         setDialogOpen(false); // close add dialog
 
-        if (contact) { // add new contact to the back of the list
+        if (contact) // add new contact to the back of the list
             setContacts(contacts.length > 0 ? [...contacts, contact]: [contact]);
-            displayDialog({
-                title: "Success",
-                message: contact.contactInfo.displayName + " added successfully",
-                type: AlertType.Success
-            });
-        }
 
         if (error) // if an error occured, display it
             displayDialog({ title: "Error", message: error, type: AlertType.Error });
@@ -96,13 +90,12 @@ const Contacts = () => {
                     <ContactItem
                         img={contact.contactInfo.imageUrl}
                         username={contact.contactInfo.displayName}
-                        booptag={contact.contactInfo.booptag}
                         status={ContactsController.evaluateStatus(contact.contactInfo.lastActive)}
                         id={contact.contactId}
                         triggerRefresh={refreshContactList}
                         key={i}
                     />
-                ) : <span className="empty">You don&apos;t have any contacts :(</span>}
+                ) : <span className="empty">You have don&apos;t any contacts :(</span>}
             </div>
         </div>
     );

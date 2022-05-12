@@ -28,10 +28,10 @@ const ChooseAdminDialog = ({ onClose, participants, id }) => {
                 <main>
                     <ul className="add_participants">
                         {candidates.map((participant) => (
-                            <li key={participant.id} title={`${participant.displayName} (${participant.booptag})`}>
+                            <li key={participant.id}>
                                 <div className="img_and_name">
                                     <img src={participant.imageUrl} alt="contact_img" />
-                                    <span className="displayName">{participant.displayName}</span>
+                                    <span>{participant.displayName}</span>
                                 </div>
                                 <input
                                     type="radio"

@@ -46,12 +46,8 @@ export const ChatController = {
         socket.on("readMessages", (readMessages) => updateMessagesRead(readMessages)),
     clearRead: (socket) => socket?.off("readMessages"),
     evaluateElapsed: sent => {
-        if (!sent && sent !== 0)
-            return "Some time ago";
         // convert timestamp into an elapsed message
         let diff = Date.now() - new Date(sent).getTime();
-        if (isNaN(diff))
-            return "Some time ago";
         let min = 60 * 1000;
         if (diff < min) return "Less than a min ago";
         else if (diff < 60 * min) {

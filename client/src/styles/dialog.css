@@ -13,10 +13,6 @@
     padding: 5px 0;
 }
 
-.modal.high {
-    z-index: 15;
-}
-
 .modal > * {
     animation: modalopen 0.5s;
 }
@@ -142,27 +138,10 @@ div#alert-dialog svg {
     background-color: var(--input);
     color: var(--text);
     padding: 12px;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 500;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
-}
-
-#view-contact-dialog header {
-    display: flex;
-    flex-direction: column;
-}
-
-#view-contact-dialog header > div {
-    display: flex;
-    align-items: center;
-    margin-top: 4px;
-}
-
-#view-contact-dialog span.booptag {
-    color: var(--text-fade);
-    font-size: 12px;
-    padding: 4px 12px 4px 0;
 }
 
 #view-contact-dialog img { 

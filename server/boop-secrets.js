@@ -4,7 +4,7 @@ const yaml = require("js-yaml");
 const fs   = require("fs");
 
 const dotenv = require("dotenv");
-dotenv.config({ path: "./.env.production" });
+dotenv.config();
 
 try {
     const secrets = yaml.dump(
@@ -23,7 +23,7 @@ try {
                 DB_USERNAME: process.env.DB_USERNAME,
                 DB_PASSWORD: process.env.DB_PASSWORD,
                 DB_HOST: process.env.DB_HOST,
-                DB_PORT: process.env.DB_PORT,
+                DB_PORT: Number(process.env.DB_PORT),
             }
         }
     );

@@ -1,11 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import React from "react";
 
 import Modal from "./Modal";
-import ViewContactDialog from "./ViewContactDialog";
-import { AlertType, useAlertDialogContext } from "./AlertDialog";
-
-import { ContactsController } from "../controllers/Contacts";
 
 const optionsEnum = {
     noAction: 0,
@@ -13,53 +8,8 @@ const optionsEnum = {
 };
 
 const ChatOptionsDialog = ({ onClose, img, title, participants, addUsers }) => {
-    const [participantDialog, setParticipantDialog] = useState({ img: "", username: "", booptag: "", open: false });
-    const [contacts, setContacts] = useState([]);
-
-    const { token, userInfo: { id } } = useSelector((state) => state.user);
-
-    const { display: displayDialog } = useAlertDialogContext();
-
-    useEffect(() => {
-        const runAsync = async () => {
-            let contacts = await ContactsController.getContacts(token);
-            setContacts(contacts.success ? contacts.contactList : []);
-        };
-        runAsync();
-    }, []);
-
-    const handleClickContact = (participant) => {
-        setParticipantDialog({
-            img: participant.imageUrl,
-            username: participant.displayName,
-            booptag: participant.booptag,
-            open: true
-        });
-    };
-
-    const closeContactImage = () => setParticipantDialog({ img: "", username: "", booptag: "", open: false });
 
     const handleClose = value => onClose(value);
-
-    const isInContacts = participant =>
-        (participant.id === id) || contacts.find(contact => contact.contactId === participant.id);
-
-    const addContact = (booptag) => {
-        const runAsync = async () => {
-            let result = await ContactsController.addContact(token, booptag);
-
-            if (result.success) {
-                const { contact } = result;
-                setContacts(contacts.length > 0 ? [...contacts, contact]: [contact]);
-                displayDialog({
-                    title: "Success",
-                    message: contact.contactInfo.displayName + " added successfully",
-                    type: AlertType.Success
-                });
-            } else displayDialog({ title: "Error", message: result.msg, type: AlertType.Error });
-        };
-        runAsync();
-    };
 
     return (
         <Modal onClose={() => handleClose(optionsEnum.noAction)}>
@@ -76,32 +26,14 @@ const ChatOptionsDialog = ({ onClose, img, title, participants, addUsers }) => {
                         <span className="participant_label">Participants</span>
                         <span className="participants_count">{participants.length}</span>
                     </section>
-                    { participantDialog.open ?
-                        <ViewContactDialog onClose={closeContactImage} img={participantDialog.img}
-                            username={participantDialog.username} booptag={participantDialog.booptag}/> :
-                        <></>
-                    }
                     <section className="participants">{
                         participants.map((participant, key) =>
-                            <div className="contact_item" key={key}
-                                title={`${participant.displayName} (${participant.booptag})`}>
-                                <div className="img_and_name" onClick={() => handleClickContact(participant)}>
+                            <div className="contact_item" key={key}>
+                                <div className="img_and_name">
                                     <img src={participant.imageUrl} alt="participant_img" />
-                                    <span className="displayName">{participant.displayName}</span>
+                                    <span>{participant.displayName}</span>
                                 </div>
-                                <div>{ !isInContacts(participant) ?
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" width="20"
-                                        height="20" className="green addContact"
-                                        onClick={() => addContact(participant.booptag)}>
-                                        <path d="M224 256c70.7 0 128-57.31 128-128S294.7 0 224 0C153.3 0 96 57.31 96
-                                            128S153.3 254 224 256zM274.7 304H173.3C77.61 304 0 381.6 0 477.3C0 496.5
-                                            15.52 512 34.66 512h378.7C432.5 512 448 496.5 448 477.3C448 381.6 370.4 304
-                                            274.7 304zM616 200h-48v-48C568 138.8 556.3 128 544 128s-24 10.75-24
-                                            24v48h-48C458.8 200 448 210.8 446 224s10.75 24 24 24h48v48C520 309.3 530.8
-                                            320 544 320s24-10.75 24-24v-48h48C629.3 248 642 237.3 640 224S629.3
-                                            200 616 200z"/>
-                                    </svg> : <></>
-                                } { participant.Participant.isAdmin ?
+                                <div>{ participant.Participant.isAdmin ?
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="28"
                                         className="adminCrown">
                                         <path d="M576 136c0 22.09-17.91 40-40 40c-.248 0-.4551-.1266-.7031-.1305l-50.54

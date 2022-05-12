@@ -3,20 +3,34 @@ import { useSelector } from "react-redux";
 
 import { ContactsController } from "./controllers/Contacts";
 import { AlertType, useAlertDialogContext } from "./dialogs/AlertDialog";
-import ViewContactDialog from "./dialogs/ViewContactDialog";
 import Modal from "./dialogs/Modal";
 
 import "../../styles/dialog.css";
 import trash from "../../assets/icons/trash.svg";
 
-const ConfirmDialog = ({ onClose, username, booptag }) => {
+
+const ViewContactDialog = ({ onClose, img, username }) => {
+
+    const handleClose = () => onClose();
+
+    return (
+        <Modal onClose={handleClose} center>
+            <div id="view-contact-dialog">
+                <header>{username}</header>
+                <img src={img} alt="user"/>
+            </div>
+        </Modal>
+    );
+};
+
+const ConfirmDialog = ({ onClose, username }) => {
 
     const handleClose = confirm => onClose(confirm);
 
     return (
         <Modal onClose={() => handleClose(false)} center>
             <div id="delete-contact-dialog">
-                <header><b>Delete contact</b> {`${username} (${booptag})`} ?</header>
+                <header><b>Delete contact</b> {username} ?</header>
                 <main>
                     <button className="btn_confirm" onClick={() => handleClose(true)}>Yes</button>
                     <button className="btn_deny" onClick={() => handleClose(false)}>Cancel</button>
@@ -26,7 +40,7 @@ const ConfirmDialog = ({ onClose, username, booptag }) => {
     );
 };
 
-const ContactItem = ({ img, username, status, id, booptag, triggerRefresh }) => {
+const ContactItem = ({ img, username, status, id, triggerRefresh }) => {
 
     const [imageDialogOpen, setImageDialogOpen] = useState(false);
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -56,18 +70,14 @@ const ContactItem = ({ img, username, status, id, booptag, triggerRefresh }) => 
     };
 
     return (
-        <div className="contact_item" title={`${username} (${booptag})`}>
+        <div className="contact_item">
+
             { imageDialogOpen ?
-                <ViewContactDialog onClose={closeContactImage} img={img} username={username} booptag={booptag}/> :
-                <></>
-            }
-            { confirmDialogOpen ?
-                <ConfirmDialog onClose={deleteContact} username={username} booptag={booptag}/>  :
-                <></>
-            }
+                <ViewContactDialog onClose={closeContactImage} img={img} username={username}/> : <></> }
+            { confirmDialogOpen ? <ConfirmDialog onClose={deleteContact} username={username}/>  : <></> }
             <div className="img_and_name contacts">
                 <img onClick={handleClickContact} src={img} className="skeleton" alt=""/>
-                <span className="displayName">{username}</span>
+                <span>{username}</span>
             </div>
 
             <div className="trash_and_status">

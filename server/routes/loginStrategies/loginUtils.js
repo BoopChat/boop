@@ -2,8 +2,6 @@
 const db = require("../../models");
 const SigninOption = db.SigninOption;
 const User = db.User;
-const dayjs = require("dayjs");
-const crypto = require("crypto");
 
 module.exports.getSigninOption = async function({ email, serviceName, firstName, lastName, imageUrl }){
     // try to find the signinOption
@@ -32,15 +30,8 @@ module.exports.getSigninOption = async function({ email, serviceName, firstName,
     if (!signinOption) {
         //try to create the new user and associate it with a new signinOption
         // with the input serviceName and email
-
-        let today = Date.now();
-        let booptag = crypto.createHash("md5")
-            .update(`${email}${serviceName}${firstName}${lastName}${imageUrl}${today}`)
-            .digest("hex");
-
         let user = await User.create({
-            displayName: `Booper${Math.floor(Math.random() * 100000)}`,
-            booptag: booptag,
+            displayName: email,
             firstName: firstName,
             lastName: lastName,
             imageUrl: imageUrl,
@@ -73,15 +64,4 @@ module.exports.getSigninOption = async function({ email, serviceName, firstName,
 
     //return the user with the signinOption if the signinOption was found
     return { "msg": "User successfully retieved!", "user": user };
-};
-
-module.exports.createCookie = (user, res) => {
-    // Creates a cookie with the user's login information
-    res.cookie("loginCookie", user, {
-        secure: false,
-        httpOnly: true,
-        expires: dayjs().add(1, "month").toDate(),
-        sameSite: "Lax"
-    });
-    return res;
 };
