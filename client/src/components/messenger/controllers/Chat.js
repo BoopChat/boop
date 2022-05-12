@@ -23,7 +23,8 @@ export const ChatController = {
                 // get the list of messages if successful
                 return data ? {
                     success: true,
-                    messages: data.messages
+                    messages: data.messages,
+                    firstMarked: data.firstMarked
                 } : {
                     success: false,
                     messages: []
@@ -41,6 +42,9 @@ export const ChatController = {
     },
     listen: (updateMessages, socket) => socket.on("newMessage", (msg) => updateMessages(msg)),
     clear: (socket) => socket?.off("newMessage"),
+    listenRead: (updateMessagesRead, socket) =>
+        socket.on("readMessages", (readMessages) => updateMessagesRead(readMessages)),
+    clearRead: (socket) => socket?.off("readMessages"),
     evaluateElapsed: sent => {
         if (!sent && sent !== 0)
             return "Some time ago";
@@ -92,4 +96,24 @@ export const ChatController = {
             };
         }
     },
+    determineRead: (list, participants) => {
+        // if the number of persons who have read the message is equal the number of participants in the chat
+        // then everyone has read the message
+        if (list?.length === participants?.length)
+            return "allRead";
+        else if (list?.length > 1) // if at least 1 person (other than the sender) has read the message
+            return "someRead";
+        else return "noneRead";
+    },
+    getLastReadMessageIndex: (messages, messageId) => {
+        if (messageId === -1 && messages.length > 0) // all messages already read
+            return messages.length - 1; // return last message
+
+        // start from the bottom of the chat and go up until you find the last message the user has read
+        for (let i = messages.length - 1; i > -1; i--) {
+            if (messages[i].id === messageId)
+                return i;
+        }
+        return -1; // chat empty
+    }
 };

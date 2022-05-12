@@ -9,6 +9,7 @@ import { ChatOptionsDialog, optionsEnum } from "./dialogs/ChatOptionsDialog";
 import { AlertType, useAlertDialogContext } from "./dialogs/AlertDialog";
 import ChooseUsersDialog from "./dialogs/ChooseUsersDialog";
 import ChooseAdminDialog from "./dialogs/ChooseAdminDialog";
+import MessageInfoDialog from "./dialogs/MessageInfoDialog";
 
 import "../../styles/chat.css";
 import Options from "../../assets/icons/options.js";
@@ -19,6 +20,7 @@ import SocketContext from "../../socketContext";
 
 const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
     const [messages, setMessages] = useState([]);
+    const [scrollToId, setScrollToId] = useState(-1);
     const [firstLoad, setFirstLoad] = useState(false);
     const [text, setText] = useState("");
     const [cursorPosition, setCursorPosition] = useState(0);
@@ -30,6 +32,7 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
     const [optionsDialog, setOptionsDialog] = useState(false);
     const [addUsersDialog, setAddUsersDialog] = useState(false);
     const [chooseAdminDialog, setChooseAdminDialog] = useState(false);
+    const [messageInfoDialog, setMessageInfoDialog] = useState({ show: false });
     const { display: displayDialog } = useAlertDialogContext();
     const socket = useContext(SocketContext);
 
@@ -92,7 +95,7 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
         let result = null;
         switch (action) {
             case optionsEnum.leave:
-                if (participants.length === 1) // if 1 on 1 conversation, simply leave
+                if (participants.length === 2) // if 1 on 1 conversation, simply leave
                     result = await ConversationsController.leaveConversation(token, conversationId);
                 else {
                     // check if user is admin
@@ -127,7 +130,7 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
                     if (result.success) {
                         dispatch(removeConversation(conversationId));
                         // close the chat window
-                        closeChat();
+                        cleanUp();
                     }
                 }
             });
@@ -181,7 +184,7 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
                         if (result.success) {
                             dispatch(removeConversation(conversationId));
                             // close the chat window
-                            closeChat();
+                            cleanUp();
                         }
                     }
                 });
@@ -212,8 +215,40 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
         ChatController.listen((message) => {
             // if the new message is a message for the currently opened chat
             // if not simply ignore it in the ui
-            if (message.newMessage.conversation.id === conversationId.toString())
+            if (message.newMessage.conversation.id === conversationId.toString()){
                 addNewMessages([message.newMessage]);
+
+                if (!message.newMessage.readBy.includes(id)){
+                    socket.emit("markAsRead", message.newMessage.id);
+                }
+            }
+        }, socket);
+
+        // update readBy array for open chat if someone reads a message
+        ChatController.clearRead(socket); // clear previous listener if exist
+        ChatController.listenRead(({ readMessages }) => {
+            // if the new message info is for the currently opened chat
+            // if not simply ignore it in the ui
+            if (readMessages[0].conversationId === conversationId.toString()) {
+                // store the readMessage info in a map so it's easily searchable by id (acts as key)
+                let readMap = new Map();
+
+                readMessages.forEach( (readMessage) => {
+                    readMap.set(readMessage.id, readMessage);
+                });
+
+                // update the readBy array for any messages that were in readMap, else leave message as is
+                setMessages(prevMessages =>
+                    prevMessages.map(
+                        (msg) =>
+                            (
+                                readMap.has(msg.id) ?
+                                    { ...msg, readBy: readMap.get(msg.id).readBy } :
+                                    msg
+                            )
+                    )
+                );
+            }
         }, socket);
 
         // get all messages (this will include any live messages caught by above code)
@@ -226,7 +261,8 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
                     type: AlertType.Error
                 });
             }
-            const { messages } = result;
+            const { messages, firstMarked } = result;
+            setScrollToId(firstMarked);
             addNewMessages(messages.reverse());
             setFirstLoad(true);
         };
@@ -236,18 +272,29 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
     // scroll the chat to the bottom when loaded
     useEffect(() => {
         if (firstLoad) {
-            scrollChat();
+            let lastMessageIndex = ChatController.getLastReadMessageIndex(messages, scrollToId);
+            if (lastMessageIndex !== -1) // if an index was found scroll to that position ... if not don't scroll
+                Array.from(chatbox.current.children)[lastMessageIndex].scrollIntoView(true);
             setFirstLoad(false);
         }
     }, [firstLoad]);
 
+    const cleanUp = () => {
+        // about to close the chat (in mobile mode) so clear the socket listeners
+        ChatController.clear(socket);
+        ChatController.clearRead(socket);
+        closeChat();
+    };
+
     const showChatOptions = () => setOptionsDialog(true);
+
+    const showMessageInfo = message => setMessageInfoDialog({ show: true, message });
 
     return (
         <div className="chat_container">
             <header className="chat_title">
                 <div className="img_and_back">
-                    <Arrow onClick={closeChat}/>
+                    <Arrow onClick={cleanUp}/>
                     <img src={"https://picsum.photos/400?id=" + title} className="skeleton" alt="chat" />
                 </div>
                 <span>{title || "Untitled Chat"}</span>
@@ -271,6 +318,11 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
                 <ChooseAdminDialog onClose={onChooseAdminDialogClose} participants={participants} id={id}/>
                 : <></>
             }
+            { messageInfoDialog.show ?
+                <MessageInfoDialog onClose={() => setMessageInfoDialog({ ...messageInfoDialog, show: false })}
+                    participants={participants} message={messageInfoDialog.message} />
+                : <></>
+            }
             {messages && messages.length > 0 ? (
                 <ul className="chat_section" ref={chatbox}>
                     {messages.map(msg =>
@@ -288,7 +340,11 @@ const Chat = ({ conversationId, title, participants, closeChat, isDark }) => {
                                     title={`${msg.sender?.displayName} (${msg.sender?.booptag})`}/>
                                 <span className="time">{ChatController.evaluateElapsed(msg.createdAt)}</span>
                             </div>
-                            <p>{msg.content}</p>
+                            <div className="message_content">{msg.content}
+                                <div onClick={() => showMessageInfo(msg)}
+                                    className={"msg_status " + ChatController.determineRead(msg.readBy, participants)}>
+                                </div>
+                            </div>
                         </li>
                     )}
                 </ul>

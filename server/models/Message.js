@@ -11,6 +11,9 @@ module.exports = (sequelize, Sequelize) => {
         },
         updatedAt: {
             type: Sequelize.DATE, field: "updated_at", defaultValue: Sequelize.NOW
+        },
+        readBy: {
+            type: Sequelize.ARRAY(Sequelize.INTEGER), field: "read_by", defaultValue: []
         }
     });
 

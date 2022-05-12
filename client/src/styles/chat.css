@@ -158,7 +158,7 @@ li.message.friend_message .avatar img {
 
 /* The message text */
 
-li.message p {
+li.message div.message_content {
     line-height: 1.5;
     padding: 18px 22px;
     width: fit-content;
@@ -176,42 +176,54 @@ li.message p {
 }
 
 @media screen and (min-width: 640px) {
-    li.message p {
+    li.message div.message_content {
         width: fit-content;
         max-width: 65%;
     }
 }
 
-li.message.friend_message p {
+li.message.friend_message div.message_content {
     border: 1px solid var(--border);
     background-color: var(--bg);
     color: var(--text);
 }
 
-li.message.author_message p {
+li.message.author_message div.message_content {
     border: 1px solid var(--author-border);
     order: 1;
     color: var(--light-text);
 }
 
-li.friend_message p:after, li.author_message p:after {
-    content: '';
+li.friend_message div.message_content div.msg_status,
+li.author_message div.message_content div.msg_status {
     position: absolute;
-    width: 15px;
-    height: 15px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
-    background-color: var(--bg);
     top: 18px;
+    cursor: pointer;
 }
 
-li.friend_message p:after {
+li.friend_message div.message_content div.msg_status {
     border: 2px solid var(--light-text);
     left: -8px;
 }
 
-li.author_message p:after {
+li.author_message div.message_content div.msg_status {
     border: 2px solid var(--light-text);
     right: -8px;
+}
+
+div.msg_status.allRead {
+    background-color: var(--online);
+}
+
+div.msg_status.someRead {
+    background-color: var(--purple_honeycreeper);
+}
+
+div.msg_status.noneRead {
+    background-color: var(--away);
 }
 
 form.interactions {
