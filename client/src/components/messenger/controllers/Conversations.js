@@ -54,7 +54,8 @@ export const ConversationsController = {
                             if (p.id !==  userId){ result.push(p.displayName); }
                             return result;
                         }, []).join(", ");
-                        convo.title = `You${participantNames.length > 0 ? "," : ""} ${participantNames.substring(0, participantNamesMaxLength)}${
+                        convo.title = `You${participantNames.length > 0 ? "," : ""} ${participantNames
+                            .substring(0, participantNamesMaxLength)}${
                             participantNames.length > participantNamesMaxLength ? "..." : ""
                         }`;
                     }
