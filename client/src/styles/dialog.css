@@ -181,6 +181,7 @@ div#alert-dialog svg {
 
 #message-info-dialog {
     min-width: 80%;
+    max-width: 80%;
 }
 
 @media screen and (min-width: 640px) {
@@ -198,7 +199,8 @@ div#alert-dialog svg {
 #message-info-dialog p {
     text-align: center;
     padding: 18px 12px;
-    margin: 0;
+    margin: 0 auto;
+    width: 80%;
 }
 
 div.circle_icon {

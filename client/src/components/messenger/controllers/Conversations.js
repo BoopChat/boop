@@ -67,6 +67,16 @@ export const ConversationsController = {
         const { messages } = chat;
         return evaluateDate(messages?.length > 0 ? messages[0].createdAt : "");
     },
+    formatLastMessage: (msg) => {
+        if (!msg)
+            return "";
+
+        let formatted = msg.substring(0, 48);
+        if (msg.length !== formatted.length)
+            formatted += "...";
+
+        return formatted;
+    },
     createConversation: async (token, participants, title) => {
         // make request to create a conversation with participants and title
         try {
