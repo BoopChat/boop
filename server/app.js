@@ -2,11 +2,12 @@ var createError = require("http-errors");
 const express = require("express");
 const path = require("path");
 var cookieParser = require("cookie-parser");
-const morganLogger = require("./logger/morganLogger");
 
 //environment variables configuration
 const dotenv = require("dotenv");
 dotenv.config();
+
+const morganLogger = require("./logger/morganLogger");
 
 // Middleware to verify the jwt
 const jwt = require("express-jwt");
