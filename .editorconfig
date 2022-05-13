@@ -23,7 +23,7 @@ indent_size = 2
 max_line_length = off
 trim_trailing_whitespace = false
 
-[GoogleButton.js]
+[GoogleButton.js, FacebookButton.js, TwitterButton.js]
 max_line_length = off
 
 [client/src/assets/icons/*]
