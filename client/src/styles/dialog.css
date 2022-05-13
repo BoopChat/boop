@@ -179,6 +179,22 @@ div#alert-dialog svg {
     border-radius: 8px;
 }
 
+#message-info-dialog {
+    min-width: 80%;
+}
+
+@media screen and (min-width: 640px) {
+    #message-info-dialog {
+        min-width: 50%;
+    }   
+}
+
+@media screen and (min-width: 1024px) {
+    #message-info-dialog {
+        min-width: 35%;
+    }  
+}
+
 #message-info-dialog p {
     text-align: center;
     padding: 18px 12px;

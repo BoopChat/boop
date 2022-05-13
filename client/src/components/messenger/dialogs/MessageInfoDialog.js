@@ -31,7 +31,7 @@ const MessageInfoDialog = ({ onClose, participants, message }) => {
                                 <div className="contact_item" key={participant.id}>
                                     <div className="img_and_name">
                                         <img src={participant.imageUrl} alt="participant" />
-                                        <span>{participant.displayName}</span>
+                                        <span className="displayName">{participant.displayName}</span>
                                     </div>
                                 </div>
                             ))}
@@ -47,7 +47,7 @@ const MessageInfoDialog = ({ onClose, participants, message }) => {
                                 <div className="contact_item" key={participant.id}>
                                     <div className="img_and_name">
                                         <img src={participant.imageUrl} alt="participant" />
-                                        <span>{participant.displayName}</span>
+                                        <span className="displayName">{participant.displayName}</span>
                                     </div>
                                 </div>
                             ))}
@@ -64,7 +64,7 @@ const MessageInfoDialog = ({ onClose, participants, message }) => {
                                 <div className="contact_item" key={participant.id}>
                                     <div className="img_and_name">
                                         <img src={participant.imageUrl} alt="participant" />
-                                        <span>{participant.displayName}</span>
+                                        <span className="displayName">{participant.displayName}</span>
                                     </div>
                                 </div>
                             ))}

@@ -1,4 +1,6 @@
 import "../../styles/login.css";
+import "../../styles/login_buttons.css";
+
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { logIn, setToken, setUserInfo } from "../../redux-store/userSlice";

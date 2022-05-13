@@ -1,5 +1,3 @@
-import "../styles/login_buttons.css";
-
 import React from "react";
 
 const TwitterButton = ({ text="sign up with twitter", handler }) => {
