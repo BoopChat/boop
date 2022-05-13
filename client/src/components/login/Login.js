@@ -117,8 +117,8 @@ const Login = () => {
                 </header>
                 <div className="sign_btns">
                     { loginService.google && <GoogleButton text="Continue with Google" /> }
-                    { loginService.facebook && <FacebookButton text="Continue with facebook" /> }
-                    { loginService.twitter && <TwitterButton text="Continue with twitter" /> }
+                    { loginService.facebook && <FacebookButton text="Continue with Facebook" /> }
+                    { loginService.twitter && <TwitterButton text="Continue with Twitter" /> }
                 </div>
             </div>
         );
