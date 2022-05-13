@@ -1,4 +1,5 @@
-import { participantNamesMaxLength } from "./controllerUtils";
+// the max length of participants' names used to auto generate a title
+export const participantNamesMaxLength = 25;
 
 const evaluateDate = (lastDate) => {
     // decide whether to return the date as (d/mm/yy) or as time(\d{2}:\d{2} (A|P)M)

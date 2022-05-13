@@ -1,6 +1,6 @@
 import store from "./../../../redux-store/store";
 import { addConversation, updateConversation, updateCurrentConversation } from "../../../redux-store/conversationSlice";
-import { participantNamesMaxLength } from "./controllerUtils";
+import { participantNamesMaxLength } from "./Conversations";
 
 export const SocketController = {
     initListeners: (socket) => {
