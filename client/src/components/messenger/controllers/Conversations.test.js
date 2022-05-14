@@ -1,6 +1,6 @@
 import { ConversationsController } from "./Conversations";
 
-describe("Test evaluateElapsed in Chat Controller", () => {
+describe("Test evaluateElapsed in Conversations Controller", () => {
     test("passes if blank string returned for falsy values", async () => {
         let elapsed = ConversationsController.evaluateDate("");
         expect(elapsed).toEqual("");
@@ -35,5 +35,35 @@ describe("Test evaluateElapsed in Chat Controller", () => {
 
         elapsed = ConversationsController.evaluateDate(Date.now() - (8 * 60 * 60 * 1000));
         expect(elapsed).toMatch(timeFormat);
+    });
+});
+
+describe("Test formatLastMessage in Conversations Controller", () => {
+    test("passes if blank string returned for falsy values", async () => {
+        let formattedMsg = ConversationsController.formatLastMessage("");
+        expect(formattedMsg).toEqual("");
+
+        formattedMsg = ConversationsController.formatLastMessage();
+        expect(formattedMsg).toEqual("");
+
+        formattedMsg = ConversationsController.formatLastMessage(null);
+        expect(formattedMsg).toEqual("");
+    });
+
+    test("passes if message is truncated and ellipsis added", async () => {
+        let formattedMsg = ConversationsController
+            .formatLastMessage("i needed a longer than usual message to test out a stretch thing");
+        expect(formattedMsg).toEqual("i needed a longer than usual message to test out...");
+
+        formattedMsg = ConversationsController.formatLastMessage("a".repeat(100));
+        expect(formattedMsg).toEqual("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...");
+    });
+
+    test("fails if original message is not returned", async () => {
+        let formattedMsg = ConversationsController.formatLastMessage("i needed a short message to test");
+        expect(formattedMsg).toEqual("i needed a short message to test");
+
+        formattedMsg = ConversationsController.formatLastMessage("b".repeat(48));
+        expect(formattedMsg).toEqual("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
     });
 });

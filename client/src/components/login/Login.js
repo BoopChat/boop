@@ -1,4 +1,6 @@
 import "../../styles/login.css";
+import "../../styles/login_buttons.css";
+
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { logIn, setToken, setUserInfo } from "../../redux-store/userSlice";
@@ -115,8 +117,8 @@ const Login = () => {
                 </header>
                 <div className="sign_btns">
                     { loginService.google && <GoogleButton text="Continue with Google" /> }
-                    { loginService.facebook && <FacebookButton text="Continue with facebook" /> }
-                    { loginService.twitter && <TwitterButton text="Continue with twitter" /> }
+                    { loginService.facebook && <FacebookButton text="Continue with Facebook" /> }
+                    { loginService.twitter && <TwitterButton text="Continue with Twitter" /> }
                 </div>
             </div>
         );

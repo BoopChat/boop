@@ -30,29 +30,32 @@ button.google span {
 /* end google button */
 
 /* facebook button */
-span.facebook {
-    transition: opacity 0.5s ease 0s;
-}
 
 button.facebook {
-    border-radius: 9999px;
-    font-family: Helvetica,sans-serif;
-    font-weight: 700;
-    -webkit-font-smoothing: antialiased;
-    color: #fff;
-    display: inline-block;
-    text-decoration: none;
-    text-transform: uppercase;
-    transition: background-color .3s,border-color .3s;
     background-color: #4c69ba;
-    border: calc(.06887vw + .67769px) solid #4c69ba;
-    padding: calc(.34435vw + 9.38843px) calc(.34435vw + 18.38843px);
-    text-align: center;
+    display: flex;
+    align-items: center;
+    color: white;
     box-shadow: #4c69ba 0px 2px 2px 0px, #4c69ba 0px 0px 1px 0px;
+    padding: 12px 10px;
+    border-radius: 9999px;
+    border: 1px solid transparent;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: Roboto, sans-serif;
+    overflow: hidden;
 }
 
 button.facebook:hover {
-    box-shadow: #4c69ba 0px 2px 2px 0px, #4c69ba 0px 0px 8px 0px;
+    box-shadow: #4c69ba 0px 2px 2px 0px, #4c69ba 0px 0px 6px 0px;
+}
+
+button.facebook svg {
+    margin-right: 15px;
+}
+
+button.facebook span {
+    font-weight: 500;
 }
 
 /* end facebook button */
@@ -60,18 +63,30 @@ button.facebook:hover {
 /* twitter button */
 
 button.twitter {
-    border: #0f9afb 1px solid;
+    background-color: #0f9afb;
+    display: flex;
+    align-items: center;
+    color: white;
+    box-shadow: #0f9afb 0px 2px 2px 0px, #0f9afb 0px 0px 1px 0px;
+    padding: 12px 10px;
     border-radius: 9999px;
-    padding: 10px 15px;
-    background: white;
-    color: #0f9afb;
+    border: 1px solid transparent;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: Roboto, sans-serif;
+    overflow: hidden;
 }
 
 button.twitter:hover {
-    color: white;
-    background-color: #0f9afb;
-    font-weight: bold;
-    box-shadow: #0f9afb 0px 2px 2px 0px, #0f9afb 0px 0px 8px 0px;
+    box-shadow: #0f9afb 0px 2px 2px 0px, #0f9afb 0px 0px 6px 0px;
+}
+
+button.twitter svg {
+    margin-right: 15px;
+}
+
+button.twitter span {
+    font-weight: 500;
 }
 
 /* end twitter button */
