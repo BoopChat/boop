@@ -1,3 +1,6 @@
+// the max length of participants' names used to auto generate a title
+export const participantNamesMaxLength = 25;
+
 const evaluateDate = (lastDate) => {
     // decide whether to return the date as (d/mm/yy) or as time(\d{2}:\d{2} (A|P)M)
     // if lastDate within the last 23 hrs display time else use date format
@@ -19,7 +22,7 @@ const evaluateDate = (lastDate) => {
 };
 
 export const ConversationsController = {
-    getConversations: async (token, socket) => {
+    getConversations: async (token, socket, userId) => {
         // make request for the conversations of user and wait for the json response
         try {
             const res = await fetch("/api/conversations", {
@@ -44,13 +47,30 @@ export const ConversationsController = {
                 "joinConversations",
                 result.conversationList.map((item) => item.id)
             );
-            return result?.conversationList ? {
-                success: true,
-                conversations: result.conversationList
-            } : {
-                success: false,
-                conversations: []
-            };
+            if (result && result.conversationList){
+                for (const convo of result.conversationList) {
+                    // if title is blank make 1 using the participant's display names
+                    if (!convo.title || convo.title.length < 1) {
+                        let participantNames = convo.participants.reduce((result, p) => {
+                            if (p.id !==  userId){ result.push(p.displayName); }
+                            return result;
+                        }, []).join(", ");
+                        convo.title = `You${participantNames.length > 0 ? "," : ""} ${participantNames
+                            .substring(0, participantNamesMaxLength)}${
+                            participantNames.length > participantNamesMaxLength ? "..." : ""
+                        }`;
+                    }
+                }
+                return {
+                    success: true,
+                    conversations: result.conversationList
+                };
+            } else {
+                return {
+                    success: false,
+                    conversations: []
+                };
+            }
         } catch (e) {
             return {
                 success: false,
